@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "glp1_boltzgen_vhh_scaffold_screen_v1",
+  "scope": {
+    "source_subset": "SAbDab2-nano SD-H",
+    "primary_vhh_provenance_patterns": [
+      "lama glama",
+      "lama",
+      "vicugna pacos",
+      "camelus dromedarius",
+      "camelus bactrianus",
+      "camelus",
+      "camelidae"
+    ],
+    "primary_method": "XRAY",
+    "max_primary_resolution_a": 2.5,
+    "max_primary_r_free": 0.3,
+    "min_variable_length_aa": 95,
+    "max_variable_length_aa": 150,
+    "max_imgt_n_terminal_position": 3,
+    "min_imgt_c_terminal_position": 125
+  },
+  "imgt_regions": {
+    "FR1": [1, 26],
+    "CDR1": [27, 38],
+    "FR2": [39, 55],
+    "CDR2": [56, 65],
+    "FR3": [66, 104],
+    "CDR3": [105, 117],
+    "FR4": [118, 128]
+  },
+  "required_imgt_anchors": [26, 39, 55, 66, 104, 118],
+  "canonical_disulfide_imgt_positions": [23, 104],
+  "canonical_disulfide_distance_a": [1.8, 2.3],
+  "min_peptide_bond_distance_a": 1.15,
+  "max_peptide_bond_distance_a": 1.8,
+  "min_residue_mean_occupancy_hard": 0.5,
+  "min_residue_mean_occupancy_soft": 0.7,
+  "allowed_residues": [
+    "ALA", "ARG", "ASN", "ASP", "CYS", "GLN", "GLU", "GLY", "HIS", "ILE",
+    "LEU", "LYS", "MET", "PHE", "PRO", "SER", "THR", "TRP", "TYR", "VAL"
+  ],
+  "clustering": {
+    "minimum_common_framework_positions": 70,
+    "framework_identity_scale": 0.1,
+    "framework_ca_rmsd_scale_a": 1.0,
+    "anchor_rmsd_scale_a": 0.75,
+    "complete_linkage_distance_threshold": 1.0
+  },
+  "selection": {
+    "primary_count": 10,
+    "reserve_count": 2,
+    "quality_weight": 0.7,
+    "framework_sequence_diversity_weight": 0.2,
+    "anchor_geometry_diversity_weight": 0.1,
+    "retain_current_7xl0_benchmark_when_eligible": true
+  },
+  "interpretation_boundaries": [
+    "原抗原名称、原亲和力和原界面不得进入正向评分。",
+    "结构质量通过只表示可作为生成起点，不表示已经结合 GLP-1。",
+    "SAbDab2 的 SD-H 还可能包括人源 VH；主面板限于有 camelid 来源证据的 VHH。",
+    "最终 GLP-1(7-36)NH2 对 GLP-1(9-36)NH2 的选择性只能由成对计算复核和实验确认。"
+  ]
+}

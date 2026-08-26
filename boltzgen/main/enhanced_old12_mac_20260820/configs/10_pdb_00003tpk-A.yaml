@@ -1,0 +1,19 @@
+# 第一轮 BoltzGen nanobody-anything 顶层设计规格。
+# 本文件只包含一个 GLP-1 正靶和一个固定 VHH 骨架，确保每个骨架得到相同候选预算。
+
+entities:
+  - file:
+      path: ../inputs/target/6X18_GLP1_7-36_geometry.cif
+      include:
+        - chain:
+            id: E
+      binding_types:
+        - chain:
+            id: E
+            binding: 1,2
+      structure_groups: all
+
+  - file:
+      path: ../inputs/scaffolds/10_pdb_00003tpk-A/scaffold.yaml
+
+# 科学边界：本轮没有输入 GLP-1(9–36) 或多构象集合，因此不能评价型态选择性。

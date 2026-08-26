@@ -1,0 +1,5 @@
+﻿metric,current_definition,default_gate,problem,recommended_role
+positive_min_i_pTM,所有正靶 iPTM 的最小值,>=0.50,模型数不一致导致不可比,相同模型/seed 合同下的鲁棒性硬门
+negative_max_i_pTM,所有负靶 iPTM 的最大值,<=0.35,缺少统一 iPAE/pLDDT 与不完整结构处理,带负靶置信度的硬门和风险排序
+selectivity_margin,positive_min - negative_max,>=0.15,在另外两个默认门下冗余,修订阈值后作为连续排序特征，不单独制造重复通过门
+N_terminal_contacts,前两个目标残基中有重原子距 binder <=5 Å 的残基数,>=2,通过者恒为 2，+0.05 加分无区分力,硬门；另用连续最小距离/几何质量排序

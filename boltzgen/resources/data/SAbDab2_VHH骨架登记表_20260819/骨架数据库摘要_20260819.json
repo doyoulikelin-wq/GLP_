@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-19T07:43:59+00:00",
+  "source_release": {
+    "release_id": "sabdab2_sd_h_20260806",
+    "source_name": "SAbDab2-nano SD-H bulk",
+    "api_version": "2.0.10",
+    "snapshot_last_modified": "2026-08-06",
+    "downloaded_at": "2026-08-19T07:43:58+00:00",
+    "license": "CC BY 4.0",
+    "summary_sha256": "3f0934c653227c30615913eeb18ae5cec88bc98b625de08ae7532bfc4cd64eff",
+    "archive_sha256": "bc07b85ebc118dc4046bb22f955950cf1c066ced58b80a00d5983c481445c409",
+    "policy_id": "glp1_boltzgen_vhh_scaffold_screen_v1",
+    "policy_sha256": "46a6aace3d872f0b03df4a6e0a50c774d9bddc03e3e521a432a982d4998375f2"
+  },
+  "counts": {
+    "raw_instances": 4508,
+    "unique_pdb": 2391,
+    "unique_sabdab_id": 1324,
+    "archive_cif_files": 2391,
+    "metadata_qualified_instances": 1227,
+    "hard_qc_pass_instances": 703,
+    "best_instance_per_sabdab_id": 333,
+    "unique_exact_framework": 324,
+    "framework_clusters": 245,
+    "selected_primary": 10,
+    "selected_reserve": 2,
+    "boltzgen_check_total": 12,
+    "boltzgen_check_pass": 12,
+    "boltzgen_check_fail": 0,
+    "boltzgen_check_pending": 0
+  },
+  "funnel": [
+    {
+      "stage_order": 1,
+      "stage": "SAbDab2 SD-H antibody instances",
+      "remaining_count": 4508
+    },
+    {
+      "stage_order": 2,
+      "stage": "camelid-origin VHH scope",
+      "remaining_count": 3574
+    },
+    {
+      "stage_order": 3,
+      "stage": "X-ray",
+      "remaining_count": 2198
+    },
+    {
+      "stage_order": 4,
+      "stage": "resolution ≤2.5 Å",
+      "remaining_count": 1242
+    },
+    {
+      "stage_order": 5,
+      "stage": "metadata-qualified for structure QC",
+      "remaining_count": 1227
+    },
+    {
+      "stage_order": 6,
+      "stage": "hard structure QC pass",
+      "remaining_count": 703
+    },
+    {
+      "stage_order": 7,
+      "stage": "best instance per SAbDab ID",
+      "remaining_count": 333
+    },
+    {
+      "stage_order": 8,
+      "stage": "unique exact framework",
+      "remaining_count": 324
+    },
+    {
+      "stage_order": 9,
+      "stage": "framework cluster representatives",
+      "remaining_count": 245
+    },
+    {
+      "stage_order": 10,
+      "stage": "selected primary + reserve",
+      "remaining_count": 12
+    }
+  ],
+  "exclusion_reasons": [
+    {
+      "reason_order": 1,
+      "reason": "首轮只采用 X-ray 结构",
+      "excluded_count": 1376
+    },
+    {
+      "reason_order": 2,
+      "reason": "分辨率缺失或高于 2.5 Å",
+      "excluded_count": 956
+    },
+    {
+      "reason_order": 3,
+      "reason": "不在 camelid-origin VHH 主面板范围",
+      "excluded_count": 934
+    },
+    {
+      "reason_order": 4,
+      "reason": "结构/编号/二硫键硬 QC 未通过",
+      "excluded_count": 524
+    },
+    {
+      "reason_order": 5,
+      "reason": "同一 SAbDab ID 有质量更优实例",
+      "excluded_count": 370
+    },
+    {
+      "reason_order": 6,
+      "reason": "通过但未进入 12 个多样化代表面板",
+      "excluded_count": 233
+    },
+    {
+      "reason_order": 7,
+      "reason": "同一 framework 结构簇已有代表",
+      "excluded_count": 79
+    },
+    {
+      "reason_order": 8,
+      "reason": "Rfree 高于 0.30",
+      "excluded_count": 13
+    },
+    {
+      "reason_order": 9,
+      "reason": "完全相同 framework 已有质量更优代表",
+      "excluded_count": 9
+    },
+    {
+      "reason_order": 10,
+      "reason": "链共享/融合构建体不进入首轮",
+      "excluded_count": 2
+    }
+  ],
+  "interpretation": {
+    "positive_claim": "入选项是可追溯、结构完整且彼此多样的 VHH 生成起点。",
+    "not_established": [
+      "GLP-1 结合",
+      "GLP-1(7-36)NH2 对 9-36NH2 选择性",
+      "表达量",
+      "热稳定性",
+      "免疫原性",
+      "知识产权自由实施"
+    ]
+  },
+  "boltzgen_export_validation": {
+    "validated_at": "2026-08-19T07:49:50+00:00",
+    "status": "PASS",
+    "boltzgen_version": "0.3.2",
+    "target_source": "boltzgen_data/mvp_run_001/inputs/target/6X18_GLP1_7-36_geometry.cif",
+    "target_sha256": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+    "target_residue_count": 30,
+    "target_role": "geometry_only",
+    "terminal_amide_atomically_verified": false,
+    "mols_zip": "boltzgen_data/mvp_assets_v0.3.2/runtime_cache/mols.zip",
+    "mols_zip_sha256": "3d4f56ac4262e745bb3d09cfaa19099b1d01be208122d501667b952e45521e53",
+    "offline_mode": true,
+    "result_table": "registry/boltzgen_export_validation.tsv",
+    "interpretation": "PASS 仅证明 6X18 target 的 30 残基几何与 scaffold 输入合同可解析；不证明 C 端 CONH2 被原子级保留，也不证明结合、亲和力或选择性。"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-20T05:18:26.144462+00:00",
+  "status": "COMPLETE",
+  "attempt": "runs/near_official_adherence_7xl0/01_pdb_00007xl0-A/attempt_001",
+  "profile_contract": {
+    "budget": 1,
+    "description": "只用 7XL0 和 adherence 单一设计 checkpoint 做近官方采样深度探针；严禁在同一 MPS 进程装载或切换第二个设计 checkpoint。",
+    "design_checkpoints": [
+      "design_adherence"
+    ],
+    "design_recycling_steps": 3,
+    "design_sampling_steps": 500,
+    "folding_diffusion_samples": 1,
+    "folding_recycling_steps": 3,
+    "folding_sampling_steps": 200,
+    "inverse_fold_diffusion_samples": 1,
+    "inverse_fold_recycling_steps": 3,
+    "inverse_fold_sampling_steps": 200,
+    "minimum_free_disk_gib": 15,
+    "num_designs": 4,
+    "official_like_scope": "采样步数接近官方默认；候选量、硬件、MPS代码与统计规模仍不是官方生产基线",
+    "parent_stress_profile": "balanced_adherence_all12",
+    "precision": "32",
+    "prerequisite_profile": "balanced_adherence_all12",
+    "selection_ranks": [
+      1
+    ],
+    "single_checkpoint_required": true
+  },
+  "counts": {
+    "runs": 1,
+    "candidates": 4,
+    "folding_samples": 4,
+    "filter_rows": 40,
+    "strict_filter_survivors": 0
+  },
+  "validation": {
+    "schema_version": "1.0.0",
+    "validated_at_utc": "2026-08-20T05:18:24.511226+00:00",
+    "checks": {
+      "profile_complete": true,
+      "exactly_four_candidates": true,
+      "exactly_four_single_folding_samples": true,
+      "exactly_forty_filter_rows": true,
+      "exactly_eight_hotspot_rows": true,
+      "exactly_thirty_two_lineage_rows": true,
+      "exactly_seven_stages": true,
+      "single_checkpoint_no_switch": true,
+      "not_part_of_main_48_candidate_namespace": true
+    },
+    "failed_checks": [],
+    "scope_note": "4个候选与4个单样本仅属于独立深度探针，不进入48/96主分析分母。"
+  },
+  "comparison_to_lightweight_7xl0": [
+    {
+      "cohort": "balanced_adherence_7xl0",
+      "cohort_label_cn": "轻量 adherence：7XL0",
+      "candidate_count": 2,
+      "folding_samples_per_candidate": 2,
+      "design_sampling_steps": 100,
+      "design_recycling_steps": 2,
+      "inverse_fold_sampling_steps": 60,
+      "inverse_fold_recycling_steps": 2,
+      "folding_sampling_steps": 100,
+      "folding_recycling_steps": 2,
+      "strict_filter_survivors": 0,
+      "median_design_to_target_iptm": 0.28994,
+      "median_design_ptm": 0.716715,
+      "median_filter_rmsd_a": 9.145455,
+      "prerefold_hotspot_positive": 2,
+      "interpretation": "不同候选数与复折叠样本数的描述性探针；不作显著性或因果推断。"
+    },
+    {
+      "cohort": "near_official_adherence_7xl0",
+      "cohort_label_cn": "近官方采样深度：7XL0",
+      "candidate_count": 4,
+      "folding_samples_per_candidate": 1,
+      "design_sampling_steps": 500,
+      "design_recycling_steps": 3,
+      "inverse_fold_sampling_steps": 200,
+      "inverse_fold_recycling_steps": 3,
+      "folding_sampling_steps": 200,
+      "folding_recycling_steps": 3,
+      "strict_filter_survivors": 0,
+      "median_design_to_target_iptm": 0.349285,
+      "median_design_ptm": 0.7031149999999999,
+      "median_filter_rmsd_a": 7.14779,
+      "prerefold_hotspot_positive": 0,
+      "interpretation": "不同候选数与复折叠样本数的描述性探针；不作显著性或因果推断。"
+    }
+  ],
+  "scope_note": "独立探针不进入主分析48候选、96复折叠样本或其通过率分母。"
+}

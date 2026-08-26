@@ -1,0 +1,269 @@
+{
+  "source_accession": "UniProtKB P01275",
+  "source_organism": "Homo sapiens",
+  "source_precursor_length": 180,
+  "coordinate_system": "UniProt positions are 1-based and inclusive",
+  "variants": [
+    {
+      "id": "GLP1_7-36_NH2",
+      "sequence": "HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR",
+      "length_residues": 30,
+      "precursor_coordinates_1_based": "P01275:98..127",
+      "n_terminus": "free amino terminus at His7",
+      "c_terminus": "Arg36 amide (NH2)",
+      "evidence": [
+        "UniProt P01275 peptide feature 98..127",
+        "UniProt P01275 modified-residue feature: Arg127 amide",
+        "PubChem CID 16133831 chemical record"
+      ],
+      "project_role": "positive target"
+    },
+    {
+      "id": "GLP1_9-36_terminal_state_not_asserted_by_9IVG",
+      "sequence": "EGTFTSDVSSYLEGQAAKEFIAWLVKGR",
+      "length_residues": 28,
+      "derivation": "sequence-only deletion of His7-Ala8 from GLP1_7-36",
+      "n_terminus": "free amino terminus at Glu9",
+      "c_terminus": "project chemistry must be specified separately; 9IVG does not verify NH2",
+      "project_role": "selectivity anti-target/challenge state"
+    },
+    {
+      "id": "GLP1_7-37",
+      "sequence": "HAEGTFTSDVSSYLEGQAAKEFIAWLVKGRG",
+      "length_residues": 31,
+      "precursor_coordinates_1_based": "P01275:98..128",
+      "c_terminus": "Gly37 carboxyl terminus unless a separate modification is supplied",
+      "project_role": "challenge state"
+    },
+    {
+      "id": "GLP1_9-37",
+      "sequence": "EGTFTSDVSSYLEGQAAKEFIAWLVKGRG",
+      "length_residues": 29,
+      "derivation": "sequence-only deletion of His7-Ala8 from GLP1_7-37",
+      "c_terminus": "Gly37 carboxyl terminus unless a separate modification is supplied",
+      "project_role": "challenge state"
+    }
+  ],
+  "relevant_uniprot_features": [
+    {
+      "type": "Peptide",
+      "location": {
+        "start": {
+          "value": 92,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 128,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Glucagon-like peptide 1",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000269",
+          "source": "PubMed",
+          "id": "2753890"
+        }
+      ],
+      "featureId": "PRO_0000011258"
+    },
+    {
+      "type": "Peptide",
+      "location": {
+        "start": {
+          "value": 98,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 128,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Glucagon-like peptide 1(7-37)",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000269",
+          "source": "PubMed",
+          "id": "2753890"
+        }
+      ],
+      "featureId": "PRO_0000011259"
+    },
+    {
+      "type": "Peptide",
+      "location": {
+        "start": {
+          "value": 98,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 127,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Glucagon-like peptide 1(7-36)",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000269",
+          "source": "PubMed",
+          "id": "2753890"
+        }
+      ],
+      "featureId": "PRO_0000011260"
+    },
+    {
+      "type": "Site",
+      "location": {
+        "start": {
+          "value": 91,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 92,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Cleavage; by PCSK1"
+    },
+    {
+      "type": "Site",
+      "location": {
+        "start": {
+          "value": 97,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 98,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Cleavage; by PCSK1"
+    },
+    {
+      "type": "Site",
+      "location": {
+        "start": {
+          "value": 130,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 131,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Cleavage; by PCSK1"
+    },
+    {
+      "type": "Modified residue",
+      "location": {
+        "start": {
+          "value": 105,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 105,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Phosphoserine",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000250",
+          "source": "UniProtKB",
+          "id": "P55095"
+        }
+      ]
+    },
+    {
+      "type": "Modified residue",
+      "location": {
+        "start": {
+          "value": 108,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 108,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Phosphoserine",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000250",
+          "source": "UniProtKB",
+          "id": "P55095"
+        }
+      ]
+    },
+    {
+      "type": "Modified residue",
+      "location": {
+        "start": {
+          "value": 127,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 127,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "Arginine amide",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0000269",
+          "source": "PubMed",
+          "id": "2753890"
+        }
+      ]
+    },
+    {
+      "type": "Natural variant",
+      "location": {
+        "start": {
+          "value": 115,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 115,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "in dbSNP:rs5650",
+      "featureCrossReferences": [
+        {
+          "database": "dbSNP",
+          "id": "rs5650"
+        }
+      ],
+      "featureId": "VAR_014596",
+      "alternativeSequence": {
+        "originalSequence": "A",
+        "alternativeSequences": [
+          "V"
+        ]
+      }
+    },
+    {
+      "type": "Helix",
+      "location": {
+        "start": {
+          "value": 104,
+          "modifier": "EXACT"
+        },
+        "end": {
+          "value": 124,
+          "modifier": "EXACT"
+        }
+      },
+      "description": "",
+      "evidences": [
+        {
+          "evidenceCode": "ECO:0007829",
+          "source": "PDB",
+          "id": "4ZGM"
+        }
+      ]
+    }
+  ],
+  "caution": "FASTA stores residue order only. It cannot encode terminal amidation; terminal chemistry must be carried in JSON/YAML or another chemical representation."
+}

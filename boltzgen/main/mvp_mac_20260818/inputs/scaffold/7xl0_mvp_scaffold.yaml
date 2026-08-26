@@ -1,0 +1,63 @@
+# 这是一份供 BoltzGen `nanobody-anything` 协议读取的 VHH scaffold 配方。
+# 它基于 BoltzGen v0.3.2 官方 7XL0 示例，但路径被固定到本次 MVP 的本地输入快照。
+# 重要：7XL0 只是官方冒烟测试示例，不代表已经获批用于本项目的生产级框架。
+
+# `path` 相对于本 YAML 文件所在目录解析。
+# 这里保留原始 7XL0 mmCIF，而不是缺失 `_struct_conn` 的旧清理副本，
+# 从而保留 Cys22—Cys95 框架二硫键的拓扑信息。
+path: 7XL0_official_example.cif
+
+# 7XL0 晶体中有 A、B 两个 VHH 拷贝；MVP 只取链 A，避免重复输入。
+include:
+  - chain:
+      id: A
+
+# 只允许三段 CDR 对应区域被设计；其余框架残基作为结构条件固定。
+# 所有编号均为 mmCIF canonical `label_seq_id`，从 1 开始，不是作者编号。
+design:
+  - chain:
+      id: A
+      res_index: 26..34,52..59,98..118
+
+# 可见度 2：把整条 VHH 框架作为模型可见的结构条件。
+# 可见度 0：隐藏三段待设计区的原始构象，允许模型重新生成这些区域。
+structure_groups:
+  - group:
+      id: A
+      visibility: 2
+  - group:
+      id: A
+      visibility: 0
+      res_index: 26..34,52..59,98..118
+
+# 删除各 CDR 起始处的一部分原始残基，为可变长度插入腾出位置。
+exclude:
+  - chain:
+      id: A
+      res_index: 26..28
+  - chain:
+      id: A
+      res_index: 52..54
+  - chain:
+      id: A
+      res_index: 98..104
+
+# 在三个锚点插入可变长度的新设计残基；范围沿用官方 7XL0 示例。
+design_insertions:
+  - insertion:
+      id: A
+      res_index: 26
+      num_residues: 1..5
+  - insertion:
+      id: A
+      res_index: 52
+      num_residues: 1..5
+  - insertion:
+      id: A
+      res_index: 98
+      num_residues: 1..14
+
+# 插入/删除后重新建立位置编码，防止旧编号间隙进入模型。
+reset_res_index:
+  - chain:
+      id: A

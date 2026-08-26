@@ -1,0 +1,9 @@
+session_id,title,started_at_asia_shanghai,updated_at_asia_shanghai,turns,route,status,content_summary,key_resources,limitations
+019ffa66-aa50-7f81-9af1-91e2ca3d9cab,整理 GLP-1 项目简介文档,2026-08-13 17:14:20,2026-08-13 18:04:38,2,shared,COMPLETED,"定义活性 GLP-1 选择性捕获蛋白与质谱增敏目标；明确 AlphaFold 只作结构与排序代理。","早期项目简介 DOCX（仅索引，不公开上传）","早期方案文本，不是运行或实验结果。"
+019ffcd0-dee7-77d2-9b96-b4b30effde80,制作 GLP-1 双轨方案文档,2026-08-14 04:29:34,2026-08-15 13:09:17,16,shared,COMPLETED,"冻结 VHH 工程主线与 de novo 小型结合蛋白探索线；澄清 His 标签用途与捕获化学风险。","双轨方案 DOCX（仅索引，不公开上传）","His 标签可用于纯化/原型，不能自动等同最终捕获化学。"
+01a00fe5-e814-7443-9dbf-f8221e36c76f,整理 GLP-1 项目知识 HTML,2026-08-17 21:25:20,2026-08-26 21:24:56,35,boltzgen+shared,33_COMPLETED_2_INTERRUPTED,"知识图谱与页面修复；BoltzGen/BindCraft 比较；数据下载、清理、VHH 骨架筛选、Mac MVP、旧 12 骨架两轮推理、失败归因与生产实施合同。","shared/reports/html；boltzgen/reports/html；boltzgen/plans","主会话覆盖面最广；摘要不复制原始逐字 transcript。"
+01a0184c-6219-7dd3-8eb9-888877ae6c1b,填写 AI 造物大赛复赛模板,2026-08-19 12:34:14,2026-08-19 12:43:00,1,shared,COMPLETED,"整理项目基础设施、算力与平台需求。","赛事 XLSX（含个人/赛事信息，仅索引，不上传）","不作为模型结果；公开仓库排除个人信息。"
+01a01927-bd4b-7513-b0e0-fd402d516b3d,bindcraft,2026-08-19 16:33:49,2026-08-26 15:25:39,3,bindcraft,COMPLETED,"解释 AlphaFold2 反向传播、ProteinMPNN、复预测与 PyRosetta 过滤；静态审计选择性原型和 8 个靶标 PDB。","bindcraft/main；bindcraft/notebooks；bindcraft/resources","Notebook 未执行，无候选、结果 CSV、日志或实验结果。"
+6a7d7c98-2230-83e8-8fb9-0efeebc447ef,GLP-1 分子式与构型,,2026-08-19 18:48:19,3,shared,CONTEXT_ONLY,"补充 GLP-1 分子式、末端酰胺与构象背景。","无独立本地产物","连接器未返回 startedAt，也没有可审计的 final-answer 产物。"
+01a03459-badd-7491-9407-70cbc26cc5ed,评估 BoltzGen GLP1 VHH 方案,2026-08-24 23:18:10,2026-08-26 16:01:45,3,boltzgen,COMPLETED,"从零上下文执行角度审计数据合同、训练策略、Linux/NVIDIA 环境与阻断门。","boltzgen/plans/boltzgen_glp1_vhh_execution_plan_20260826.md","正式生产脚本仍有 TO_IMPLEMENT 项；审计通过不等于 campaign 已运行。"
+6a7ae4f1-331c-83e8-a794-04e701682217,蛋白组学代谢组学与 AI 造药,,2026-08-14 04:29:45,,shared,BACKGROUND_REFERENCE,"为早期项目简介和双轨文档提供背景讨论。","只作为引用链背景","不是独立运行、数据集或实验产物。"

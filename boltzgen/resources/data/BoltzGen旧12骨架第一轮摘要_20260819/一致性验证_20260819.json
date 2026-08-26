@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0.0",
+  "validated_at_utc": "2026-08-19T15:45:56.513833+00:00",
+  "assessment": "READY_TO_SHARE_WITH_SCIENTIFIC_CAVEATS",
+  "checks": {
+    "twelve_unique_scaffolds": true,
+    "all_tasks_pipeline_complete": true,
+    "each_scaffold_has_two_ids_at_every_pre_ranking_stage": true,
+    "each_scaffold_has_exact_budget_one_contract": true,
+    "twenty_four_raw_design_pairs": true,
+    "twenty_four_inverse_fold_pairs": true,
+    "twenty_four_fold_npz": true,
+    "twenty_four_refold_cif": true,
+    "twenty_four_analyzed_rows": true,
+    "candidate_ids_unique_after_per_scaffold_dedup": true,
+    "each_candidate_has_six_lineage_artifacts": true,
+    "each_candidate_has_two_hotspot_rows": true,
+    "framework_sequence_unchanged_outside_design_mask": true,
+    "prerefold_hotspot_coverage_is_fraction": true,
+    "ten_filter_rows_per_candidate": true,
+    "fold_sample_axis_matches_frozen_config": true,
+    "fold_best_sample_indexes_are_in_bounds": true,
+    "source_files_unchanged_by_analysis": true,
+    "actual_target_file_sha_matches_manifest": true,
+    "target_manifest_sha_matches_frozen_expected": true
+  },
+  "failed_checks": [],
+  "target_path": "inputs/target/6X18_GLP1_7-36_geometry.cif",
+  "target_observed_sha256": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+  "target_manifest_sha256": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+  "scientific_caveats": [
+    "本轮是预训练模型推理，不是模型权重训练。",
+    "只有单一6X18受体结合态几何，没有GLP-1(9-36)或多构象反筛。",
+    "目标C端酰胺未在当前标准聚合物CIF中完成原子级验证。",
+    "iPTM、PAE、RMSD、SASA和接触数都是计算代理，不是Kd或实验命中。",
+    "每骨架n=2，只能做流程与候选级描述，不能估计骨架因果效应或模型命中率。",
+    "实验性MPS结果不等同于官方Linux+NVIDIA基线。"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "html": "bindcraft/reports/html/bindcraft_glp1_selectivity_input_audit_20260826.html",
+  "stages": {
+    "validation": "passed",
+    "package": "passed",
+    "verification": "structural_only"
+  },
+  "counts": {
+    "blocks": 14,
+    "charts": 1,
+    "html": 0,
+    "metrics": 0,
+    "tables": 5
+  },
+  "browser_warning": "No installed Chromium headless-shell was available; exact payload and required runtime/reader/semantic-fallback roots passed structural verification, but source-dialog and viewport interactions were not browser-verified."
+}

@@ -1,0 +1,4 @@
+﻿route,decision,available_input,latest_result,current_state,next_gate
+BoltzGen / VHH,工程主线,旧 12 个已检查 VHH 骨架 + GLP-1 数据资产,0/2；0/24；0/48；深度探针 0/4 严格通过,Mac 工程闭环完成；Linux/NVIDIA 正式 campaign 未启动,"实现并运行 AIV1，按 10→240→2,400→12,000 门控"
+BindCraft / de novo miniprotein,探索线,1 个原型 Notebook + 8 个 PDB + 1 个审计 Notebook,12 个代码单元未执行；无候选、CSV、日志或实验结果,输入与评价合同 NEEDS_REVISION,修复后按每个正构象 30–50 条轨迹小试
+共享治理,两线共同合同,8 个相关会话条目 + 11 个资源包索引,代码、报告、小型数据与外置大资产边界已分离,报告与资源可审计；无项目整体许可证声明,PR 审阅、CI 通过后合并；再保护 main

@@ -1,0 +1,33 @@
+# BoltzGen nanobody-anything MVP 顶层设计规格。
+# 本文件同时声明“被结合的目标”和“需要改造的 VHH scaffold”；
+# 仅运行单独的 scaffold YAML 不会包含 GLP-1 目标。
+
+entities:
+  # 实体 1：GLP-1(7–36) 的结构几何。
+  - file:
+      # 路径相对于本 YAML 所在目录解析。
+      path: target/6X18_GLP1_7-36_geometry.cif
+
+      # 清理后的目标文件只保留 label_asym_id=E 的 30 aa GLP-1 链。
+      include:
+        - chain:
+            id: E
+
+      # 引导模型优先接触目标的前两个残基：位置1=His7、位置2=Ala8。
+      # 这两个残基正是 DPP-4 截短为 GLP-1(9–36) 时被删除的 His–Ala。
+      # `binding` 是正向位点提示，不是跨靶标选择性损失函数。
+      binding_types:
+        - chain:
+            id: E
+            binding: 1,2
+
+      # 目标的全部已观测原子坐标均作为结构条件提供给设计模型。
+      structure_groups: all
+
+  # 实体 2：固定 VHH 框架、重设计三段 CDR 的 scaffold 配方。
+  - file:
+      path: scaffold/7xl0_mvp_scaffold.yaml
+
+# 本轮不把 9IVG 加入同一个设计规格：它只观测到 9–36 的 21/28 个残基，
+# 且 BoltzGen v0.3.2 没有原生的“跨目标反向选择性”训练目标。
+# 因此本次输出只能评价正靶生成与结构自洽性，不能宣称 7–36/9–36 选择性。

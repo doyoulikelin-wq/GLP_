@@ -1,0 +1,54 @@
+{
+  "artifact_id": "GLP1_7-36NH2_6X18_peptide_only",
+  "status": "project_input_geometry_with_chemistry_caveat",
+  "project_role": "receptor-bound positive-target geometry",
+  "source_pdb_id": "6X18",
+  "source_path": "raw_sources/rcsb_structures/6X18.cif",
+  "curated_path": "curated_project_inputs/glp1_complex_peptides/6X18_glp1_7-36NH2_labelE_authP.cif",
+  "mapping_path": "curated_project_inputs/glp1_complex_peptides/6X18_glp1_7-36NH2_labelE_authP_residue_mapping.tsv",
+  "source_sha256": "cf18ce80abdffd6c791e4047da0a6fb2a80a3233561842188d9133d255b00d17",
+  "curated_sha256": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+  "source_chain_mapping": {
+    "label_asym_id": "E",
+    "auth_asym_id": "P"
+  },
+  "curated_chain_mapping": {
+    "label_asym_id": "E",
+    "auth_asym_id": "P",
+    "label_seq_id_policy": "renumbered 1..N in observed coordinate order",
+    "auth_seq_id_policy": "preserved from source"
+  },
+  "experimental_method": "ELECTRON MICROSCOPY",
+  "resolution_angstrom": 2.1,
+  "model_count": 1,
+  "observed_residue_count_per_model": [
+    30
+  ],
+  "atom_count_per_model": [
+    233
+  ],
+  "atom_count_semantics": "number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation",
+  "raw_declared_sequence": "HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR",
+  "raw_declared_sequence_length": 30,
+  "curated_entity_sequence": "HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR",
+  "curated_entity_sequence_length": 30,
+  "observed_coordinate_sequence": "HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR",
+  "observed_coordinate_sequence_length": 30,
+  "unresolved_declared_positions": [],
+  "terminal_chemistry": {
+    "source_annotation": "entity description explicitly states GLP-1(7-36)NH2",
+    "coordinate_observation": "the standard polymer atom list does not provide an unambiguous explicit terminal-amide atom-level encoding",
+    "usage": "use UniProt/PubChem for chemical identity; use 6X18 for geometry"
+  },
+  "expression_tag_assessment": null,
+  "excluded_content": "G-protein alpha/beta/gamma, Nanobody35, GLP-1 receptor, and all waters",
+  "curation_assertions": [
+    "exactly one selected polymer chain per model",
+    "no water residues in curated coordinate file",
+    "no non-polymer residues in curated coordinate file",
+    "no explicit hydrogen atoms in curated coordinate file",
+    "one alternate conformation retained per atom name",
+    "all selected models retained"
+  ],
+  "notes": "The selected peptide is label_asym_id E / auth_asym_id P."
+}

@@ -1,0 +1,705 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "BoltzGen nanobody-anything MVP：数据资产、样例与清理审计",
+    "description": "版本锁定的运行资产、公开来源、项目清理输入、格式/轴解释和逐项样例。",
+    "generatedAt": "2026-08-18T18:22:41.485478+00:00",
+    "cards": [
+      {
+        "id": "package_summary",
+        "description": "MVP数据包的精确范围。",
+        "dataset": "summary",
+        "source": {
+          "id": "package_summary_query",
+          "label": "MVP package summary from reviewed manifests",
+          "path": "metadata/file_inventory.tsv",
+          "query": {
+            "engine": "duckdb",
+            "sql": "WITH inventory AS (\n  SELECT * FROM read_csv_auto('metadata/file_inventory.tsv', delim='\\t', header=true)\n), model_summary AS (\n  SELECT curated_coordinate_model_count\n  FROM read_json_auto('metadata/machine_readable_summary.json')\n)\nSELECT\n  count(*) FILTER (WHERE stage='runtime') AS runtime_files,\n  sum(size_bytes) FILTER (WHERE stage='runtime') / 1000000000.0 AS runtime_gb,\n  count(*) FILTER (WHERE stage='raw_source') AS raw_files,\n  max(curated_coordinate_model_count) AS curated_models\nFROM inventory CROSS JOIN model_summary",
+            "description": "Reproduces the four package headline metrics from the reviewed local manifests.",
+            "tables_used": [
+              "metadata/file_inventory.tsv",
+              "metadata/machine_readable_summary.json"
+            ]
+          }
+        },
+        "metrics": [
+          {
+            "label": "必需运行资产",
+            "field": "runtime_files"
+          },
+          {
+            "label": "运行资产总计（GB）",
+            "field": "runtime_gb"
+          },
+          {
+            "label": "公开来源文件",
+            "field": "raw_files"
+          },
+          {
+            "label": "清理坐标模型",
+            "field": "curated_models"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "runtime_size_chart",
+        "title": "MVP运行资产下载体积",
+        "subtitle": "5个nanobody-anything必需资产；按十进制GB排序，精确字节见下方清单。",
+        "type": "leaderboard",
+        "dataset": "runtime_sizes",
+        "source": {
+          "id": "runtime_size_query",
+          "label": "Verified runtime asset sizes",
+          "path": "metadata/file_inventory.tsv",
+          "query": {
+            "engine": "duckdb",
+            "sql": "SELECT asset, size_bytes / 1000000000.0 AS size_gb, size_bytes AS bytes\nFROM read_csv_auto('metadata/file_inventory.tsv', delim='\\t', header=true)\nWHERE stage='runtime'\nORDER BY size_bytes DESC",
+            "description": "Ranks the five verified runtime assets by exact downloaded bytes.",
+            "tables_used": [
+              "metadata/file_inventory.tsv"
+            ]
+          }
+        },
+        "valueFormat": "decimal",
+        "encodings": {
+          "x": {
+            "field": "asset",
+            "type": "nominal",
+            "label": "资产"
+          },
+          "y": {
+            "field": "size_gb",
+            "type": "quantitative",
+            "label": "GB"
+          }
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "asset_inventory",
+        "title": "逐文件数据资产清单",
+        "subtitle": "记录数量必须结合“记录单位”解释，不能跨checkpoint、化学字典和结构文件直接相加。",
+        "dataset": "inventory",
+        "source": {
+          "id": "inventory_query",
+          "label": "Final file inventory",
+          "path": "metadata/file_inventory.tsv",
+          "query": {
+            "engine": "duckdb",
+            "sql": "SELECT stage, asset, role, format, record_unit,\n       CAST(record_count AS BIGINT) AS record_count,\n       size_display AS size, status\nFROM read_csv_auto('metadata/file_inventory.tsv', delim='\\t', header=true)\nORDER BY CASE stage WHEN 'runtime' THEN 1 WHEN 'raw_source' THEN 2 ELSE 3 END, path",
+            "description": "Returns the reviewed runtime, raw-source and curated file inventory shown in the report.",
+            "tables_used": [
+              "metadata/file_inventory.tsv"
+            ]
+          }
+        },
+        "density": "compact",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "stage",
+            "label": "层级",
+            "type": "text"
+          },
+          {
+            "field": "asset",
+            "label": "资产",
+            "type": "text"
+          },
+          {
+            "field": "role",
+            "label": "输入/输出角色",
+            "type": "text"
+          },
+          {
+            "field": "format",
+            "label": "格式",
+            "type": "text"
+          },
+          {
+            "field": "record_unit",
+            "label": "一条数据",
+            "type": "text"
+          },
+          {
+            "field": "record_count",
+            "label": "数量"
+          },
+          {
+            "field": "size",
+            "label": "体积",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "状态",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "scope_manifest",
+        "label": "MVP scope manifest",
+        "path": "metadata/mvp_scope.json",
+        "href": "https://github.com/HannesStark/boltzgen/releases/tag/v0.3.2"
+      },
+      {
+        "id": "runtime_manifest",
+        "label": "Verified runtime manifest",
+        "path": "runtime_cache/runtime_manifest.json",
+        "href": "https://huggingface.co/boltzgen/boltzgen-1/tree/c1be29e1f82ffcc72264f64b993c43fb4e0d17f0"
+      },
+      {
+        "id": "file_inventory",
+        "label": "Final file inventory",
+        "path": "metadata/file_inventory.tsv"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "summary",
+        "type": "markdown",
+        "body": "## 技术结论\n\nMVP数据包已按 **runtime / raw / curated** 三层分离。官方远程下载共 **19个文件、6,357,565,795 B**；其中5个必需运行资产为 **6,352,944,053 B（6.353 GB）**。原始来源保留完整以便复现，但项目配置不得直接读取raw目录。\n\n最终QA为 **PASS_WITH_DECLARED_LIMITATIONS**：文件完整性与清理链路通过；C端酰胺的原子级往返、9IVG缺失坐标以及VHH示例框架的生产适用性仍是明确限制。"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "package_summary"
+        ]
+      },
+      {
+        "id": "runtime_chart",
+        "type": "chart",
+        "chartId": "runtime_size_chart"
+      },
+      {
+        "id": "runtime_exact",
+        "type": "markdown",
+        "body": "## 精确运行资产体积\n\n- `boltz2_conf_final.ckpt`：2,087,255,089 B（1.944 GiB）\n- `boltzgen1_adherence.ckpt`：1,930,858,014 B（1.798 GiB）\n- `boltzgen1_diverse.ckpt`：1,930,847,192 B（1.798 GiB）\n- `mols.zip`：391,401,102 B（373.269 MiB）\n- `boltzgen1_ifold.ckpt`：12,582,656 B（12.000 MiB）\n\n合计：**6,352,944,053 B**。`mols.zip`运行时可直接从ZIP按需读取，解压后的1.820 GB不是额外必须占用的磁盘。"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "body": "## 范围、数据与定义\n\n- **运行资产**：预训练checkpoint和完整化学组分字典；它们是推理输入，不是本项目要重新训练的数据集。\n- **原始来源**：UniProt、PubChem、RCSB和官方示例配置的不可变副本；用于溯源和清理。\n- **清理后输入**：只含项目选定GLP-1肽链、两条VHH示例链、序列/端基注册表、映射和白名单。\n- **记录数量**：必须连同记录单位阅读。一个checkpoint记录单位是张量，一个mmCIF记录单位可指模型或原子行，一个ZIP记录单位是CCD组分。\n- **输入/输出**：同一个文件可以是上一步输出、下一步输入。例如清理CIF是清理流程输出，也是推理准备输入。\n- **生产就绪状态**：当前是可审计的MVP准备包，不是可直接得出选择性结论的生产输入；尚缺正式顶层run YAML、端基原子级闭环和完整9–36构象集合。"
+      },
+      {
+        "id": "inventory",
+        "type": "table",
+        "tableId": "asset_inventory",
+        "layout": "full"
+      },
+      {
+        "id": "runtime_details",
+        "type": "html",
+        "body": "\n<style>\n  :root{color-scheme:light dark}\n  .asset-guide{font:17px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:#19324a}\n  .asset-guide *{box-sizing:border-box}\n  .asset-guide .intro{margin:0 0 14px;color:#4b6378}\n  .asset-guide details{border:1px solid #c8d8e3;border-radius:14px;margin:10px 0;background:#fff;overflow:clip}\n  .asset-guide summary{list-style:none;cursor:pointer;padding:15px 17px;display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:760;color:#123754;background:#f5f9fb}\n  .asset-guide summary::-webkit-details-marker{display:none}\n  .asset-guide summary:focus-visible{outline:3px solid #0b7f78;outline-offset:-3px}\n  .asset-guide summary::after{content:\"＋\";font-size:22px;color:#0b6e68;flex:0 0 auto}\n  .asset-guide details[open] summary::after{content:\"－\"}\n  .asset-guide .summary-text{min-width:0}\n  .asset-guide .badge{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:99px;font-size:12px;line-height:1.6;background:#dff3ef;color:#075f59;vertical-align:2px}\n  .asset-guide .badge.warn{background:#fff0d5;color:#87510a}\n  .asset-guide .badge.stop{background:#ffe5e2;color:#9b2f27}\n  .asset-guide .body{padding:15px 17px 18px}\n  .asset-guide .lead{margin:0 0 12px;font-weight:650;color:#213f59}\n  .asset-guide .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 15px}\n  .asset-guide .fact{padding:9px 11px;border-radius:10px;background:#f3f7f9;overflow-wrap:anywhere}\n  .asset-guide .fact b{display:block;font-size:12px;letter-spacing:.04em;color:#60798d;margin-bottom:2px}\n  .asset-guide h4{font-size:17px;margin:17px 0 7px;color:#153b59}\n  .asset-guide p{margin:7px 0}\n  .asset-guide ul{margin:7px 0;padding-left:23px}\n  .asset-guide li{margin:4px 0}\n  .asset-guide pre{font:14px/1.52 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto;max-height:390px;padding:13px;border-radius:10px;background:#10283b;color:#e9f3f6;border:1px solid #27475b}\n  .asset-guide code{overflow-wrap:anywhere}\n  .asset-guide .note{border-left:4px solid #12827a;background:#edf8f6;padding:10px 12px;border-radius:0 9px 9px 0}\n  .asset-guide .warning{border-left-color:#c37816;background:#fff6e7}\n  .asset-guide .blocker{border-left-color:#b33b32;background:#fff0ee}\n  .asset-guide .link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n  .asset-guide a{color:#075f8c;font-weight:650}\n  .asset-guide .mini-table{overflow:auto;margin:8px 0}\n  .asset-guide table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}\n  .asset-guide th,.asset-guide td{padding:8px 9px;border-bottom:1px solid #d9e4ea;text-align:left;vertical-align:top}\n  .asset-guide th{background:#eef5f7;color:#29485f;position:sticky;top:0}\n  @media(prefers-color-scheme:dark){\n    .asset-guide{color:#dbe8ef}.asset-guide details{background:#172a38;border-color:#385364}\n    .asset-guide summary{background:#1c3444;color:#eef7fa}.asset-guide .body{background:#172a38}\n    .asset-guide .lead,.asset-guide h4{color:#e6f2f7}.asset-guide .intro{color:#afc5d2}\n    .asset-guide .fact{background:#203948}.asset-guide .fact b{color:#a9c2d0}\n    .asset-guide .note{background:#183d3b}.asset-guide .warning{background:#4a3519}.asset-guide .blocker{background:#4d2928}\n    .asset-guide th{background:#203b4b;color:#d9eaf2}.asset-guide td,.asset-guide th{border-color:#3b5666}\n    .asset-guide a{color:#7fcfff}\n  }\n  @media(max-width:560px){.asset-guide{font-size:16px}.asset-guide summary,.asset-guide .body{padding:13px}.asset-guide .facts{grid-template-columns:1fr}.asset-guide pre{font-size:13px}}\n</style>\n<section class=\"asset-guide\"><h2>运行时模型与化学字典：点击查看样例</h2><p class=\"intro\">每个模块都给出真实本地统计、样例、shape解释、输入/输出角色和清理策略。</p>\n<details>\n  <summary><span class=\"summary-text\">设计模型：diverse<span class=\"badge \">必需运行资产</span><span class=\"badge \">已验SHA</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是预训练模型检查点：它是原训练过程的输出，也是本次MVP推理的输入；不是一张按蛋白样本排列的训练数据表。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>runtime_cache/boltzgen1_diverse.ckpt</div><div class=\"fact\"><b>文件大小</b>1,930,847,192 B｜1.798 GiB</div><div class=\"fact\"><b>参数张量</b>4,739 个</div><div class=\"fact\"><b>张量元素</b>496,498,146 个</div><div class=\"fact\"><b>状态字典位置</b>state_dict</div><div class=\"fact\"><b>安全读取</b>pinned SHA-256 + ZIP data.pkl only + restricted metadata unpickler; no module imports, no project globals executed, no tensor storage loaded</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[checkpoint 顶层字段]\n{\n  &quot;epoch&quot;: 90,\n  &quot;global_step&quot;: 71162,\n  &quot;pytorch-lightning_version&quot;: &quot;2.5.5&quot;,\n  &quot;state_dict&quot;: &quot;mapping[4739]&quot;,\n  &quot;hparams_name&quot;: &quot;kwargs&quot;,\n  &quot;hyper_parameters&quot;: &quot;mapping[85]&quot;,\n  &quot;validators&quot;: null\n}\n\n[state_dict 参数样例]\nparameter_key\tdtype\tshape\telements\nbfactor_module.bfactor.bias\tfloat32\t[64]\t64\nbfactor_module.bfactor.weight\tfloat32\t[64, 384]\t24576\ncontact_conditioning.encoder.bias\tfloat32\t[128]\t128\ncontact_conditioning.encoder.weight\tfloat32\t[128, 132]\t16896\ncontact_conditioning.encoding_unselected\tfloat32\t[128]\t128\ncontact_conditioning.encoding_unspecified\tfloat32\t[128]\t128\ncontact_conditioning.fourier_embedding.proj.bias\tfloat32\t[128]\t128\ncontact_conditioning.fourier_embedding.proj.weight\tfloat32\t[128, 1]\t128\ndiffusion_conditioning.atom_dec_proj_z.0.0.bias\tfloat32\t[16]\t16\ndiffusion_conditioning.atom_dec_proj_z.0.0.weight\tfloat32\t[16]\t16\ndiffusion_conditioning.atom_dec_proj_z.0.1.weight\tfloat32\t[4, 16]\t64\ndiffusion_conditioning.atom_dec_proj_z.1.0.bias\tfloat32\t[16]\t16</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li><b>一条记录</b>定义为一个命名参数张量，而不是一个生物样本。</li><li>向量 <code>[d]</code> 常表示每个隐藏特征一个偏置或缩放值。</li><li>线性层矩阵 <code>[O,I]</code> 通常是：行对应输出特征，列对应输入特征；但嵌入矩阵 <code>[V,H]</code> 则是行对应类别、列对应隐藏维度。</li><li>更高阶张量的轴必须结合参数名与源码解释，不能把任意二维张量说成“残基×氨基酸”。</li><li>权重数值本身没有可直接阅读的生物学标签；样例展示的是键、dtype与shape。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>BoltzGen在design、inverse folding或Boltz-2 refold阶段加载；该文件不会被项目重新训练。</p>\n    <h4>清理决定</h4>\n    <p>保留官方固定revision下的完整文件；不裁剪、不改名、不反序列化不可信来源。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 只有在文件大小与SHA-256均匹配官方锁定值后才允许加载。PyTorch 2.9的weights_only读取器不支持这些protocol-5文件；本报告没有降级到不受限torch.load，而是只读ZIP中的data.pkl，并用禁止模块导入/项目类执行的受限元数据解析器生成键与shape。</div>\n    <div class=\"link-row\"><a href=\"https://huggingface.co/boltzgen/boltzgen-1/blob/c1be29e1f82ffcc72264f64b993c43fb4e0d17f0/boltzgen1_diverse.ckpt\" target=\"_blank\" rel=\"noreferrer\">固定版本模型文件 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py#L120-L139\" target=\"_blank\" rel=\"noreferrer\">BoltzGen v0.3.2运行资产映射 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">设计模型：adherence<span class=\"badge \">必需运行资产</span><span class=\"badge \">已验SHA</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是预训练模型检查点：它是原训练过程的输出，也是本次MVP推理的输入；不是一张按蛋白样本排列的训练数据表。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>runtime_cache/boltzgen1_adherence.ckpt</div><div class=\"fact\"><b>文件大小</b>1,930,858,014 B｜1.798 GiB</div><div class=\"fact\"><b>参数张量</b>4,739 个</div><div class=\"fact\"><b>张量元素</b>496,498,146 个</div><div class=\"fact\"><b>状态字典位置</b>state_dict</div><div class=\"fact\"><b>安全读取</b>pinned SHA-256 + ZIP data.pkl only + restricted metadata unpickler; no module imports, no project globals executed, no tensor storage loaded</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[checkpoint 顶层字段]\n{\n  &quot;epoch&quot;: 103,\n  &quot;global_step&quot;: 81328,\n  &quot;pytorch-lightning_version&quot;: &quot;2.5.5&quot;,\n  &quot;state_dict&quot;: &quot;mapping[4739]&quot;,\n  &quot;hparams_name&quot;: &quot;kwargs&quot;,\n  &quot;hyper_parameters&quot;: &quot;mapping[85]&quot;,\n  &quot;validators&quot;: null\n}\n\n[state_dict 参数样例]\nparameter_key\tdtype\tshape\telements\nbfactor_module.bfactor.bias\tfloat32\t[64]\t64\nbfactor_module.bfactor.weight\tfloat32\t[64, 384]\t24576\ncontact_conditioning.encoder.bias\tfloat32\t[128]\t128\ncontact_conditioning.encoder.weight\tfloat32\t[128, 132]\t16896\ncontact_conditioning.encoding_unselected\tfloat32\t[128]\t128\ncontact_conditioning.encoding_unspecified\tfloat32\t[128]\t128\ncontact_conditioning.fourier_embedding.proj.bias\tfloat32\t[128]\t128\ncontact_conditioning.fourier_embedding.proj.weight\tfloat32\t[128, 1]\t128\ndiffusion_conditioning.atom_dec_proj_z.0.0.bias\tfloat32\t[16]\t16\ndiffusion_conditioning.atom_dec_proj_z.0.0.weight\tfloat32\t[16]\t16\ndiffusion_conditioning.atom_dec_proj_z.0.1.weight\tfloat32\t[4, 16]\t64\ndiffusion_conditioning.atom_dec_proj_z.1.0.bias\tfloat32\t[16]\t16</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li><b>一条记录</b>定义为一个命名参数张量，而不是一个生物样本。</li><li>向量 <code>[d]</code> 常表示每个隐藏特征一个偏置或缩放值。</li><li>线性层矩阵 <code>[O,I]</code> 通常是：行对应输出特征，列对应输入特征；但嵌入矩阵 <code>[V,H]</code> 则是行对应类别、列对应隐藏维度。</li><li>更高阶张量的轴必须结合参数名与源码解释，不能把任意二维张量说成“残基×氨基酸”。</li><li>权重数值本身没有可直接阅读的生物学标签；样例展示的是键、dtype与shape。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>BoltzGen在design、inverse folding或Boltz-2 refold阶段加载；该文件不会被项目重新训练。</p>\n    <h4>清理决定</h4>\n    <p>保留官方固定revision下的完整文件；不裁剪、不改名、不反序列化不可信来源。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 只有在文件大小与SHA-256均匹配官方锁定值后才允许加载。PyTorch 2.9的weights_only读取器不支持这些protocol-5文件；本报告没有降级到不受限torch.load，而是只读ZIP中的data.pkl，并用禁止模块导入/项目类执行的受限元数据解析器生成键与shape。</div>\n    <div class=\"link-row\"><a href=\"https://huggingface.co/boltzgen/boltzgen-1/blob/c1be29e1f82ffcc72264f64b993c43fb4e0d17f0/boltzgen1_adherence.ckpt\" target=\"_blank\" rel=\"noreferrer\">固定版本模型文件 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py#L120-L139\" target=\"_blank\" rel=\"noreferrer\">BoltzGen v0.3.2运行资产映射 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">逆折叠模型：ifold<span class=\"badge \">必需运行资产</span><span class=\"badge \">已验SHA</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是预训练模型检查点：它是原训练过程的输出，也是本次MVP推理的输入；不是一张按蛋白样本排列的训练数据表。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>runtime_cache/boltzgen1_ifold.ckpt</div><div class=\"fact\"><b>文件大小</b>12,582,656 B｜12.000 MiB</div><div class=\"fact\"><b>参数张量</b>357 个</div><div class=\"fact\"><b>张量元素</b>3,051,516 个</div><div class=\"fact\"><b>状态字典位置</b>state_dict</div><div class=\"fact\"><b>安全读取</b>pinned SHA-256 + ZIP data.pkl only + restricted metadata unpickler; no module imports, no project globals executed, no tensor storage loaded</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[checkpoint 顶层字段]\n{\n  &quot;epoch&quot;: 4,\n  &quot;global_step&quot;: 375000,\n  &quot;pytorch-lightning_version&quot;: &quot;2.5.5&quot;,\n  &quot;state_dict&quot;: &quot;mapping[357]&quot;,\n  &quot;hparams_name&quot;: &quot;kwargs&quot;,\n  &quot;hyper_parameters&quot;: &quot;mapping[109]&quot;,\n  &quot;validators&quot;: null\n}\n\n[state_dict 参数样例]\nparameter_key\tdtype\tshape\telements\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.adaln.s_bias.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.adaln.s_norm.weight\tfloat32\t[128]\t128\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.adaln.s_scale.bias\tfloat32\t[128]\t128\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.adaln.s_scale.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.output_projection.0.bias\tfloat32\t[128]\t128\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.output_projection.0.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.output_projection_linear.bias\tfloat32\t[128]\t128\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.output_projection_linear.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.pair_bias_attn.proj_g.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.pair_bias_attn.proj_k.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.pair_bias_attn.proj_o.weight\tfloat32\t[128, 128]\t16384\ninput_embedder.atom_attention_encoder.atom_encoder.diffusion_transformer.layers.0.pair_bias_attn.proj_q.bias\tfloat32\t[128]\t128</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li><b>一条记录</b>定义为一个命名参数张量，而不是一个生物样本。</li><li>向量 <code>[d]</code> 常表示每个隐藏特征一个偏置或缩放值。</li><li>线性层矩阵 <code>[O,I]</code> 通常是：行对应输出特征，列对应输入特征；但嵌入矩阵 <code>[V,H]</code> 则是行对应类别、列对应隐藏维度。</li><li>更高阶张量的轴必须结合参数名与源码解释，不能把任意二维张量说成“残基×氨基酸”。</li><li>权重数值本身没有可直接阅读的生物学标签；样例展示的是键、dtype与shape。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>BoltzGen在design、inverse folding或Boltz-2 refold阶段加载；该文件不会被项目重新训练。</p>\n    <h4>清理决定</h4>\n    <p>保留官方固定revision下的完整文件；不裁剪、不改名、不反序列化不可信来源。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 只有在文件大小与SHA-256均匹配官方锁定值后才允许加载。PyTorch 2.9的weights_only读取器不支持这些protocol-5文件；本报告没有降级到不受限torch.load，而是只读ZIP中的data.pkl，并用禁止模块导入/项目类执行的受限元数据解析器生成键与shape。</div>\n    <div class=\"link-row\"><a href=\"https://huggingface.co/boltzgen/boltzgen-1/blob/c1be29e1f82ffcc72264f64b993c43fb4e0d17f0/boltzgen1_ifold.ckpt\" target=\"_blank\" rel=\"noreferrer\">固定版本模型文件 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py#L120-L139\" target=\"_blank\" rel=\"noreferrer\">BoltzGen v0.3.2运行资产映射 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">复折叠／置信度模型：Boltz-2 conf<span class=\"badge \">必需运行资产</span><span class=\"badge \">已验SHA</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是预训练模型检查点：它是原训练过程的输出，也是本次MVP推理的输入；不是一张按蛋白样本排列的训练数据表。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>runtime_cache/boltz2_conf_final.ckpt</div><div class=\"fact\"><b>文件大小</b>2,087,255,089 B｜1.944 GiB</div><div class=\"fact\"><b>参数张量</b>5,102 个</div><div class=\"fact\"><b>张量元素</b>521,047,871 个</div><div class=\"fact\"><b>状态字典位置</b>state_dict</div><div class=\"fact\"><b>安全读取</b>pinned SHA-256 + ZIP data.pkl only + restricted metadata unpickler; no module imports, no project globals executed, no tensor storage loaded</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[checkpoint 顶层字段]\n{\n  &quot;epoch&quot;: 37,\n  &quot;global_step&quot;: 23750,\n  &quot;pytorch-lightning_version&quot;: &quot;2.5.5&quot;,\n  &quot;state_dict&quot;: &quot;mapping[5102]&quot;,\n  &quot;hparams_name&quot;: &quot;kwargs&quot;,\n  &quot;hyper_parameters&quot;: &quot;mapping[82]&quot;,\n  &quot;validators&quot;: null\n}\n\n[state_dict 参数样例]\nparameter_key\tdtype\tshape\telements\nbfactor_module.bfactor.bias\tfloat32\t[64]\t64\nbfactor_module.bfactor.weight\tfloat32\t[64, 384]\t24576\nconfidence_module.boundaries\tfloat32\t[63]\t63\nconfidence_module.confidence_heads.to_pae_inter_logits.weight\tfloat32\t[64, 128]\t8192\nconfidence_module.confidence_heads.to_pae_intra_logits.weight\tfloat32\t[64, 128]\t8192\nconfidence_module.confidence_heads.to_pde_inter_logits.weight\tfloat32\t[64, 128]\t8192\nconfidence_module.confidence_heads.to_pde_intra_logits.weight\tfloat32\t[64, 128]\t8192\nconfidence_module.confidence_heads.to_plddt_logits.weight\tfloat32\t[50, 384]\t19200\nconfidence_module.confidence_heads.to_resolved_logits.weight\tfloat32\t[2, 384]\t768\nconfidence_module.contact_conditioning.encoder.bias\tfloat32\t[128]\t128\nconfidence_module.contact_conditioning.encoder.weight\tfloat32\t[128, 132]\t16896\nconfidence_module.contact_conditioning.encoding_unselected\tfloat32\t[128]\t128</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li><b>一条记录</b>定义为一个命名参数张量，而不是一个生物样本。</li><li>向量 <code>[d]</code> 常表示每个隐藏特征一个偏置或缩放值。</li><li>线性层矩阵 <code>[O,I]</code> 通常是：行对应输出特征，列对应输入特征；但嵌入矩阵 <code>[V,H]</code> 则是行对应类别、列对应隐藏维度。</li><li>更高阶张量的轴必须结合参数名与源码解释，不能把任意二维张量说成“残基×氨基酸”。</li><li>权重数值本身没有可直接阅读的生物学标签；样例展示的是键、dtype与shape。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>BoltzGen在design、inverse folding或Boltz-2 refold阶段加载；该文件不会被项目重新训练。</p>\n    <h4>清理决定</h4>\n    <p>保留官方固定revision下的完整文件；不裁剪、不改名、不反序列化不可信来源。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 只有在文件大小与SHA-256均匹配官方锁定值后才允许加载。PyTorch 2.9的weights_only读取器不支持这些protocol-5文件；本报告没有降级到不受限torch.load，而是只读ZIP中的data.pkl，并用禁止模块导入/项目类执行的受限元数据解析器生成键与shape。</div>\n    <div class=\"link-row\"><a href=\"https://huggingface.co/boltzgen/boltzgen-1/blob/c1be29e1f82ffcc72264f64b993c43fb4e0d17f0/boltz2_conf_final.ckpt\" target=\"_blank\" rel=\"noreferrer\">固定版本模型文件 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py#L120-L139\" target=\"_blank\" rel=\"noreferrer\">BoltzGen v0.3.2运行资产映射 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">mols.zip：CCD／RDKit化学组分字典<span class=\"badge \">必需运行字典</span><span class=\"badge warn\">完整保留</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是BoltzGen按CCD三字母代码索引的化学字典。45,227个成员不是45,227条本项目训练样本。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>runtime_cache/mols.zip</div><div class=\"fact\"><b>ZIP大小</b>391,401,102 B｜373.269 MiB</div><div class=\"fact\"><b>成员数</b>45,227 个.pkl</div><div class=\"fact\"><b>成员解压总量</b>1,820,698,819 B｜1.696 GiB</div><div class=\"fact\"><b>目录结构</b>根目录唯一.pkl；无重复、无路径穿越</div><div class=\"fact\"><b>项目使用记录</b>used_components.tsv列出当前输入出现的20种标准组分</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>{\n  &quot;archive_members_first_12&quot;: [\n    &quot;ADQ.pkl&quot;,\n    &quot;OJB.pkl&quot;,\n    &quot;H9O.pkl&quot;,\n    &quot;8D6.pkl&quot;,\n    &quot;8GL.pkl&quot;,\n    &quot;OIY.pkl&quot;,\n    &quot;CL.pkl&quot;,\n    &quot;AGJ.pkl&quot;,\n    &quot;MRF.pkl&quot;,\n    &quot;8DW.pkl&quot;,\n    &quot;F4G.pkl&quot;,\n    &quot;6JD.pkl&quot;\n  ],\n  &quot;selected_component_summaries&quot;: [\n    {\n      &quot;member&quot;: &quot;ALA.pkl&quot;,\n      &quot;bytes&quot;: 7605,\n      &quot;object_type&quot;: &quot;rdkit.Chem.rdchem.Mol&quot;,\n      &quot;atom_count&quot;: 6,\n      &quot;bond_count&quot;: 5,\n      &quot;conformer_count&quot;: 10,\n      &quot;smiles&quot;: &quot;C[C@H](N)C(=O)O&quot;\n    },\n    {\n      &quot;member&quot;: &quot;GLY.pkl&quot;,\n      &quot;bytes&quot;: 6754,\n      &quot;object_type&quot;: &quot;rdkit.Chem.rdchem.Mol&quot;,\n      &quot;atom_count&quot;: 5,\n      &quot;bond_count&quot;: 4,\n      &quot;conformer_count&quot;: 10,\n      &quot;smiles&quot;: &quot;NCC(=O)O&quot;\n    },\n    {\n      &quot;member&quot;: &quot;HIS.pkl&quot;,\n      &quot;bytes&quot;: 11685,\n      &quot;object_type&quot;: &quot;rdkit.Chem.rdchem.Mol&quot;,\n      &quot;atom_count&quot;: 11,\n      &quot;bond_count&quot;: 11,\n      &quot;conformer_count&quot;: 10,\n      &quot;smiles&quot;: &quot;N[C@@H](Cc1c[nH]c[nH+]1)C(=O)O&quot;\n    },\n    {\n      &quot;member&quot;: &quot;ARG.pkl&quot;,\n      &quot;bytes&quot;: 12646,\n      &quot;object_type&quot;: &quot;rdkit.Chem.rdchem.Mol&quot;,\n      &quot;atom_count&quot;: 12,\n      &quot;bond_count&quot;: 11,\n      &quot;conformer_count&quot;: 10,\n      &quot;smiles&quot;: &quot;NC(=[NH2+])NCCC[C@H](N)C(=O)O&quot;\n    },\n    {\n      &quot;member&quot;: &quot;HOH.pkl&quot;,\n      &quot;bytes&quot;: 5125,\n      &quot;object_type&quot;: &quot;rdkit.Chem.rdchem.Mol&quot;,\n      &quot;atom_count&quot;: 1,\n      &quot;bond_count&quot;: 0,\n      &quot;conformer_count&quot;: 10,\n      &quot;smiles&quot;: &quot;O&quot;\n    }\n  ]\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>每个 <code>ALA.pkl</code>、<code>HIS.pkl</code> 等成员是一张RDKit分子图：原子是节点、化学键是边。</li><li>若对象含构象，坐标矩阵形状是 <code>[N,3]</code>：每行一个原子，三列依次为x、y、z。</li><li>原子对索引常见 <code>[2,E]</code>：每列是一条边的两个端点；距离上下界向量 <code>[E]</code> 与这些边逐一对齐。</li><li>手性/芳环索引的每一列是一组共同定义一个几何约束的原子编号，不能按普通特征矩阵解释。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>BoltzGen解析蛋白、肽或非标准组分时按需查表；标准流程还会预载20种标准氨基酸。</p>\n    <h4>清理决定</h4>\n    <p>整包保留并从ZIP按需读取；不解压、不从45,227项中删出一个“小字典”。另用used_components.tsv记录项目实际出现过的组分。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> Python pickle不应在HTML或未知环境中直接执行。此报告只展示在官方SHA校验后离线生成的RDKit摘要。</div>\n    <div class=\"link-row\"><a href=\"https://huggingface.co/datasets/boltzgen/inference-data/blob/c3d36fd276e9caf098c75d4113c6d5eb320b1a4c/mols.zip\" target=\"_blank\" rel=\"noreferrer\">固定revision的mols.zip ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/data/mol.py\" target=\"_blank\" rel=\"noreferrer\">官方读取代码 ↗</a></div>\n  </div>\n</details></section>"
+      },
+      {
+        "id": "raw_details",
+        "type": "html",
+        "body": "\n<style>\n  :root{color-scheme:light dark}\n  .asset-guide{font:17px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:#19324a}\n  .asset-guide *{box-sizing:border-box}\n  .asset-guide .intro{margin:0 0 14px;color:#4b6378}\n  .asset-guide details{border:1px solid #c8d8e3;border-radius:14px;margin:10px 0;background:#fff;overflow:clip}\n  .asset-guide summary{list-style:none;cursor:pointer;padding:15px 17px;display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:760;color:#123754;background:#f5f9fb}\n  .asset-guide summary::-webkit-details-marker{display:none}\n  .asset-guide summary:focus-visible{outline:3px solid #0b7f78;outline-offset:-3px}\n  .asset-guide summary::after{content:\"＋\";font-size:22px;color:#0b6e68;flex:0 0 auto}\n  .asset-guide details[open] summary::after{content:\"－\"}\n  .asset-guide .summary-text{min-width:0}\n  .asset-guide .badge{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:99px;font-size:12px;line-height:1.6;background:#dff3ef;color:#075f59;vertical-align:2px}\n  .asset-guide .badge.warn{background:#fff0d5;color:#87510a}\n  .asset-guide .badge.stop{background:#ffe5e2;color:#9b2f27}\n  .asset-guide .body{padding:15px 17px 18px}\n  .asset-guide .lead{margin:0 0 12px;font-weight:650;color:#213f59}\n  .asset-guide .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 15px}\n  .asset-guide .fact{padding:9px 11px;border-radius:10px;background:#f3f7f9;overflow-wrap:anywhere}\n  .asset-guide .fact b{display:block;font-size:12px;letter-spacing:.04em;color:#60798d;margin-bottom:2px}\n  .asset-guide h4{font-size:17px;margin:17px 0 7px;color:#153b59}\n  .asset-guide p{margin:7px 0}\n  .asset-guide ul{margin:7px 0;padding-left:23px}\n  .asset-guide li{margin:4px 0}\n  .asset-guide pre{font:14px/1.52 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto;max-height:390px;padding:13px;border-radius:10px;background:#10283b;color:#e9f3f6;border:1px solid #27475b}\n  .asset-guide code{overflow-wrap:anywhere}\n  .asset-guide .note{border-left:4px solid #12827a;background:#edf8f6;padding:10px 12px;border-radius:0 9px 9px 0}\n  .asset-guide .warning{border-left-color:#c37816;background:#fff6e7}\n  .asset-guide .blocker{border-left-color:#b33b32;background:#fff0ee}\n  .asset-guide .link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n  .asset-guide a{color:#075f8c;font-weight:650}\n  .asset-guide .mini-table{overflow:auto;margin:8px 0}\n  .asset-guide table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}\n  .asset-guide th,.asset-guide td{padding:8px 9px;border-bottom:1px solid #d9e4ea;text-align:left;vertical-align:top}\n  .asset-guide th{background:#eef5f7;color:#29485f;position:sticky;top:0}\n  @media(prefers-color-scheme:dark){\n    .asset-guide{color:#dbe8ef}.asset-guide details{background:#172a38;border-color:#385364}\n    .asset-guide summary{background:#1c3444;color:#eef7fa}.asset-guide .body{background:#172a38}\n    .asset-guide .lead,.asset-guide h4{color:#e6f2f7}.asset-guide .intro{color:#afc5d2}\n    .asset-guide .fact{background:#203948}.asset-guide .fact b{color:#a9c2d0}\n    .asset-guide .note{background:#183d3b}.asset-guide .warning{background:#4a3519}.asset-guide .blocker{background:#4d2928}\n    .asset-guide th{background:#203b4b;color:#d9eaf2}.asset-guide td,.asset-guide th{border-color:#3b5666}\n    .asset-guide a{color:#7fcfff}\n  }\n  @media(max-width:560px){.asset-guide{font-size:16px}.asset-guide summary,.asset-guide .body{padding:13px}.asset-guide .facts{grid-template-columns:1fr}.asset-guide pre{font-size:13px}}\n</style>\n<section class=\"asset-guide\"><h2>公开原始来源：点击查看样例</h2><p class=\"intro\">raw_sources保持不可变；完整复合物与180 aa前体只用于溯源，不会直接进入推理。</p>\n<details>\n  <summary><span class=\"summary-text\">UniProtKB P01275：人胰高血糖素原<span class=\"badge \">公开来源</span><span class=\"badge \">溯源输入</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">四个文件是同一个P01275条目的不同序列化，不是四个独立生物样本；P01275本身是180 aa前体，不是30 aa的GLP-1。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>文件</b>FASTA / JSON / XML / TSV，共4个</div><div class=\"fact\"><b>记录</b>每种格式1条数据库记录</div><div class=\"fact\"><b>序列</b>180 aa pro-glucagon前体</div><div class=\"fact\"><b>JSON注释</b>30个features</div><div class=\"fact\"><b>TSV</b>7列×1数据行</div><div class=\"fact\"><b>角色</b>序列、加工位点和Arg127酰胺注释的来源</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[FASTA]\n&gt;sp|P01275|GLUC_HUMAN Pro-glucagon OS=Homo sapiens OX=9606 GN=GCG PE=1 SV=3\nMKSIYFVAGLFVMLVQGSWQRSLQDTEEKSRSFSASQADPLSDPDQMNEDKRHSQGTFTS\nDYSKYLDSRRAQDFVQWLMNTKRNRNNIAKRHDEFERHAEGTFTSDVSSYLEGQAAKEFI\nAWLVKGRGRRDFPEEVAIVEELGRRHADGSFSDEMNTILDNLAARDFINWLIQTKITDRK\n\n[JSON 摘要]\n{\n  &quot;primaryAccession&quot;: &quot;P01275&quot;,\n  &quot;uniProtkbId&quot;: &quot;GLUC_HUMAN&quot;,\n  &quot;organism&quot;: {\n    &quot;scientificName&quot;: &quot;Homo sapiens&quot;,\n    &quot;commonName&quot;: &quot;Human&quot;,\n    &quot;taxonId&quot;: 9606,\n    &quot;lineage&quot;: [\n      &quot;Eukaryota&quot;,\n      &quot;Metazoa&quot;,\n      &quot;Chordata&quot;,\n      &quot;Craniata&quot;,\n      &quot;Vertebrata&quot;,\n      &quot;Euteleostomi&quot;,\n      &quot;Mammalia&quot;,\n      &quot;Eutheria&quot;,\n      &quot;Euarchontoglires&quot;,\n      &quot;Primates&quot;,\n      &quot;Haplorrhini&quot;,\n      &quot;Catarrhini&quot;,\n      &quot;Hominidae&quot;,\n      &quot;Homo&quot;\n    ]\n  },\n  &quot;sequence&quot;: {\n    &quot;value&quot;: &quot;MKSIYFVAGLFVMLVQGSWQRSLQDTEEKSRSFSASQADPLSDPDQMNEDKRHSQGTFTSDYSKYLDSRRAQDFVQWLMNTKRNRNNIAKRHDEFERHAEGTFTSDVSSYLEGQAAKEFIAWLVKGRGRRDFPEEVAIVEELGRRHADGSFSDEMNTILDNLAARDFINWLIQTKITDRK&quot;,\n    &quot;length&quot;: 180,\n    &quot;molWeight&quot;: 20909,\n    &quot;crc64&quot;: &quot;7A99EEC629B2862C&quot;,\n    &quot;md5&quot;: &quot;9A908D05335E61234613A736E703A54B&quot;\n  },\n  &quot;features&quot;: [\n    {\n      &quot;type&quot;: &quot;Signal&quot;,\n      &quot;location&quot;: {\n        &quot;start&quot;: {\n          &quot;value&quot;: 1,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        },\n        &quot;end&quot;: {\n          &quot;value&quot;: 20,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        }\n      },\n      &quot;description&quot;: &quot;&quot;\n    },\n    {\n      &quot;type&quot;: &quot;Peptide&quot;,\n      &quot;location&quot;: {\n        &quot;start&quot;: {\n          &quot;value&quot;: 21,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        },\n        &quot;end&quot;: {\n          &quot;value&quot;: 89,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        }\n      },\n      &quot;description&quot;: &quot;Glicentin&quot;,\n      &quot;evidences&quot;: [\n        {\n          &quot;evidenceCode&quot;: &quot;ECO:0000250&quot;,\n          &quot;source&quot;: &quot;UniProtKB&quot;,\n          &quot;id&quot;: &quot;P01274&quot;\n        }\n      ],\n      &quot;featureId&quot;: &quot;PRO_0000011253&quot;\n    },\n    {\n      &quot;type&quot;: &quot;Peptide&quot;,\n      &quot;location&quot;: {\n        &quot;start&quot;: {\n          &quot;value&quot;: 21,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        },\n        &quot;end&quot;: {\n          &quot;value&quot;: 50,\n          &quot;modifier&quot;: &quot;EXACT&quot;\n        }\n      },\n      &quot;description&quot;: &quot;Glicentin-related polypeptide&quot;,\n      &quot;evidences&quot;: [\n        {\n          &quot;evidenceCode&quot;: &quot;ECO:0000250&quot;,\n          &quot;source&quot;: &quot;UniProtKB&quot;,\n          &quot;id&quot;: &quot;P09686&quot;\n        }\n      ],\n      &quot;featureId&quot;: &quot;PRO_0000011254&quot;\n    }\n  ]\n}\n…（显示截断）\n\n[TSV]\nEntry\tEntry Name\tProtein names\tGene Names\tOrganism\tLength\tSequence\nP01275\tGLUC_HUMAN\tPro-glucagon [Cleaved into: Glicentin; Glicentin-related polypeptide (GRPP); Oxyntomodulin (OXM) (OXY); Glucagon; Glucagon-like peptide 1 (GLP-1) (Incretin hormone); Glucagon-like peptide 1(7-37) (GLP-1(7-37)); Glucagon-like peptide 1(7-36) (GLP-1(7-36)); Glucagon-like peptide 2 (GLP-2)]\tGCG\tHomo sapiens (Human)\t180\tMKSIYFVAGLFVMLVQGSWQRSLQDTEEKSRSFSASQADPLSDPDQMNEDKRHSQGTFTSDYSKYLDSRRAQDFVQWLMNTKRNRNNIAKRHDEFERHAEGTFTSDVSSYLEGQAAKEFIAWLVKGRGRRDFPEEVAIVEELGRRHADGSFSDEMNTILDNLAARDFINWLIQTKITDRK\n\n[XML]\n&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;  standalone=&quot;no&quot; ?&gt;\n&lt;uniprot xmlns=&quot;http://uniprot.org/uniprot&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://uniprot.org/uniprot http://www.uniprot.org/docs/uniprot.xsd&quot;&gt;\n&lt;entry dataset=&quot;Swiss-Prot&quot; created=&quot;1986-07-21&quot; modified=&quot;2026-06-10&quot; version=&quot;240&quot; xmlns=&quot;http://uniprot.org/uniprot&quot;&gt;\n  &lt;accession&gt;P01275&lt;/accession&gt;\n  &lt;accession&gt;A6NN65&lt;/accession&gt;\n  &lt;accession&gt;Q53TP6&lt;/accession&gt;\n  &lt;name&gt;GLUC_HUMAN&lt;/name&gt;\n  &lt;protein&gt;\n    &lt;recommendedName&gt;\n      &lt;fullName&gt;Pro-glucagon&lt;/fullName&gt;\n    &lt;/recommendedName&gt;\n    &lt;component&gt;\n      &lt;recommendedName&gt;\n        &lt;fullName&gt;Glicentin&lt;/fullName&gt;\n      &lt;/recommendedName&gt;\n    &lt;/component&gt;</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>FASTA第一行 <code>&gt;</code> 后是身份信息，后续字母是连续氨基酸序列；换行没有生物学边界。</li><li>JSON的 <code>features</code> 是注释对象列表，不是数值向量；<code>start/end</code> 是一基闭区间。</li><li>TSV一行代表一个数据库条目，一列代表固定属性。</li><li>XML是嵌套树；一个 <code>&lt;entry&gt;</code> 包含同一条记录的序列、注释和引用。</li><li>前体98..127对应7–36，100..127对应9–36；必须由sidecar表达末端化学，FASTA做不到。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>仅作为清理/注册表生成的来源输入；不会把180 aa整条前体直接交给nanobody-anything。</p>\n    <h4>清理决定</h4>\n    <p>原始四格式完整保留；清理目录只留下项目四种GLP-1状态的FASTA和带端基说明的JSON。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> UniProt序列字母本身不能编码C端–NH2；酰胺证据来自feature注释，必须与结构几何分开保存。</div>\n    <div class=\"link-row\"><a href=\"https://www.uniprot.org/uniprotkb/P01275/entry\" target=\"_blank\" rel=\"noreferrer\">UniProt P01275 ↗</a><a href=\"https://www.uniprot.org/help/api_queries\" target=\"_blank\" rel=\"noreferrer\">UniProt REST说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">PubChem CID 16133831：GLP-1(7–36)酰胺化学记录<span class=\"badge \">公开来源</span><span class=\"badge \">化学身份</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">SDF、JSON和XML是同一个CID的三种表示；它们提供化学连接与身份核对，不提供可直接替代蛋白三维结构的坐标。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>文件</b>SDF / JSON / XML，共3个</div><div class=\"fact\"><b>记录</b>每种格式1个化合物</div><div class=\"fact\"><b>显式原子</b>460个（含氢）</div><div class=\"fact\"><b>化学键</b>465条</div><div class=\"fact\"><b>构象</b>1个二维构象；z=0</div><div class=\"fact\"><b>角色</b>确认30 aa与C端酰胺的化学身份</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[SDF头部与原子/键片段]\n16133831\n  -OEChem-08182613532D\n\n460465  0     1  0  0  0  0  0999 V2000\n   15.8025  -10.0013    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   17.4954  -13.1847    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   12.5563  -11.5705    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   19.8561  -17.1124    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   18.1632  -13.9290    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   23.1022  -15.5433    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   10.8634   -8.3871    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   24.0807  -15.3371    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   27.6841  -15.4627    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    7.6173   -9.9562    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   29.0198  -16.9513    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   39.2866   -5.0521    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   27.9483  -11.8668    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   27.7306  -18.1080    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   39.5508   -1.4562    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   35.6833   -4.9264    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   39.8614   -0.5057    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n    5.9244   -6.7728    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   31.5516  -11.9925    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n   39.1471    2.8840    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n\n[JSON结构摘要]\n{\n  &quot;id&quot;: {\n    &quot;id&quot;: {\n      &quot;cid&quot;: 16133831\n    }\n  },\n  &quot;atoms&quot;: {\n    &quot;aid&quot;: [\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8\n    ],\n    &quot;element&quot;: [\n      8,\n      8,\n      8,\n      8,\n      8,\n      8,\n      8,\n      8\n    ]\n  },\n  &quot;bonds&quot;: {\n    &quot;aid1&quot;: [\n      1,\n      2,\n      3,\n      4,\n      5,\n      6,\n      7,\n      8\n    ],\n    &quot;aid2&quot;: [\n      94,\n      96,\n      98,\n      102,\n      110,\n      111,\n      118,\n      122\n    ],\n    &quot;order&quot;: [\n      2,\n      2,\n      2,\n      2,\n      2,\n      2,\n      2,\n      2\n    ]\n  },\n  &quot;charge&quot;: 0,\n  &quot;count&quot;: {\n    &quot;heavy_atom&quot;: 234,\n    &quot;atom_chiral&quot;: 30,\n    &quot;atom_chiral_def&quot;: 30,\n    &quot;atom_chiral_undef&quot;: 0,\n    &quot;bond_chiral&quot;: 0,\n    &quot;bond_chiral_def&quot;: 0,\n    &quot;bond_chiral_undef&quot;: 0,\n    &quot;isotope_atom&quot;: 0,\n    &quot;covalent_unit&quot;: 1,\n    &quot;tautomers&quot;: -1\n  }\n}\n…（显示截断）\n\n[XML]\n&lt;?xml version=&quot;1.0&quot;?&gt;\n&lt;PC-Compounds\n    xmlns=&quot;http://www.ncbi.nlm.nih.gov&quot;\n    xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;\n    xs:schemaLocation=&quot;http://www.ncbi.nlm.nih.gov ftp://ftp.ncbi.nlm.nih.gov/pubchem/specifications/pubchem.xsd&quot;\n&gt;\n  &lt;PC-Compound&gt;\n    &lt;PC-Compound_id&gt;\n      &lt;PC-CompoundType&gt;\n        &lt;PC-CompoundType_id&gt;\n          &lt;PC-CompoundType_id_cid&gt;16133831&lt;/PC-CompoundType_id_cid&gt;\n        &lt;/PC-CompoundType_id&gt;\n      &lt;/PC-CompoundType&gt;\n    &lt;/PC-Compound_id&gt;\n    &lt;PC-Compound_atoms&gt;\n      &lt;PC-Atoms&gt;</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>SDF计数行中的 <code>460465</code> 是两个固定宽度字段：460个原子和465条键，不是460,465。</li><li>原子块每行一个原子，前三列x/y/z；本记录是二维图，所以z为0。</li><li>键块每行一条键：两个一基原子编号加键级。</li><li>JSON中 <code>atoms.aid[i]</code> 与 <code>atoms.element[i]</code> 是并行数组的同一原子；<code>bonds.aid1[i]</code>、<code>aid2[i]</code>、<code>order[i]</code> 共同定义第i条边。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>作为化学身份参考输入；不会把二维SDF当作BoltzGen三维target结构。</p>\n    <h4>清理决定</h4>\n    <p>保留原始三格式；另生成一条只含项目相关身份字段的精简JSON，但不改写官方原始记录。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 二维连接图能证明原子连接和端基标注，却不能说明肽在溶液或受体中的三维构象。PubChem SDF第二行含动态OEChem生成时间，故完整文件SHA是下载快照SHA；去掉该时间戳行后的规范化内容哈希已独立比对一致。</div>\n    <div class=\"link-row\"><a href=\"https://pubchem.ncbi.nlm.nih.gov/compound/16133831\" target=\"_blank\" rel=\"noreferrer\">PubChem CID 16133831 ↗</a><a href=\"https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest\" target=\"_blank\" rel=\"noreferrer\">PUG REST ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">RCSB PDB 1D0R：7–36 amide溶液NMR集合<span class=\"badge \">PDBx/mmCIF</span><span class=\"badge \">原始结构</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">一个文件是一条PDB deposition；文件内部可包含多个模型、多条链、非聚合物、水以及大量原子观测。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/rcsb_structures/1D0R.cif</div><div class=\"fact\"><b>文件大小</b>834,745 B｜815.181 KiB</div><div class=\"fact\"><b>坐标模型</b>20</div><div class=\"fact\"><b>_atom_site行</b>9,160</div><div class=\"fact\"><b>label链数（含非聚合物）</b>1</div><div class=\"fact\"><b>项目用途</b>正靶几何来源</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>pdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t1\t1\tHIS\tN\tN\t-19.642\t-0.534\t5.647\n1\tA\tA\t1\t1\tHIS\tCA\tC\t-19.212\t-1.302\t4.435\n1\tA\tA\t1\t1\tHIS\tC\tC\t-20.079\t-0.784\t3.273\n1\tA\tA\t1\t1\tHIS\tO\tO\t-21.091\t-0.213\t3.614\n1\tA\tA\t1\t1\tHIS\tCB\tC\t-19.443\t-2.807\t4.690\n1\tA\tA\t1\t1\tHIS\tCG\tC\t-19.064\t-3.521\t3.414</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>mmCIF由多个命名category组成，不是一张单一矩阵；<code>loop_</code>下的字段名是列。</li><li><code>_atom_site</code>每行是某个模型中的一个原子观测。</li><li><code>label_asym_id</code>是标准化链，<code>auth_asym_id</code>是作者链；BoltzGen应使用label坐标。</li><li><code>label_seq_id</code>是一基标准残基号；<code>Cartn_x/y/z</code>是Å坐标。</li><li>抽成 <code>[N,3]</code> 坐标矩阵后：每行一个原子，三列为x/y/z；整体旋转和平移无意义，相对距离才有意义。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>原始结构是清理脚本的来源输入；完整复合物从不直接进入项目BoltzGen配置。</p>\n    <h4>清理决定</h4>\n    <p>只含GLP-1链A；清理后保留20个NMR模型。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 标题写amide，但坐标末端ARG含OXT，元素组成与真正酰胺化记录不一致，普通聚合物坐标没有把C端酰胺原子级编码。它还来自三氟乙醇/水NMR环境，20个归档模型不是生理水相概率分布；只能作为几何来源。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/1D0R\" target=\"_blank\" rel=\"noreferrer\">RCSB 1D0R ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">RCSB PDB 6X18：GLP-1–GLP-1R复合物<span class=\"badge \">PDBx/mmCIF</span><span class=\"badge \">原始结构</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">一个文件是一条PDB deposition；文件内部可包含多个模型、多条链、非聚合物、水以及大量原子观测。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/rcsb_structures/6X18.cif</div><div class=\"fact\"><b>文件大小</b>1,181,090 B｜1.126 MiB</div><div class=\"fact\"><b>坐标模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>10,381</div><div class=\"fact\"><b>label链数（含非聚合物）</b>11</div><div class=\"fact\"><b>项目用途</b>受体结合态正靶几何来源</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>pdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t11\t11\tASP\tN\tN\t65.046\t94.983\t94.063\n1\tA\tA\t11\t11\tASP\tCA\tC\t65.782\t95.156\t92.816\n1\tA\tA\t11\t11\tASP\tC\tC\t67.219\t94.661\t92.945\n1\tA\tA\t11\t11\tASP\tO\tO\t67.603\t94.097\t93.969\n1\tA\tA\t11\t11\tASP\tCB\tC\t65.776\t96.626\t92.388\n1\tA\tA\t11\t11\tASP\tCG\tC\t64.411\t97.097\t91.928</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>mmCIF由多个命名category组成，不是一张单一矩阵；<code>loop_</code>下的字段名是列。</li><li><code>_atom_site</code>每行是某个模型中的一个原子观测。</li><li><code>label_asym_id</code>是标准化链，<code>auth_asym_id</code>是作者链；BoltzGen应使用label坐标。</li><li><code>label_seq_id</code>是一基标准残基号；<code>Cartn_x/y/z</code>是Å坐标。</li><li>抽成 <code>[N,3]</code> 坐标矩阵后：每行一个原子，三列为x/y/z；整体旋转和平移无意义，相对距离才有意义。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>原始结构是清理脚本的来源输入；完整复合物从不直接进入项目BoltzGen配置。</p>\n    <h4>清理决定</h4>\n    <p>从完整复合物只抽取label链E／auth链P的30 aa肽；去掉受体、G蛋白、Nanobody35和水。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 来源实体名明确NH2，但233个重原子中没有额外的C端酰胺氮；ARG内名为NH2的原子属于精氨酸胍基侧链，不是C端酰胺。标准聚合物坐标不能证明BoltzGen看见或往返保留该端基。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/6X18\" target=\"_blank\" rel=\"noreferrer\">RCSB 6X18 ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">RCSB PDB 9IVG：9–36–GLP-1R–Gs复合物<span class=\"badge \">PDBx/mmCIF</span><span class=\"badge \">原始结构</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">一个文件是一条PDB deposition；文件内部可包含多个模型、多条链、非聚合物、水以及大量原子观测。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/rcsb_structures/9IVG.cif</div><div class=\"fact\"><b>文件大小</b>971,067 B｜948.308 KiB</div><div class=\"fact\"><b>坐标模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>9,325</div><div class=\"fact\"><b>label链数（含非聚合物）</b>6</div><div class=\"fact\"><b>项目用途</b>反靶／挑战态几何参考</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>pdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tP\t1\t9\tGLU\tN\tN\t145.578\t131.211\t170.614\n1\tA\tP\t1\t9\tGLU\tCA\tC\t144.454\t132.081\t170.935\n1\tA\tP\t1\t9\tGLU\tC\tC\t144.474\t132.492\t172.404\n1\tA\tP\t1\t9\tGLU\tO\tO\t144.503\t133.680\t172.726\n1\tA\tP\t1\t9\tGLU\tCB\tC\t143.129\t131.390\t170.604\n1\tA\tP\t1\t9\tGLU\tCG\tC\t141.902\t132.266\t170.807</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>mmCIF由多个命名category组成，不是一张单一矩阵；<code>loop_</code>下的字段名是列。</li><li><code>_atom_site</code>每行是某个模型中的一个原子观测。</li><li><code>label_asym_id</code>是标准化链，<code>auth_asym_id</code>是作者链；BoltzGen应使用label坐标。</li><li><code>label_seq_id</code>是一基标准残基号；<code>Cartn_x/y/z</code>是Å坐标。</li><li>抽成 <code>[N,3]</code> 坐标矩阵后：每行一个原子，三列为x/y/z；整体旋转和平移无意义，相对距离才有意义。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>原始结构是清理脚本的来源输入；完整复合物从不直接进入项目BoltzGen配置。</p>\n    <h4>清理决定</h4>\n    <p>从复合物只抽取label链A／auth链P；声明28 aa，但仅9..29共21个残基有坐标。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 阻断：缺失C端7个残基、条目未声明NH2，且构象受GLP-1R/Gs约束；不能当完整游离9–36NH2真值或实验阴性标签。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/9IVG\" target=\"_blank\" rel=\"noreferrer\">RCSB 9IVG ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">RCSB PDB 7EOW：caplacizumab VHH示例来源<span class=\"badge \">PDBx/mmCIF</span><span class=\"badge \">原始结构</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">一个文件是一条PDB deposition；文件内部可包含多个模型、多条链、非聚合物、水以及大量原子观测。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/rcsb_structures/7EOW.cif</div><div class=\"fact\"><b>文件大小</b>647,713 B｜632.532 KiB</div><div class=\"fact\"><b>坐标模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>2,980</div><div class=\"fact\"><b>label链数（含非聚合物）</b>4</div><div class=\"fact\"><b>项目用途</b>纳米抗体scaffold冒烟测试来源</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>pdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t27\t27\tSER\tN\tN\t-19.67826\t53.50169\t66.93357\n1\tA\tA\t27\t27\tSER\tCA\tC\t-18.67784\t54.02814\t66.01160\n1\tA\tA\t27\t27\tSER\tC\tC\t-18.02127\t55.29022\t66.55919\n1\tA\tA\t27\t27\tSER\tO\tO\t-18.66165\t56.08748\t67.24431\n1\tA\tA\t27\t27\tSER\tCB\tC\t-19.30720\t54.31768\t64.64871\n1\tA\tA\t27\t27\tSER\tOG\tO\t-19.34175\t53.14801\t63.85252</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>mmCIF由多个命名category组成，不是一张单一矩阵；<code>loop_</code>下的字段名是列。</li><li><code>_atom_site</code>每行是某个模型中的一个原子观测。</li><li><code>label_asym_id</code>是标准化链，<code>auth_asym_id</code>是作者链；BoltzGen应使用label坐标。</li><li><code>label_seq_id</code>是一基标准残基号；<code>Cartn_x/y/z</code>是Å坐标。</li><li>抽成 <code>[N,3]</code> 坐标矩阵后：每行一个原子，三列为x/y/z；整体旋转和平移无意义，相对距离才有意义。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>原始结构是清理脚本的来源输入；完整复合物从不直接进入项目BoltzGen配置。</p>\n    <h4>清理决定</h4>\n    <p>只保留VHH链B的128个有坐标残基；去抗原和水。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 官方示例不等于筛选、验证或推荐的生产VHH框架；清理文件状态为provisional_example。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/7EOW\" target=\"_blank\" rel=\"noreferrer\">RCSB 7EOW ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">RCSB PDB 7XL0：vobarilizumab VHH示例来源<span class=\"badge \">PDBx/mmCIF</span><span class=\"badge \">原始结构</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">一个文件是一条PDB deposition；文件内部可包含多个模型、多条链、非聚合物、水以及大量原子观测。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/rcsb_structures/7XL0.cif</div><div class=\"fact\"><b>文件大小</b>451,294 B｜440.717 KiB</div><div class=\"fact\"><b>坐标模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>2,065</div><div class=\"fact\"><b>label链数（含非聚合物）</b>7</div><div class=\"fact\"><b>项目用途</b>纳米抗体scaffold冒烟测试来源</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>pdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t1\t1\tGLU\tN\tN\t17.266\t-18.781\t20.355\n1\tA\tA\t1\t1\tGLU\tCA\tC\t17.654\t-18.660\t18.920\n1\tA\tA\t1\t1\tGLU\tC\tC\t16.452\t-19.033\t18.042\n1\tA\tA\t1\t1\tGLU\tO\tO\t15.576\t-19.810\t18.490\n1\tA\tA\t1\t1\tGLU\tCB\tC\t18.892\t-19.516\t18.626\n1\tA\tA\t1\t1\tGLU\tCG\tC\t19.243\t-19.647\t17.149</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>mmCIF由多个命名category组成，不是一张单一矩阵；<code>loop_</code>下的字段名是列。</li><li><code>_atom_site</code>每行是某个模型中的一个原子观测。</li><li><code>label_asym_id</code>是标准化链，<code>auth_asym_id</code>是作者链；BoltzGen应使用label坐标。</li><li><code>label_seq_id</code>是一基标准残基号；<code>Cartn_x/y/z</code>是Å坐标。</li><li>抽成 <code>[N,3]</code> 坐标矩阵后：每行一个原子，三列为x/y/z；整体旋转和平移无意义，相对距离才有意义。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>原始结构是清理脚本的来源输入；完整复合物从不直接进入项目BoltzGen配置。</p>\n    <h4>清理决定</h4>\n    <p>只保留VHH链A的121个有坐标残基；去第二晶体拷贝、硫酸根、甘油和水。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 官方示例不等于生产scaffold库；清理文件状态为provisional_example。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/7XL0\" target=\"_blank\" rel=\"noreferrer\">RCSB 7XL0 ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">BoltzGen v0.3.2 7EOW scaffold YAML示例<span class=\"badge warn\">官方仓库示例</span><span class=\"badge \">配置文件</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是一条scaffold配方，不是模型训练数据，也不是官方验证过的生产框架库。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/boltzgen_examples/7eow.yaml</div><div class=\"fact\"><b>文件大小</b>1,052 B</div><div class=\"fact\"><b>记录</b>1个YAML配置树</div><div class=\"fact\"><b>顶层字段</b>path, include, design, structure_groups, exclude, design_insertions, reset_res_index</div><div class=\"fact\"><b>配对结构</b>7eow.cif</div><div class=\"fact\"><b>状态</b>provisional_example / smoke_test_only</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code># caplacizumab\npath: 7eow.cif\ninclude: \n  - chain: \n      id: B\n\ndesign:\n  - chain:\n      id: B\n      res_index: 26..34,52..59,98..118\n\nstructure_groups:\n  - group:\n      id: B\n      visibility: 2\n  - group:\n      id: B\n      visibility: 0\n      res_index: 26..34,52..59,98..118\n\nexclude: \n  - chain:\n      id: B\n      res_index: 26..28 # take out 3\n  - chain:\n      id: B\n      res_index: 52..54 # take out 3\n  - chain:\n      id: B\n      res_index: 98..104 # take out seven\n\ndesign_insertions:\n  - insertion:\n      id: B\n      res_index: 26 # The res_index&#x27;th residue will be a designed one (starting to count from 1)\n      num_residues: 1..5\n  - insertion:\n      id: B\n      res_index: 52 # The res_index&#x27;th residue will be a designed one (starting to count from 1)\n      num_residues: 1..5</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>YAML是键值和列表组成的配置树，不是矩阵。</li><li><code>path</code>指向配对CIF；<code>include</code>选链；<code>design</code>定义允许设计的CDR区。</li><li><code>exclude</code>先删模板残基，<code>design_insertions</code>规定插入长度范围。</li><li>残基编号一基，并按mmCIF的label坐标解释；路径相对YAML所在目录。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>与清理后的VHH CIF配对，可作为nanobody-anything的冒烟测试输入。</p>\n    <h4>清理决定</h4>\n    <p>原始YAML保留作溯源；清理目录复制同一规则并把相对路径对准清理后的同名CIF。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 不能仅因文件位于官方example目录就称为VHH数据库或项目批准scaffold。</div>\n    <div class=\"link-row\"><a href=\"https://github.com/HannesStark/boltzgen/tree/v0.3.2/example/nanobody_scaffolds\" target=\"_blank\" rel=\"noreferrer\">v0.3.2 nanobody_scaffolds示例目录 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/nanobody_scaffolds/7eow.yaml\" target=\"_blank\" rel=\"noreferrer\">7eow YAML ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">BoltzGen v0.3.2 7XL0 scaffold YAML示例<span class=\"badge warn\">官方仓库示例</span><span class=\"badge \">配置文件</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是一条scaffold配方，不是模型训练数据，也不是官方验证过的生产框架库。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>raw_sources/boltzgen_examples/7xl0.yaml</div><div class=\"fact\"><b>文件大小</b>1,052 B</div><div class=\"fact\"><b>记录</b>1个YAML配置树</div><div class=\"fact\"><b>顶层字段</b>path, include, design, structure_groups, exclude, design_insertions, reset_res_index</div><div class=\"fact\"><b>配对结构</b>7xl0.cif</div><div class=\"fact\"><b>状态</b>provisional_example / smoke_test_only</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code># Vobarilizumab\npath: 7xl0.cif\ninclude: \n  - chain: \n      id: A\ndesign:\n  - chain:\n      id: A\n      res_index: 26..33,51..57,97..110\n\nstructure_groups:\n  - group:\n      id: A\n      visibility: 2\n  - group:\n      id: A\n      visibility: 0\n      res_index: 26..33,51..57,97..110\n\n\nexclude: \n  - chain:\n      id: A\n      res_index: 26..28 # take out 3\n  - chain:\n      id: A\n      res_index: 51..53 # take out 3\n  - chain:\n      id: A\n      res_index: 97..102 # take out 6\n\ndesign_insertions:\n  - insertion:\n      id: A\n      res_index: 26 # The res_index&#x27;th residue will be a designed one (starting to count from 1)\n      num_residues: 1..5\n  - insertion:\n      id: A\n      res_index: 51 # The res_index&#x27;th residue will be a designed one (starting to count from 1)\n      num_residues: 1..5</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>YAML是键值和列表组成的配置树，不是矩阵。</li><li><code>path</code>指向配对CIF；<code>include</code>选链；<code>design</code>定义允许设计的CDR区。</li><li><code>exclude</code>先删模板残基，<code>design_insertions</code>规定插入长度范围。</li><li>残基编号一基，并按mmCIF的label坐标解释；路径相对YAML所在目录。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>与清理后的VHH CIF配对，可作为nanobody-anything的冒烟测试输入。</p>\n    <h4>清理决定</h4>\n    <p>原始YAML保留作溯源；清理目录复制同一规则并把相对路径对准清理后的同名CIF。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 不能仅因文件位于官方example目录就称为VHH数据库或项目批准scaffold。</div>\n    <div class=\"link-row\"><a href=\"https://github.com/HannesStark/boltzgen/tree/v0.3.2/example/nanobody_scaffolds\" target=\"_blank\" rel=\"noreferrer\">v0.3.2 nanobody_scaffolds示例目录 ↗</a><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/nanobody_scaffolds/7xl0.yaml\" target=\"_blank\" rel=\"noreferrer\">7xl0 YAML ↗</a></div>\n  </div>\n</details></section>"
+      },
+      {
+        "id": "curated_details",
+        "type": "html",
+        "body": "\n<style>\n  :root{color-scheme:light dark}\n  .asset-guide{font:17px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:#19324a}\n  .asset-guide *{box-sizing:border-box}\n  .asset-guide .intro{margin:0 0 14px;color:#4b6378}\n  .asset-guide details{border:1px solid #c8d8e3;border-radius:14px;margin:10px 0;background:#fff;overflow:clip}\n  .asset-guide summary{list-style:none;cursor:pointer;padding:15px 17px;display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:760;color:#123754;background:#f5f9fb}\n  .asset-guide summary::-webkit-details-marker{display:none}\n  .asset-guide summary:focus-visible{outline:3px solid #0b7f78;outline-offset:-3px}\n  .asset-guide summary::after{content:\"＋\";font-size:22px;color:#0b6e68;flex:0 0 auto}\n  .asset-guide details[open] summary::after{content:\"－\"}\n  .asset-guide .summary-text{min-width:0}\n  .asset-guide .badge{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:99px;font-size:12px;line-height:1.6;background:#dff3ef;color:#075f59;vertical-align:2px}\n  .asset-guide .badge.warn{background:#fff0d5;color:#87510a}\n  .asset-guide .badge.stop{background:#ffe5e2;color:#9b2f27}\n  .asset-guide .body{padding:15px 17px 18px}\n  .asset-guide .lead{margin:0 0 12px;font-weight:650;color:#213f59}\n  .asset-guide .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 15px}\n  .asset-guide .fact{padding:9px 11px;border-radius:10px;background:#f3f7f9;overflow-wrap:anywhere}\n  .asset-guide .fact b{display:block;font-size:12px;letter-spacing:.04em;color:#60798d;margin-bottom:2px}\n  .asset-guide h4{font-size:17px;margin:17px 0 7px;color:#153b59}\n  .asset-guide p{margin:7px 0}\n  .asset-guide ul{margin:7px 0;padding-left:23px}\n  .asset-guide li{margin:4px 0}\n  .asset-guide pre{font:14px/1.52 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto;max-height:390px;padding:13px;border-radius:10px;background:#10283b;color:#e9f3f6;border:1px solid #27475b}\n  .asset-guide code{overflow-wrap:anywhere}\n  .asset-guide .note{border-left:4px solid #12827a;background:#edf8f6;padding:10px 12px;border-radius:0 9px 9px 0}\n  .asset-guide .warning{border-left-color:#c37816;background:#fff6e7}\n  .asset-guide .blocker{border-left-color:#b33b32;background:#fff0ee}\n  .asset-guide .link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n  .asset-guide a{color:#075f8c;font-weight:650}\n  .asset-guide .mini-table{overflow:auto;margin:8px 0}\n  .asset-guide table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}\n  .asset-guide th,.asset-guide td{padding:8px 9px;border-bottom:1px solid #d9e4ea;text-align:left;vertical-align:top}\n  .asset-guide th{background:#eef5f7;color:#29485f;position:sticky;top:0}\n  @media(prefers-color-scheme:dark){\n    .asset-guide{color:#dbe8ef}.asset-guide details{background:#172a38;border-color:#385364}\n    .asset-guide summary{background:#1c3444;color:#eef7fa}.asset-guide .body{background:#172a38}\n    .asset-guide .lead,.asset-guide h4{color:#e6f2f7}.asset-guide .intro{color:#afc5d2}\n    .asset-guide .fact{background:#203948}.asset-guide .fact b{color:#a9c2d0}\n    .asset-guide .note{background:#183d3b}.asset-guide .warning{background:#4a3519}.asset-guide .blocker{background:#4d2928}\n    .asset-guide th{background:#203b4b;color:#d9eaf2}.asset-guide td,.asset-guide th{border-color:#3b5666}\n    .asset-guide a{color:#7fcfff}\n  }\n  @media(max-width:560px){.asset-guide{font-size:16px}.asset-guide summary,.asset-guide .body{padding:13px}.asset-guide .facts{grid-template-columns:1fr}.asset-guide pre{font-size:13px}}\n</style>\n<section class=\"asset-guide\"><h2>项目清理数据：点击查看样例</h2><p class=\"intro\">curated_project_inputs只保留项目相关内容；每个结构都配有残基映射和清理记录。</p>\n<details>\n  <summary><span class=\"summary-text\">GLP1_project_variants：四种项目化学／序列状态<span class=\"badge \">清理后注册表</span><span class=\"badge \">4条</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">FASTA保存残基字母；JSON sidecar保存长度、前体坐标、N/C端说明与项目角色，两者必须成对读取。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>FASTA路径</b>curated_project_inputs/sequence_chemistry/GLP1_project_variants.fasta</div><div class=\"fact\"><b>JSON路径</b>curated_project_inputs/sequence_chemistry/GLP1_project_variants.json</div><div class=\"fact\"><b>记录</b>4个状态：7–36NH2、9–36、7–37、9–37</div><div class=\"fact\"><b>正靶</b>GLP1_7-36_NH2</div><div class=\"fact\"><b>反靶/挑战</b>9–36以及7–37、9–37</div><div class=\"fact\"><b>来源</b>UniProt P01275 + PubChem CID16133831</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>{\n  &quot;source_accession&quot;: &quot;UniProtKB P01275&quot;,\n  &quot;coordinate_system&quot;: &quot;UniProt positions are 1-based and inclusive&quot;,\n  &quot;variants&quot;: [\n    {\n      &quot;id&quot;: &quot;GLP1_7-36_NH2&quot;,\n      &quot;sequence&quot;: &quot;HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR&quot;,\n      &quot;length_residues&quot;: 30,\n      &quot;precursor_coordinates_1_based&quot;: &quot;P01275:98..127&quot;,\n      &quot;n_terminus&quot;: &quot;free amino terminus at His7&quot;,\n      &quot;c_terminus&quot;: &quot;Arg36 amide (NH2)&quot;,\n      &quot;evidence&quot;: [\n        &quot;UniProt P01275 peptide feature 98..127&quot;,\n        &quot;UniProt P01275 modified-residue feature: Arg127 amide&quot;,\n        &quot;PubChem CID 16133831 chemical record&quot;\n      ],\n      &quot;project_role&quot;: &quot;positive target&quot;\n    },\n    {\n      &quot;id&quot;: &quot;GLP1_9-36_terminal_state_not_asserted_by_9IVG&quot;,\n      &quot;sequence&quot;: &quot;EGTFTSDVSSYLEGQAAKEFIAWLVKGR&quot;,\n      &quot;length_residues&quot;: 28,\n      &quot;derivation&quot;: &quot;sequence-only deletion of His7-Ala8 from GLP1_7-36&quot;,\n      &quot;n_terminus&quot;: &quot;free amino terminus at Glu9&quot;,\n      &quot;c_terminus&quot;: &quot;project chemistry must be specified separately; 9IVG does not verify NH2&quot;,\n      &quot;project_role&quot;: &quot;selectivity anti-target/challenge state&quot;\n    },\n    {\n      &quot;id&quot;: &quot;GLP1_7-37&quot;,\n      &quot;sequence&quot;: &quot;HAEGTFTSDVSSYLEGQAAKEFIAWLVKGRG&quot;,\n      &quot;length_residues&quot;: 31,\n      &quot;precursor_coordinates_1_based&quot;: &quot;P01275:98..128&quot;,\n      &quot;c_terminus&quot;: &quot;Gly37 carboxyl terminus unless a separate modification is supplied&quot;,\n      &quot;project_role&quot;: &quot;challenge state&quot;\n    },\n    {\n      &quot;id&quot;: &quot;GLP1_9-37&quot;,\n      &quot;sequence&quot;: &quot;EGTFTSDVSSYLEGQAAKEFIAWLVKGRG&quot;,\n      &quot;length_residues&quot;: 29,\n      &quot;derivation&quot;: &quot;sequence-only deletion of His7-Ala8 from GLP1_7-37&quot;,\n      &quot;c_terminus&quot;: &quot;Gly37 carboxyl terminus unless a separate modification is supplied&quot;,\n      &quot;project_role&quot;: &quot;challenge state&quot;\n    }\n  ]\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>JSON顶层 <code>variants</code> 是对象列表；每个对象是一种明确的序列/端基状态，不是数值向量。</li><li><code>sequence</code>由单字母氨基酸组成；<code>length_residues</code>必须等于字母数。</li><li><code>precursor_coordinates_1_based</code>使用UniProt前体的一基闭区间。</li><li>FASTA不能编码–NH2，所以不得把FASTA名称当作原子级端基已验证的证据。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>这是靶状态准备与多状态评估的输入；会被转换成每个构象一个结构/配置任务。</p>\n    <h4>清理决定</h4>\n    <p>只保留当前项目四种GLP-1状态，未把P01275中的胰高血糖素、OXM、GLP-2等其他产物混入项目注册表。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 9–36的项目端基需另行定义；9IVG本身不验证NH2。注册表不会把推导状态伪装成直接实验结构证据。</div>\n    <div class=\"link-row\"><a href=\"https://www.uniprot.org/uniprotkb/P01275/entry\" target=\"_blank\" rel=\"noreferrer\">UniProt P01275 ↗</a><a href=\"https://pubchem.ncbi.nlm.nih.gov/compound/16133831\" target=\"_blank\" rel=\"noreferrer\">PubChem CID16133831 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">PubChem_CID16133831_project_record：精简化学身份<span class=\"badge \">清理后参考</span><span class=\"badge \">1条</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从官方PubChem JSON中过滤出的项目相关字段，便于人工核对；官方原始JSON仍完整保留。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/sequence_chemistry/PubChem_CID16133831_project_record.json</div><div class=\"fact\"><b>文件大小</b>2,807 B</div><div class=\"fact\"><b>记录</b>1个过滤后的化合物对象</div><div class=\"fact\"><b>角色</b>化学身份与端基参考</div><div class=\"fact\"><b>直接模型输入</b>否</div><div class=\"fact\"><b>官方原始记录</b>raw_sources/pubchem_CID16133831/CID16133831.json</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>{\n  &quot;cid&quot;: 16133831,\n  &quot;molecular_formula&quot;: &quot;C149H226N40O45&quot;,\n  &quot;molecular_weight&quot;: &quot;3297.6&quot;,\n  &quot;exact_mass&quot;: &quot;3296.6659301&quot;,\n  &quot;standard_inchi&quot;: &quot;InChI=1S/C149H226N40O45/c1-17-76(10)119(146(232)167-80(14)126(212)175-104(60-86-63-159-91-36-25-24-35-89(86)91)136(222)177-100(56-73(4)5)137(223)186-117(74(6)7)144(230)174-93(37-26-28-52-150)128(214)160-65-110(197)168-92(122(154)208)39-30-54-158-149(155)156)188-138(224)102(57-83-31-20-18-21-32-83)178-133(219)98(47-51-115(204)205)173-132(218)94(38-27-29-53-151)170-124(210)78(12)164-123(209)77(11)166-131(217)97(44-48-109(153)196)169-111(198)66-161-130(216)96(46-50-114(202)203)172-134(220)99(55-72(2)3)176-135(221)101(59-85-40-42-88(195)43-41-85)179-141(227)106(68-190)182-143(229)108(70-192)183-145(231)118(75(8)9)187-140(226)105(62-116(206)207)180-142(228)107(69-191)184-148(234)121(82(16)194)189-139(225)103(58-84-33-22-19-23-34-84)181-147(233)120(81(15)193)185-112(199)67-162-129(215)95(45-49-113(200)201)171-125(211)79(13)165-127(213)90(152)61-87-64-157-71-163-87/h18-25,31-36,40-43,63-64,71-82,90,92-108,117-121,159,190-195H,17,26-30,37-39,44-62,65-70,150-152H2,1-16H3,(H2,153,196)(H2,154,208)(H,157,163)(H,160,214)(H,161,216)(H,162,215)(H,164,209)(H,165,213)(H,166,217)(H,167,232)(H,168,197)(H,169,198)(H,170,210)(H,171,211)(H,172,220)(H,173,218)(H,174,230)(H,175,212)(H,176,221)(H,177,222)(H,178,219)(H,179,227)(H,180,228)(H,181,233)(H,182,229)(H,183,231)(H,184,234)(H,185,199)(H,186,223)(H,187,226)(H,188,224)(H,189,225)(H,200,201)(H,202,203)(H,204,205)(H,206,207)(H4,155,156,158)/t76-,77-,78-,79-,80-,81+,82+,90-,92-,93-,94-,95-,96-,97-,98-,99-,100-,101-,102-,103-,104-,105-,106-,107-,108-,117-,118-,119-,120-,121-/m0/s1&quot;,\n  &quot;standard_inchikey&quot;: &quot;DTHNMHAUYICORS-KTKZVXAJSA-N&quot;,\n  &quot;isomeric_smiles&quot;: &quot;CC[C@H](C)[C@@H](C(=O)N[C@@H](C)C(=O)N[C@@H](CC1=CNC2=CC=CC=C21)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CCCCN)C(=O)NCC(=O)N[C@@H](CCCNC(=N)N)C(=O)N)NC(=O)[C@H](CC3=CC=CC=C3)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCCCN)NC(=O)[C@H](C)NC(=O)[C@H](C)NC(=O)[C@H](CCC(=O)N)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CC4=CC=C(C=C4)O)NC(=O)[C@H](CO)NC(=O)[C@H](CO)NC(=O)[C@H](C(C)C)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC5=CC=CC=C5)NC(=O)[C@H]([C@@H](C)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](C)NC(=O)[C@H](CC6=CNC=N6)N&quot;,\n  &quot;atom_count&quot;: 460,\n  &quot;bond_count&quot;: 465,\n  &quot;coordinate_conformer_count&quot;: 1,\n  &quot;formal_charge&quot;: 0,\n  &quot;source&quot;: &quot;PubChem PUG REST&quot;,\n  &quot;source_url&quot;: &quot;https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/16133831/JSON&quot;,\n  &quot;project_interpretation&quot;: &quot;Chemical identity record for GLP-1(7-36) amide. Use it to verify terminal chemistry and composition; do not feed the full 460-atom graph to the nanobody-anything protein target input unless the protocol explicitly requires it.&quot;\n}\n…（如有更多字段则显示截断）</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><p>对象的每个键是一项身份或属性；它不是特征向量，也没有可用于训练的行×列样本结构。</p></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>供靶状态注册与人工QC读取；不直接传给BoltzGen。</p>\n    <h4>清理决定</h4>\n    <p>只复制项目所需身份字段；没有删除或覆盖raw目录中的官方记录。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 精简JSON是派生物，权威来源仍是固定CID的官方原始记录与SHA。</div>\n    <div class=\"link-row\"><a href=\"https://pubchem.ncbi.nlm.nih.gov/compound/16133831\" target=\"_blank\" rel=\"noreferrer\">PubChem CID16133831 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">GLP1_7-36NH2_1D0R_all_models<span class=\"badge \">清理后正靶几何</span><span class=\"badge warn\">端基待验证</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从RCSB原始结构提取出的单链项目资产；项目角色：positive-target solution NMR conformational ensemble。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/glp1_1D0R_all_models/1D0R_glp1_7-36NH2_all20models.cif</div><div class=\"fact\"><b>文件大小</b>291,590 B｜284.756 KiB</div><div class=\"fact\"><b>模型</b>20</div><div class=\"fact\"><b>_atom_site行</b>4,680</div><div class=\"fact\"><b>声明/观察残基</b>30 / 30</div><div class=\"fact\"><b>状态</b>project_input_geometry_with_chemistry_caveat</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[_atom_site坐标片段]\npdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t1\t1\tHIS\tN\tN\t-19.642\t-0.534\t5.647\n1\tA\tA\t1\t1\tHIS\tCA\tC\t-19.212\t-1.302\t4.435\n1\tA\tA\t1\t1\tHIS\tC\tC\t-20.079\t-0.784\t3.273\n1\tA\tA\t1\t1\tHIS\tO\tO\t-21.091\t-0.213\t3.614\n1\tA\tA\t1\t1\tHIS\tCB\tC\t-19.443\t-2.807\t4.69\n1\tA\tA\t1\t1\tHIS\tCG\tC\t-19.064\t-3.521\t3.414\n\n[residue_mapping.tsv片段]\nmodel_number\tcurated_order_index\tcurated_label_seq_id\tresidue_name_3\tresidue_name_1\toriginal_pdb_id\toriginal_label_asym_id\toriginal_auth_asym_id\toriginal_label_seq_id\toriginal_auth_seq_id\toriginal_insertion_code\tkept_atom_count\n1\t1\t1\tHIS\tH\t1D0R\tA\tA\t1\t1\t\t10\n1\t2\t2\tALA\tA\t1D0R\tA\tA\t2\t2\t\t5\n1\t3\t3\tGLU\tE\t1D0R\tA\tA\t3\t3\t\t9\n1\t4\t4\tGLY\tG\t1D0R\tA\tA\t4\t4\t\t4\n1\t5\t5\tTHR\tT\t1D0R\tA\tA\t5\t5\t\t7\n1\t6\t6\tPHE\tF\t1D0R\tA\tA\t6\t6\t\t11\n\n[curation.json核心字段]\n{\n  &quot;artifact_id&quot;: &quot;GLP1_7-36NH2_1D0R_all_models&quot;,\n  &quot;status&quot;: &quot;project_input_geometry_with_chemistry_caveat&quot;,\n  &quot;project_role&quot;: &quot;positive-target solution NMR conformational ensemble&quot;,\n  &quot;source_chain_mapping&quot;: {\n    &quot;label_asym_id&quot;: &quot;A&quot;,\n    &quot;auth_asym_id&quot;: &quot;A&quot;\n  },\n  &quot;raw_declared_sequence_length&quot;: 30,\n  &quot;observed_coordinate_sequence_length&quot;: 30,\n  &quot;unresolved_declared_positions&quot;: [],\n  &quot;atom_count_semantics&quot;: &quot;number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation&quot;,\n  &quot;terminal_chemistry&quot;: {\n    &quot;source_annotation&quot;: &quot;entity description calls the peptide 7-36-amide&quot;,\n    &quot;coordinate_observation&quot;: &quot;C-terminal Arg includes OXT in the deposited coordinates; amidation is therefore not faithfully encoded as an atom-level terminal modification&quot;,\n    &quot;usage&quot;: &quot;use UniProt/PubChem for chemical identity; use 1D0R for geometry&quot;\n  },\n  &quot;paired_yaml&quot;: null,\n  &quot;excluded_content&quot;: &quot;none; the source already contains only the GLP-1 chain&quot;\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>坐标表每行仍是一个清理后重原子；<code>Cartn_x/y/z</code>三列单位为Å。</li><li>原始<code>_atom_site</code>行数不一定等于运行时原子数：1D0R原始每模型458行含224个H，清理后是234个重原子；7XL0原始链A的942行含27对altloc，清理后是915个单构象原子。</li><li>残基映射TSV每行是“一个模型中的一个保留残基”，不是一个原子；它把清理顺序、label/auth编号和保留原子数连起来。</li><li>多个NMR模型是同一分子的多个构象，不是多个不同序列样本。</li><li><code>curation.json</code>是一条转换记录，声明删除内容、观察缺口、端基限制与哈希。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>清理CIF是几何输入；mapping和curation JSON是该输入的审计输出，并在运行前用于自动QC。</p>\n    <h4>清理决定</h4>\n    <p>none; the source already contains only the GLP-1 chain；只保留GLP-1肽链，完整记录源链、重编号与每个残基的原始索引。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 可用于几何MVP，但C端酰胺尚未完成BoltzGen解析→生成→复折叠输出的原子/键闭环验证。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/1D0R\" target=\"_blank\" rel=\"noreferrer\">RCSB 1D0R ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">GLP1_7-36NH2_6X18_peptide_only<span class=\"badge \">清理后正靶几何</span><span class=\"badge warn\">端基待验证</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从RCSB原始结构提取出的单链项目资产；项目角色：receptor-bound positive-target geometry。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/glp1_complex_peptides/6X18_glp1_7-36NH2_labelE_authP.cif</div><div class=\"fact\"><b>文件大小</b>17,614 B｜17.201 KiB</div><div class=\"fact\"><b>模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>233</div><div class=\"fact\"><b>声明/观察残基</b>30 / 30</div><div class=\"fact\"><b>状态</b>project_input_geometry_with_chemistry_caveat</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[_atom_site坐标片段]\npdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tE\tP\t1\t7\tHIS\tN\tN\t109.481\t134.095\t114.777\n1\tE\tP\t1\t7\tHIS\tCA\tC\t110.174\t133.226\t113.789\n1\tE\tP\t1\t7\tHIS\tC\tC\t110.934\t134.085\t112.772\n1\tE\tP\t1\t7\tHIS\tO\tO\t110.631\t135.29\t112.664\n1\tE\tP\t1\t7\tHIS\tCB\tC\t109.178\t132.281\t113.107\n1\tE\tP\t1\t7\tHIS\tCG\tC\t108.024\t132.984\t112.477\n\n[residue_mapping.tsv片段]\nmodel_number\tcurated_order_index\tcurated_label_seq_id\tresidue_name_3\tresidue_name_1\toriginal_pdb_id\toriginal_label_asym_id\toriginal_auth_asym_id\toriginal_label_seq_id\toriginal_auth_seq_id\toriginal_insertion_code\tkept_atom_count\n1\t1\t1\tHIS\tH\t6X18\tE\tP\t1\t7\t\t10\n1\t2\t2\tALA\tA\t6X18\tE\tP\t2\t8\t\t5\n1\t3\t3\tGLU\tE\t6X18\tE\tP\t3\t9\t\t9\n1\t4\t4\tGLY\tG\t6X18\tE\tP\t4\t10\t\t4\n1\t5\t5\tTHR\tT\t6X18\tE\tP\t5\t11\t\t7\n1\t6\t6\tPHE\tF\t6X18\tE\tP\t6\t12\t\t11\n\n[curation.json核心字段]\n{\n  &quot;artifact_id&quot;: &quot;GLP1_7-36NH2_6X18_peptide_only&quot;,\n  &quot;status&quot;: &quot;project_input_geometry_with_chemistry_caveat&quot;,\n  &quot;project_role&quot;: &quot;receptor-bound positive-target geometry&quot;,\n  &quot;source_chain_mapping&quot;: {\n    &quot;label_asym_id&quot;: &quot;E&quot;,\n    &quot;auth_asym_id&quot;: &quot;P&quot;\n  },\n  &quot;raw_declared_sequence_length&quot;: 30,\n  &quot;observed_coordinate_sequence_length&quot;: 30,\n  &quot;unresolved_declared_positions&quot;: [],\n  &quot;atom_count_semantics&quot;: &quot;number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation&quot;,\n  &quot;terminal_chemistry&quot;: {\n    &quot;source_annotation&quot;: &quot;entity description explicitly states GLP-1(7-36)NH2&quot;,\n    &quot;coordinate_observation&quot;: &quot;the standard polymer atom list does not provide an unambiguous explicit terminal-amide atom-level encoding&quot;,\n    &quot;usage&quot;: &quot;use UniProt/PubChem for chemical identity; use 6X18 for geometry&quot;\n  },\n  &quot;paired_yaml&quot;: null,\n  &quot;excluded_content&quot;: &quot;G-protein alpha/beta/gamma, Nanobody35, GLP-1 receptor, and all waters&quot;\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>坐标表每行仍是一个清理后重原子；<code>Cartn_x/y/z</code>三列单位为Å。</li><li>原始<code>_atom_site</code>行数不一定等于运行时原子数：1D0R原始每模型458行含224个H，清理后是234个重原子；7XL0原始链A的942行含27对altloc，清理后是915个单构象原子。</li><li>残基映射TSV每行是“一个模型中的一个保留残基”，不是一个原子；它把清理顺序、label/auth编号和保留原子数连起来。</li><li>多个NMR模型是同一分子的多个构象，不是多个不同序列样本。</li><li><code>curation.json</code>是一条转换记录，声明删除内容、观察缺口、端基限制与哈希。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>清理CIF是几何输入；mapping和curation JSON是该输入的审计输出，并在运行前用于自动QC。</p>\n    <h4>清理决定</h4>\n    <p>G-protein alpha/beta/gamma, Nanobody35, GLP-1 receptor, and all waters；只保留GLP-1肽链，完整记录源链、重编号与每个残基的原始索引。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 可用于几何MVP，但C端酰胺尚未完成BoltzGen解析→生成→复折叠输出的原子/键闭环验证。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/6X18\" target=\"_blank\" rel=\"noreferrer\">RCSB 6X18 ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">GLP1_9-36_9IVG_peptide_observed_only<span class=\"badge \">清理后反靶几何</span><span class=\"badge stop\">不完整/阻断</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从RCSB原始结构提取出的单链项目资产；项目角色：selectivity anti-target/challenge geometry。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/glp1_complex_peptides/9IVG_glp1_9-36_labelA_authP_observed.cif</div><div class=\"fact\"><b>文件大小</b>12,648 B｜12.352 KiB</div><div class=\"fact\"><b>模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>160</div><div class=\"fact\"><b>声明/观察残基</b>28 / 21</div><div class=\"fact\"><b>状态</b>project_input_geometry_only_terminal_state_unverified</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[_atom_site坐标片段]\npdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tP\t1\t9\tGLU\tN\tN\t145.578\t131.211\t170.614\n1\tA\tP\t1\t9\tGLU\tCA\tC\t144.454\t132.081\t170.935\n1\tA\tP\t1\t9\tGLU\tC\tC\t144.474\t132.492\t172.404\n1\tA\tP\t1\t9\tGLU\tO\tO\t144.503\t133.68\t172.726\n1\tA\tP\t1\t9\tGLU\tCB\tC\t143.129\t131.39\t170.604\n1\tA\tP\t1\t9\tGLU\tCG\tC\t141.902\t132.266\t170.807\n\n[residue_mapping.tsv片段]\nmodel_number\tcurated_order_index\tcurated_label_seq_id\tresidue_name_3\tresidue_name_1\toriginal_pdb_id\toriginal_label_asym_id\toriginal_auth_asym_id\toriginal_label_seq_id\toriginal_auth_seq_id\toriginal_insertion_code\tkept_atom_count\n1\t1\t1\tGLU\tE\t9IVG\tA\tP\t1\t9\t\t9\n1\t2\t2\tGLY\tG\t9IVG\tA\tP\t2\t10\t\t4\n1\t3\t3\tTHR\tT\t9IVG\tA\tP\t3\t11\t\t7\n1\t4\t4\tPHE\tF\t9IVG\tA\tP\t4\t12\t\t11\n1\t5\t5\tTHR\tT\t9IVG\tA\tP\t5\t13\t\t7\n1\t6\t6\tSER\tS\t9IVG\tA\tP\t6\t14\t\t6\n\n[curation.json核心字段]\n{\n  &quot;artifact_id&quot;: &quot;GLP1_9-36_9IVG_peptide_observed_only&quot;,\n  &quot;status&quot;: &quot;project_input_geometry_only_terminal_state_unverified&quot;,\n  &quot;project_role&quot;: &quot;selectivity anti-target/challenge geometry&quot;,\n  &quot;source_chain_mapping&quot;: {\n    &quot;label_asym_id&quot;: &quot;A&quot;,\n    &quot;auth_asym_id&quot;: &quot;P&quot;\n  },\n  &quot;raw_declared_sequence_length&quot;: 28,\n  &quot;observed_coordinate_sequence_length&quot;: 21,\n  &quot;unresolved_declared_positions&quot;: {\n    &quot;GLP1_residue_numbers&quot;: [\n      30,\n      31,\n      32,\n      33,\n      34,\n      35,\n      36\n    ],\n    &quot;entity_label_seq_ids&quot;: [\n      22,\n      23,\n      24,\n      25,\n      26,\n      27,\n      28\n    ]\n  },\n  &quot;atom_count_semantics&quot;: &quot;number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation&quot;,\n  &quot;terminal_chemistry&quot;: {\n    &quot;source_annotation&quot;: &quot;entity is named GLP-1(9-36), without NH2 in the record used here&quot;,\n    &quot;coordinate_observation&quot;: &quot;only residues 9..29 have coordinates; the C terminus 30..36 is unresolved&quot;,\n    &quot;usage&quot;: &quot;do not label this coordinate file as NH2-verified; provide project terminal chemistry separately before chemistry-aware modeling&quot;\n  },\n  &quot;paired_yaml&quot;: null,\n  &quot;excluded_content&quot;: &quot;GLP-1 receptor, engineered G-protein alpha, G-protein beta/gamma, and Nanobody35&quot;\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>坐标表每行仍是一个清理后重原子；<code>Cartn_x/y/z</code>三列单位为Å。</li><li>原始<code>_atom_site</code>行数不一定等于运行时原子数：1D0R原始每模型458行含224个H，清理后是234个重原子；7XL0原始链A的942行含27对altloc，清理后是915个单构象原子。</li><li>残基映射TSV每行是“一个模型中的一个保留残基”，不是一个原子；它把清理顺序、label/auth编号和保留原子数连起来。</li><li>多个NMR模型是同一分子的多个构象，不是多个不同序列样本。</li><li><code>curation.json</code>是一条转换记录，声明删除内容、观察缺口、端基限制与哈希。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>清理CIF是几何输入；mapping和curation JSON是该输入的审计输出，并在运行前用于自动QC。</p>\n    <h4>清理决定</h4>\n    <p>GLP-1 receptor, engineered G-protein alpha, G-protein beta/gamma, and Nanobody35；保留21个实际有坐标残基并在映射中记录来源编号，不虚构缺失坐标。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 阻断：缺失的7个C端残基不得用零坐标或臆测补齐；NH2未验证，且来源为受体/Gs结合态。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/9IVG\" target=\"_blank\" rel=\"noreferrer\">RCSB 9IVG ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">VHH_7EOW_caplacizumab_observed_core<span class=\"badge \">清理后VHH</span><span class=\"badge warn\">仅冒烟测试</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从RCSB原始结构提取出的单链项目资产；项目角色：temporary BoltzGen nanobody scaffold example; not project-approved。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/vhh_provisional_scaffolds/7eow/7eow.cif</div><div class=\"fact\"><b>文件大小</b>129,141 B｜126.114 KiB</div><div class=\"fact\"><b>模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>972</div><div class=\"fact\"><b>声明/观察残基</b>137 / 128</div><div class=\"fact\"><b>状态</b>provisional_example</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[_atom_site坐标片段]\npdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tB\tB\t1\t2\tGLU\tN\tN\t-22.26096\t50.27028\t49.35879\n1\tB\tB\t1\t2\tGLU\tCA\tC\t-22.35244\t51.54802\t48.66422\n1\tB\tB\t1\t2\tGLU\tC\tC\t-22.30386\t52.70932\t49.64966\n1\tB\tB\t1\t2\tGLU\tO\tO\t-22.20373\t52.52343\t50.86125\n1\tB\tB\t1\t2\tGLU\tCB\tC\t-23.64229\t51.63204\t47.84286\n1\tB\tB\t1\t2\tGLU\tCG\tC\t-23.81012\t50.53742\t46.80623\n\n[residue_mapping.tsv片段]\nmodel_number\tcurated_order_index\tcurated_label_seq_id\tresidue_name_3\tresidue_name_1\toriginal_pdb_id\toriginal_label_asym_id\toriginal_auth_asym_id\toriginal_label_seq_id\toriginal_auth_seq_id\toriginal_insertion_code\tkept_atom_count\n1\t1\t1\tGLU\tE\t7EOW\tB\tB\t2\t2\t\t9\n1\t2\t2\tVAL\tV\t7EOW\tB\tB\t3\t3\t\t7\n1\t3\t3\tGLN\tQ\t7EOW\tB\tB\t4\t4\t\t9\n1\t4\t4\tLEU\tL\t7EOW\tB\tB\t5\t5\t\t8\n1\t5\t5\tVAL\tV\t7EOW\tB\tB\t6\t6\t\t7\n1\t6\t6\tGLU\tE\t7EOW\tB\tB\t7\t7\t\t9\n\n[curation.json核心字段]\n{\n  &quot;artifact_id&quot;: &quot;VHH_7EOW_caplacizumab_observed_core&quot;,\n  &quot;status&quot;: &quot;provisional_example&quot;,\n  &quot;project_role&quot;: &quot;temporary BoltzGen nanobody scaffold example; not project-approved&quot;,\n  &quot;source_chain_mapping&quot;: {\n    &quot;label_asym_id&quot;: &quot;B&quot;,\n    &quot;auth_asym_id&quot;: &quot;B&quot;\n  },\n  &quot;raw_declared_sequence_length&quot;: 137,\n  &quot;observed_coordinate_sequence_length&quot;: 128,\n  &quot;unresolved_declared_positions&quot;: {\n    &quot;entity_label_seq_ids&quot;: [\n      1,\n      130,\n      131,\n      132,\n      133,\n      134,\n      135,\n      136,\n      137\n    ],\n    &quot;reason&quot;: &quot;unobserved initiator Met1 plus unobserved C-terminal expression tag 130..137&quot;\n  },\n  &quot;atom_count_semantics&quot;: &quot;number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation&quot;,\n  &quot;terminal_chemistry&quot;: {\n    &quot;source_annotation&quot;: &quot;not a GLP-1 target; VHH scaffold coordinates only&quot;,\n    &quot;coordinate_observation&quot;: &quot;kept observed VHH residues E2..S129&quot;,\n    &quot;usage&quot;: &quot;scaffold demonstration only&quot;\n  },\n  &quot;paired_yaml&quot;: {\n    &quot;path&quot;: &quot;curated_project_inputs/vhh_provisional_scaffolds/7eow/7eow.yaml&quot;,\n    &quot;source_yaml&quot;: &quot;raw_sources/boltzgen_examples/7eow.yaml&quot;,\n    &quot;adaptation&quot;: &quot;All design, visibility, exclude, and insertion res_index values are shifted by -1 because unresolved source Met1 is removed and curated E2 becomes label_seq_id 1.&quot;,\n    &quot;status&quot;: &quot;adapted_for_curated_cif; provisional smoke-test only&quot;\n  },\n  &quot;excluded_content&quot;: &quot;von Willebrand factor chain and all waters&quot;\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>坐标表每行仍是一个清理后重原子；<code>Cartn_x/y/z</code>三列单位为Å。</li><li>原始<code>_atom_site</code>行数不一定等于运行时原子数：1D0R原始每模型458行含224个H，清理后是234个重原子；7XL0原始链A的942行含27对altloc，清理后是915个单构象原子。</li><li>残基映射TSV每行是“一个模型中的一个保留残基”，不是一个原子；它把清理顺序、label/auth编号和保留原子数连起来。</li><li>多个NMR模型是同一分子的多个构象，不是多个不同序列样本。</li><li><code>curation.json</code>是一条转换记录，声明删除内容、观察缺口、端基限制与哈希。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>清理CIF是几何输入；mapping和curation JSON是该输入的审计输出，并在运行前用于自动QC。</p>\n    <h4>清理决定</h4>\n    <p>von Willebrand factor chain and all waters；仅保留单一VHH有坐标核心。因未观测Met1被删除，派生YAML的design/visibility/exclude/insertion索引全部减1；raw官方YAML保持不变。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> 修正后的CIF/YAML索引配对已通过逐残基复核，但该结构仍只进入smoke-test白名单；不得作为项目批准的生产VHH框架。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/7EOW\" target=\"_blank\" rel=\"noreferrer\">RCSB 7EOW ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">VHH_7XL0_vobarilizumab_observed_core<span class=\"badge \">清理后VHH</span><span class=\"badge warn\">仅冒烟测试</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">这是从RCSB原始结构提取出的单链项目资产；项目角色：temporary BoltzGen nanobody scaffold example; not project-approved。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>本地路径</b>curated_project_inputs/vhh_provisional_scaffolds/7xl0/7xl0.cif</div><div class=\"fact\"><b>文件大小</b>108,504 B｜105.961 KiB</div><div class=\"fact\"><b>模型</b>1</div><div class=\"fact\"><b>_atom_site行</b>915</div><div class=\"fact\"><b>声明/观察残基</b>130 / 121</div><div class=\"fact\"><b>状态</b>provisional_example</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[_atom_site坐标片段]\npdbx_PDB_model_num\tlabel_asym_id\tauth_asym_id\tlabel_seq_id\tauth_seq_id\tlabel_comp_id\tlabel_atom_id\ttype_symbol\tCartn_x\tCartn_y\tCartn_z\n1\tA\tA\t1\t1\tGLU\tN\tN\t17.266\t-18.781\t20.355\n1\tA\tA\t1\t1\tGLU\tCA\tC\t17.654\t-18.66\t18.92\n1\tA\tA\t1\t1\tGLU\tC\tC\t16.452\t-19.033\t18.042\n1\tA\tA\t1\t1\tGLU\tO\tO\t15.576\t-19.81\t18.49\n1\tA\tA\t1\t1\tGLU\tCB\tC\t18.892\t-19.516\t18.626\n1\tA\tA\t1\t1\tGLU\tCG\tC\t19.243\t-19.647\t17.149\n\n[residue_mapping.tsv片段]\nmodel_number\tcurated_order_index\tcurated_label_seq_id\tresidue_name_3\tresidue_name_1\toriginal_pdb_id\toriginal_label_asym_id\toriginal_auth_asym_id\toriginal_label_seq_id\toriginal_auth_seq_id\toriginal_insertion_code\tkept_atom_count\n1\t1\t1\tGLU\tE\t7XL0\tA\tA\t1\t1\t\t9\n1\t2\t2\tVAL\tV\t7XL0\tA\tA\t2\t2\t\t7\n1\t3\t3\tGLN\tQ\t7XL0\tA\tA\t3\t3\t\t9\n1\t4\t4\tLEU\tL\t7XL0\tA\tA\t4\t4\t\t8\n1\t5\t5\tVAL\tV\t7XL0\tA\tA\t5\t5\t\t7\n1\t6\t6\tGLU\tE\t7XL0\tA\tA\t6\t6\t\t9\n\n[curation.json核心字段]\n{\n  &quot;artifact_id&quot;: &quot;VHH_7XL0_vobarilizumab_observed_core&quot;,\n  &quot;status&quot;: &quot;provisional_example&quot;,\n  &quot;project_role&quot;: &quot;temporary BoltzGen nanobody scaffold example; not project-approved&quot;,\n  &quot;source_chain_mapping&quot;: {\n    &quot;label_asym_id&quot;: &quot;A&quot;,\n    &quot;auth_asym_id&quot;: &quot;A&quot;\n  },\n  &quot;raw_declared_sequence_length&quot;: 130,\n  &quot;observed_coordinate_sequence_length&quot;: 121,\n  &quot;unresolved_declared_positions&quot;: {\n    &quot;entity_label_seq_ids&quot;: [\n      122,\n      123,\n      124,\n      125,\n      126,\n      127,\n      128,\n      129,\n      130\n    ],\n    &quot;reason&quot;: &quot;unobserved C-terminal expression tag 122..130&quot;\n  },\n  &quot;atom_count_semantics&quot;: &quot;number of retained heavy-atom _atom_site rows after removal of explicit hydrogens and collapse to one alternate conformation&quot;,\n  &quot;terminal_chemistry&quot;: {\n    &quot;source_annotation&quot;: &quot;not a GLP-1 target; VHH scaffold coordinates only&quot;,\n    &quot;coordinate_observation&quot;: &quot;kept observed VHH residues E1..S121&quot;,\n    &quot;usage&quot;: &quot;scaffold demonstration only&quot;\n  },\n  &quot;paired_yaml&quot;: null,\n  &quot;excluded_content&quot;: &quot;second VHH crystal copy, sulfate ions, glycerol, and all waters&quot;\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><ul><li>坐标表每行仍是一个清理后重原子；<code>Cartn_x/y/z</code>三列单位为Å。</li><li>原始<code>_atom_site</code>行数不一定等于运行时原子数：1D0R原始每模型458行含224个H，清理后是234个重原子；7XL0原始链A的942行含27对altloc，清理后是915个单构象原子。</li><li>残基映射TSV每行是“一个模型中的一个保留残基”，不是一个原子；它把清理顺序、label/auth编号和保留原子数连起来。</li><li>多个NMR模型是同一分子的多个构象，不是多个不同序列样本。</li><li><code>curation.json</code>是一条转换记录，声明删除内容、观察缺口、端基限制与哈希。</li></ul></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>清理CIF是几何输入；mapping和curation JSON是该输入的审计输出，并在运行前用于自动QC。</p>\n    <h4>清理决定</h4>\n    <p>second VHH crystal copy, sulfate ions, glycerol, and all waters；只保留链A，并把27对altloc A/B原子统一解析为A构象，使_atom_site从942行降至915行。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 等占有率altloc中选择A只是为形成单构象输入，不表示A具有生物学优势；该结构仍只可smoke test。</div>\n    <div class=\"link-row\"><a href=\"https://www.rcsb.org/structure/7XL0\" target=\"_blank\" rel=\"noreferrer\">RCSB 7XL0 ↗</a><a href=\"https://mmcif.wwpdb.org/docs/tutorials/content/atomic-description.html\" target=\"_blank\" rel=\"noreferrer\">wwPDB atom_site说明 ↗</a></div>\n  </div>\n</details>\n<details>\n  <summary><span class=\"summary-text\">project_input_allowlist.tsv + used_components.tsv<span class=\"badge \">配置边界</span><span class=\"badge \">机器可读</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">白名单决定项目配置可引用什么；组分表只记录实际使用轨迹，不用于裁剪mols.zip。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>白名单条目</b>9</div><div class=\"fact\"><b>当前组分</b>20</div><div class=\"fact\"><b>白名单路径</b>curated_project_inputs/project_input_allowlist.tsv</div><div class=\"fact\"><b>组分路径</b>curated_project_inputs/used_components.tsv</div><div class=\"fact\"><b>raw直连</b>禁止</div><div class=\"fact\"><b>mols.zip策略</b>完整保留</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>[project_input_allowlist.tsv]\nasset\tpath\trole\tstatus\tuse_level\tconditions\tsha256\n1D0R_glp1_7-36NH2_all20models.cif\tcurated_project_inputs/glp1_1D0R_all_models/1D0R_glp1_7-36NH2_all20models.cif\tpositive-target geometry\tproject_input_geometry_with_chemistry_caveat\tconditional_geometry_only\tTerminal amide is not explicitly encoded; use as geometry only until round-trip chemistry QC passes.\td5e033c30cda2e274f7bb67698c5db5c5fb2e5c979a89c17017ae74546fae013\n6X18_glp1_7-36NH2_labelE_authP.cif\tcurated_project_inputs/glp1_complex_peptides/6X18_glp1_7-36NH2_labelE_authP.cif\tpositive-target geometry\tproject_input_geometry_with_chemistry_caveat\tconditional_geometry_only\tTerminal amide is not explicitly encoded; use as geometry only until round-trip chemistry QC passes.\t11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53\n9IVG_glp1_9-36_labelA_authP_observed.cif\tcurated_project_inputs/glp1_complex_peptides/9IVG_glp1_9-36_labelA_authP_observed.cif\tchallenge-state geometry reference\tproject_input_geometry_only_terminal_state_unverified\tblocked_until_missing_geometry_and_terminal_chemistry_are_resolved\t9IVG lacks coordinates for residues 30..36 and does not verify NH2; do not use as a complete 9-36NH2 target.\te7e2288715e820028ce86d470d0b4d7daca05fa6b8fb36c05d98e34a1389d520\nGLP1_project_variants.fasta\tcurated_project_inputs/sequence_chemistry/GLP1_project_variants.fasta\tsequence registry; terminal chemistry comes from JSON sidecar\tkeep_derived_input\tsequence_only_not_terminal_chemistry\tFASTA stores residues only; read terminal chemistry from GLP1_project_variants.json.\t91f9490b902755b89b761b977d381182670ebfcb75595f106c28b8b71549757d\nGLP1_project_variants.json\tcurated_project_inputs/sequence_chemistry/GLP1_project_variants.json\tcanonical target-state registry\tkeep_derived_input\tpreparation_input\tRegistry input; convert to a validated target specification before inference.\tcaee7e0c8c15e72b53bf8481f81eefaafd0430433f7f3136dc35332d96345231\n7eow.cif\tcurated_project_inputs/vhh_provisional_scaffolds/7eow/7eow.cif\tsmoke-test scaffold geometry\tprovisional_example\tsmoke_test_only\tOfficial example scaffold, not a validated or project-approved production framework.\te97da07886ef0c4adaae0ed40d99cd5ffa128fc25f4246048eeb6c3752a81932\n\n[used_components.tsv 前8行]\nccd_component_id\tone_letter_code\tsource_asset_count\tsource_assets\tdictionary_policy\nALA\tA\t6\tGLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only\nARG\tR\t6\tGLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only\nASN\tN\t2\tVHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only\nASP\tD\t6\tGLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only\nCYS\tC\t2\tVHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only\nGLN\tQ\t6\tGLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core\tmols.zip retained whole; this table is usage lineage only</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><p>两个TSV都是普通表：每行一个资产或一个CCD组分，每列一个固定属性。<code>source_assets</code>中的分号仅是列表分隔，不是数值向量。</p></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>配置生成器只允许读取白名单路径；组分表用于追踪而非模型特征。</p>\n    <h4>清理决定</h4>\n    <p>白名单显式标出geometry-only、blocked和smoke-test-only，避免“文件存在”被误解为“可以用于生产结论”。</p>\n    <div class=\"note warning\"><b>限制与检查：</b> 任何绕过白名单直接指向raw_sources的配置都应被拒绝。</div>\n    <div class=\"link-row\"><a href=\"https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/README.md\" target=\"_blank\" rel=\"noreferrer\">BoltzGen示例格式说明 ↗</a></div>\n  </div>\n</details></section>"
+      },
+      {
+        "id": "future_outputs",
+        "type": "html",
+        "body": "\n<style>\n  :root{color-scheme:light dark}\n  .asset-guide{font:17px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:#19324a}\n  .asset-guide *{box-sizing:border-box}\n  .asset-guide .intro{margin:0 0 14px;color:#4b6378}\n  .asset-guide details{border:1px solid #c8d8e3;border-radius:14px;margin:10px 0;background:#fff;overflow:clip}\n  .asset-guide summary{list-style:none;cursor:pointer;padding:15px 17px;display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:760;color:#123754;background:#f5f9fb}\n  .asset-guide summary::-webkit-details-marker{display:none}\n  .asset-guide summary:focus-visible{outline:3px solid #0b7f78;outline-offset:-3px}\n  .asset-guide summary::after{content:\"＋\";font-size:22px;color:#0b6e68;flex:0 0 auto}\n  .asset-guide details[open] summary::after{content:\"－\"}\n  .asset-guide .summary-text{min-width:0}\n  .asset-guide .badge{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:99px;font-size:12px;line-height:1.6;background:#dff3ef;color:#075f59;vertical-align:2px}\n  .asset-guide .badge.warn{background:#fff0d5;color:#87510a}\n  .asset-guide .badge.stop{background:#ffe5e2;color:#9b2f27}\n  .asset-guide .body{padding:15px 17px 18px}\n  .asset-guide .lead{margin:0 0 12px;font-weight:650;color:#213f59}\n  .asset-guide .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 15px}\n  .asset-guide .fact{padding:9px 11px;border-radius:10px;background:#f3f7f9;overflow-wrap:anywhere}\n  .asset-guide .fact b{display:block;font-size:12px;letter-spacing:.04em;color:#60798d;margin-bottom:2px}\n  .asset-guide h4{font-size:17px;margin:17px 0 7px;color:#153b59}\n  .asset-guide p{margin:7px 0}\n  .asset-guide ul{margin:7px 0;padding-left:23px}\n  .asset-guide li{margin:4px 0}\n  .asset-guide pre{font:14px/1.52 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto;max-height:390px;padding:13px;border-radius:10px;background:#10283b;color:#e9f3f6;border:1px solid #27475b}\n  .asset-guide code{overflow-wrap:anywhere}\n  .asset-guide .note{border-left:4px solid #12827a;background:#edf8f6;padding:10px 12px;border-radius:0 9px 9px 0}\n  .asset-guide .warning{border-left-color:#c37816;background:#fff6e7}\n  .asset-guide .blocker{border-left-color:#b33b32;background:#fff0ee}\n  .asset-guide .link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n  .asset-guide a{color:#075f8c;font-weight:650}\n  .asset-guide .mini-table{overflow:auto;margin:8px 0}\n  .asset-guide table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}\n  .asset-guide th,.asset-guide td{padding:8px 9px;border-bottom:1px solid #d9e4ea;text-align:left;vertical-align:top}\n  .asset-guide th{background:#eef5f7;color:#29485f;position:sticky;top:0}\n  @media(prefers-color-scheme:dark){\n    .asset-guide{color:#dbe8ef}.asset-guide details{background:#172a38;border-color:#385364}\n    .asset-guide summary{background:#1c3444;color:#eef7fa}.asset-guide .body{background:#172a38}\n    .asset-guide .lead,.asset-guide h4{color:#e6f2f7}.asset-guide .intro{color:#afc5d2}\n    .asset-guide .fact{background:#203948}.asset-guide .fact b{color:#a9c2d0}\n    .asset-guide .note{background:#183d3b}.asset-guide .warning{background:#4a3519}.asset-guide .blocker{background:#4d2928}\n    .asset-guide th{background:#203b4b;color:#d9eaf2}.asset-guide td,.asset-guide th{border-color:#3b5666}\n    .asset-guide a{color:#7fcfff}\n  }\n  @media(max-width:560px){.asset-guide{font-size:16px}.asset-guide summary,.asset-guide .body{padding:13px}.asset-guide .facts{grid-template-columns:1fr}.asset-guide pre{font-size:13px}}\n</style>\n\n<section class=\"asset-guide\">\n  <h2>运行后会产生什么输出</h2>\n  <p class=\"intro\">当前目录只有准备与运行输入；尚未运行BoltzGen，所以没有把虚构的NPZ/CSV/CIF当成已有数据样例。</p>\n  <div class=\"mini-table\"><table><thead><tr><th>未来输出</th><th>一条记录</th><th>形状/字段</th><th>作用</th></tr></thead><tbody>\n    <tr><td>intermediate_designs/*.cif</td><td>一个候选复合物</td><td>mmCIF原子表</td><td>design阶段输出、inverse folding输入</td></tr>\n    <tr><td>*.npz</td><td>一个候选的数组包</td><td>如design_mask[T]、aa_constraint_mask[T,20]、coords[S,A,3]</td><td>阶段间机器输入</td></tr>\n    <tr><td>refold_cif/*.cif</td><td>一个复折叠候选复合物</td><td>三维坐标</td><td>分析与筛选主输入</td></tr>\n    <tr><td>aggregate_metrics_analyze.csv</td><td>一行一个候选</td><td>结构置信度与界面指标列</td><td>筛选/排序输出；不是KD</td></tr>\n    <tr><td>results_overview.pdf</td><td>一次运行报告</td><td>可视化页面</td><td>人工审阅输出</td></tr>\n  </tbody></table></div>\n  <div class=\"note warning\"><b>NPZ轴：</b> <code>[T]</code>每个位置一个token；<code>[T,20]</code>行是位置、列是20种标准氨基酸；<code>[S,A,3]</code>依次是采样结构、原子、x/y/z。读取时先用<code>allow_pickle=False</code>。</div>\n</section>\n"
+      },
+      {
+        "id": "method",
+        "type": "markdown",
+        "body": "## 清理与统计方法\n\n1. 固定BoltzGen v0.3.2、模型仓库revision和mols字典revision。\n2. 下载到暂存区，核对预期字节数与SHA-256后才原子移动到runtime_cache。\n3. raw_sources保存官方文件；对RCSB结构按`label_asym_id`抽链，删除受体、G蛋白、抗原、水、配体、离子和多余晶体拷贝。\n4. 为每个清理结构写`curation.json`与`residue_mapping.tsv`，保留源哈希、链映射、缺失残基、端基限制和删除内容。\n5. checkpoint只在官方哈希通过后剖析。由于PyTorch 2.9的`weights_only=True`不支持其pickle protocol 5，本报告只读取ZIP中的`data.pkl`，用受限元数据解析器把storage/tensor重建为shape代理；不导入项目类、不读取张量storage，也没有回退到`weights_only=False`。\n6. `mols.zip`保持完整，通过中央目录统计45,227个成员；仅在哈希通过后读取少量标准氨基酸生成离线摘要。\n7. 最终配置只能引用`project_input_allowlist.tsv`。"
+      },
+      {
+        "id": "qa",
+        "type": "html",
+        "body": "\n<style>\n  :root{color-scheme:light dark}\n  .asset-guide{font:17px/1.65 ui-sans-serif,-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif;color:#19324a}\n  .asset-guide *{box-sizing:border-box}\n  .asset-guide .intro{margin:0 0 14px;color:#4b6378}\n  .asset-guide details{border:1px solid #c8d8e3;border-radius:14px;margin:10px 0;background:#fff;overflow:clip}\n  .asset-guide summary{list-style:none;cursor:pointer;padding:15px 17px;display:flex;align-items:center;gap:10px;justify-content:space-between;font-weight:760;color:#123754;background:#f5f9fb}\n  .asset-guide summary::-webkit-details-marker{display:none}\n  .asset-guide summary:focus-visible{outline:3px solid #0b7f78;outline-offset:-3px}\n  .asset-guide summary::after{content:\"＋\";font-size:22px;color:#0b6e68;flex:0 0 auto}\n  .asset-guide details[open] summary::after{content:\"－\"}\n  .asset-guide .summary-text{min-width:0}\n  .asset-guide .badge{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:99px;font-size:12px;line-height:1.6;background:#dff3ef;color:#075f59;vertical-align:2px}\n  .asset-guide .badge.warn{background:#fff0d5;color:#87510a}\n  .asset-guide .badge.stop{background:#ffe5e2;color:#9b2f27}\n  .asset-guide .body{padding:15px 17px 18px}\n  .asset-guide .lead{margin:0 0 12px;font-weight:650;color:#213f59}\n  .asset-guide .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px;margin:10px 0 15px}\n  .asset-guide .fact{padding:9px 11px;border-radius:10px;background:#f3f7f9;overflow-wrap:anywhere}\n  .asset-guide .fact b{display:block;font-size:12px;letter-spacing:.04em;color:#60798d;margin-bottom:2px}\n  .asset-guide h4{font-size:17px;margin:17px 0 7px;color:#153b59}\n  .asset-guide p{margin:7px 0}\n  .asset-guide ul{margin:7px 0;padding-left:23px}\n  .asset-guide li{margin:4px 0}\n  .asset-guide pre{font:14px/1.52 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre;overflow:auto;max-height:390px;padding:13px;border-radius:10px;background:#10283b;color:#e9f3f6;border:1px solid #27475b}\n  .asset-guide code{overflow-wrap:anywhere}\n  .asset-guide .note{border-left:4px solid #12827a;background:#edf8f6;padding:10px 12px;border-radius:0 9px 9px 0}\n  .asset-guide .warning{border-left-color:#c37816;background:#fff6e7}\n  .asset-guide .blocker{border-left-color:#b33b32;background:#fff0ee}\n  .asset-guide .link-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}\n  .asset-guide a{color:#075f8c;font-weight:650}\n  .asset-guide .mini-table{overflow:auto;margin:8px 0}\n  .asset-guide table{border-collapse:collapse;width:100%;min-width:650px;font-size:14px}\n  .asset-guide th,.asset-guide td{padding:8px 9px;border-bottom:1px solid #d9e4ea;text-align:left;vertical-align:top}\n  .asset-guide th{background:#eef5f7;color:#29485f;position:sticky;top:0}\n  @media(prefers-color-scheme:dark){\n    .asset-guide{color:#dbe8ef}.asset-guide details{background:#172a38;border-color:#385364}\n    .asset-guide summary{background:#1c3444;color:#eef7fa}.asset-guide .body{background:#172a38}\n    .asset-guide .lead,.asset-guide h4{color:#e6f2f7}.asset-guide .intro{color:#afc5d2}\n    .asset-guide .fact{background:#203948}.asset-guide .fact b{color:#a9c2d0}\n    .asset-guide .note{background:#183d3b}.asset-guide .warning{background:#4a3519}.asset-guide .blocker{background:#4d2928}\n    .asset-guide th{background:#203b4b;color:#d9eaf2}.asset-guide td,.asset-guide th{border-color:#3b5666}\n    .asset-guide a{color:#7fcfff}\n  }\n  @media(max-width:560px){.asset-guide{font-size:16px}.asset-guide summary,.asset-guide .body{padding:13px}.asset-guide .facts{grid-template-columns:1fr}.asset-guide pre{font-size:13px}}\n</style>\n<section class=\"asset-guide\"><h2>质量检查与可追溯性</h2><p class=\"intro\">PASS_WITH_DECLARED_LIMITATIONS表示完整性通过且科学边界已明确，不表示所有结构化学问题已解决。</p>\n<details>\n  <summary><span class=\"summary-text\">最终机器校验与范围清单<span class=\"badge warn\">PASS_WITH_DECLARED_LIMITATIONS</span></span></summary>\n  <div class=\"body\">\n    <p class=\"lead\">所有纳入的官方文件通过大小与SHA检查；科学限制被保留为阻断项，而不是被计入失败下载。</p>\n    <div class=\"facts\"><div class=\"fact\"><b>质量检查</b>13项</div><div class=\"fact\"><b>通过</b>13/13</div><div class=\"fact\"><b>官方下载</b>19文件｜6,357,565,795 B</div><div class=\"fact\"><b>运行资产</b>5文件｜6,352,944,053 B</div><div class=\"fact\"><b>原始来源</b>14文件｜4,621,742 B</div><div class=\"fact\"><b>清理结构</b>5个文件／24个模型</div></div>\n    <h4>一个真实样例</h4>\n    <pre tabindex=\"0\"><code>{\n  &quot;overall_status&quot;: &quot;PASS_WITH_DECLARED_LIMITATIONS&quot;,\n  &quot;checks&quot;: [\n    {\n      &quot;id&quot;: &quot;runtime_hashes&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;raw_source_hashes&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;curated_structure_hashes&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;all_curated_manifest_hashes&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;no_partial_downloads&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;mols_zip_exact_member_count&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;excluded_assets_absent&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;9ivg_limitation_recorded&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;vhh_examples_not_approved&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;7eow_curated_yaml_index_shift&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;curated_heavy_atom_counts&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;vhh_unresolved_termini_recorded&quot;,\n      &quot;passed&quot;: true\n    },\n    {\n      &quot;id&quot;: &quot;correct_pubchem_cid&quot;,\n      &quot;passed&quot;: true\n    }\n  ]\n}</code></pre>\n    <h4>如何读、行列或向量代表什么</h4>\n    <div><p>质量JSON的每个对象是一项检查；<code>passed</code>是布尔值，<code>items</code>保存逐文件证据。不同记录单位不能相加：checkpoint用张量数，mols用CCD成员数，mmCIF用原子行/模型数。</p></div>\n    <h4>在流程中的输入／输出位置</h4>\n    <p>这是数据准备流程的输出，也是每次运行前的门控输入。</p>\n    <h4>清理决定</h4>\n    <p>保留raw、clean、runtime三层；删除/排除的仅是MVP不需要的远程资产，没有删除溯源原件。</p>\n    <div class=\"note blocker\"><b>限制与检查：</b> PASS_WITH_DECLARED_LIMITATIONS不等于所有科学问题已解决；它表示下载与清理正确，且端基、缺失坐标、示例scaffold限制已被明确标注。</div>\n    <div class=\"link-row\"><a href=\"https://github.com/HannesStark/boltzgen/releases/tag/v0.3.2\" target=\"_blank\" rel=\"noreferrer\">BoltzGen v0.3.2 ↗</a><a href=\"https://docs.pytorch.org/docs/main/notes/serialization.html\" target=\"_blank\" rel=\"noreferrer\">PyTorch序列化安全说明 ↗</a></div>\n  </div>\n</details></section>"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## 限制与稳健性\n\n- Ordinary FASTA and the curated standard-polymer mmCIF files do not explicitly prove C-terminal amidation round-trips through BoltzGen v0.3.2.\n- 9IVG provides coordinates for only 21 of the declared 28 residues and must not be treated as a complete free GLP-1(9-36)NH2 truth structure.\n- 7EOW and 7XL0 are official example scaffolds for smoke testing only, not project-approved production VHH frameworks.\n- A production-ready top-level BoltzGen run YAML has not been generated; scaffold, target conformer, chemistry state and design policy still require an explicit reviewed task specification.\n\n### 本次明确未下载\n\n- **boltz2_aff.ckpt**：protein-small_molecule affinity only; nanobody-anything does not use it\n- **boltzgen1_train/targets.zip**：foundation-model training archive; not required for MVP inference\n- **boltzgen1_train/msa.zip**：foundation-model training archive; not required for MVP inference\n- **boltzgen1_structuretrained_small.ckpt**：optional training initialization; not required for nanobody-anything inference\n- **remaining nanobody_scaffolds examples**：examples, not an approved production scaffold library\n- **SAbDab2-nano and PROPEDIA**：future scaffold/interface expansion; not needed for the inference-only MVP"
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "body": "## 下一步\n\n1. 先用7EOW或7XL0中的**一个**示例scaffold和一个7–36几何构象做50个设计的smoke test。\n2. 在正式比较7–36NH2与9–36NH2前，完成C端酰胺在BoltzGen解析、生成CIF和Boltz-2复折叠输出中的原子/键往返测试。\n3. 为9–36建立完整的多构象参考，不用9IVG的21残基片段替代28残基完整状态。\n4. 生产阶段另建经审核、去标签、编号一致且覆盖多个框架家族的VHH scaffold库。\n5. 运行后把每个候选的CIF、NPZ与CSV纳入同一manifest，再做正靶/反靶统一重预测与实验校准。\n\n## 进一步问题\n\n- BoltzGen v0.3.2是否能可靠往返保留自定义C端酰胺组分和共价键？\n- 9–36完整构象集合应来自MD、同源约束还是独立结构预测组合？\n- 两个示例VHH框架是否满足表达、二硫键、CDR长度与序列责任范围要求？"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-18T18:22:41.485478+00:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "runtime_files": 5,
+          "runtime_gb": 6.353,
+          "raw_files": 14,
+          "curated_models": 24
+        }
+      ],
+      "runtime_sizes": [
+        {
+          "asset": "boltz2_conf_final.ckpt",
+          "size_gb": 2.087255,
+          "bytes": 2087255089
+        },
+        {
+          "asset": "boltzgen1_adherence.ckpt",
+          "size_gb": 1.930858,
+          "bytes": 1930858014
+        },
+        {
+          "asset": "boltzgen1_diverse.ckpt",
+          "size_gb": 1.930847,
+          "bytes": 1930847192
+        },
+        {
+          "asset": "mols.zip",
+          "size_gb": 0.391401,
+          "bytes": 391401102
+        },
+        {
+          "asset": "boltzgen1_ifold.ckpt",
+          "size_gb": 0.012583,
+          "bytes": 12582656
+        }
+      ],
+      "inventory": [
+        {
+          "stage": "运行资产",
+          "asset": "boltzgen1_diverse.ckpt",
+          "role": "BoltzGen design checkpoint; inference input",
+          "format": "PyTorch/Lightning checkpoint",
+          "record_unit": "parameter tensor",
+          "record_count": 4739,
+          "size": "1.798 GiB",
+          "status": "verified_required"
+        },
+        {
+          "stage": "运行资产",
+          "asset": "boltzgen1_adherence.ckpt",
+          "role": "BoltzGen design checkpoint; inference input",
+          "format": "PyTorch/Lightning checkpoint",
+          "record_unit": "parameter tensor",
+          "record_count": 4739,
+          "size": "1.798 GiB",
+          "status": "verified_required"
+        },
+        {
+          "stage": "运行资产",
+          "asset": "boltzgen1_ifold.ckpt",
+          "role": "inverse-folding checkpoint; inference input",
+          "format": "PyTorch/Lightning checkpoint",
+          "record_unit": "parameter tensor",
+          "record_count": 357,
+          "size": "12.000 MiB",
+          "status": "verified_required"
+        },
+        {
+          "stage": "运行资产",
+          "asset": "boltz2_conf_final.ckpt",
+          "role": "Boltz-2 confidence/refolding checkpoint; inference input",
+          "format": "PyTorch/Lightning checkpoint",
+          "record_unit": "parameter tensor",
+          "record_count": 5102,
+          "size": "1.944 GiB",
+          "status": "verified_required"
+        },
+        {
+          "stage": "运行资产",
+          "asset": "mols.zip",
+          "role": "CCD/RDKit component dictionary; inference input",
+          "format": "ZIP of RDKit Mol pickle objects",
+          "record_unit": "CCD component pickle",
+          "record_count": 45227,
+          "size": "373.269 MiB",
+          "status": "verified_required"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "UniProtKB P01275",
+          "role": "immutable provenance; preparation reference only",
+          "format": "FASTA",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "259 B",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "UniProtKB P01275",
+          "role": "immutable provenance; preparation reference only",
+          "format": "UniProt JSON",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "56.308 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "UniProtKB P01275",
+          "role": "immutable provenance; preparation reference only",
+          "format": "UniProt XML",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "64.227 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "UniProtKB P01275",
+          "role": "immutable provenance; preparation reference only",
+          "format": "TSV",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "584 B",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "PubChem CID 16133831",
+          "role": "immutable provenance; preparation reference only",
+          "format": "SDF V2000",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "53.448 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "PubChem CID 16133831",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PubChem JSON",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "91.723 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "PubChem CID 16133831",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PubChem XML",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "254.691 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "RCSB PDB 1D0R",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PDBx/mmCIF",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "815.181 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "RCSB PDB 6X18",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PDBx/mmCIF",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "1.126 MiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "RCSB PDB 9IVG",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PDBx/mmCIF",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "948.308 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "RCSB PDB 7EOW",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PDBx/mmCIF",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "632.532 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "RCSB PDB 7XL0",
+          "role": "immutable provenance; preparation reference only",
+          "format": "PDBx/mmCIF",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "440.717 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "BoltzGen v0.3.2 nanobody scaffold example",
+          "role": "immutable provenance; preparation reference only",
+          "format": "YAML",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "1.027 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "原始来源",
+          "asset": "BoltzGen v0.3.2 nanobody scaffold example",
+          "role": "immutable provenance; preparation reference only",
+          "format": "YAML",
+          "record_unit": "source record",
+          "record_count": 1,
+          "size": "1.027 KiB",
+          "status": "verified_raw_source"
+        },
+        {
+          "stage": "清理后",
+          "asset": "1D0R_glp1_7-36NH2_all20models.cif",
+          "role": "positive-target geometry",
+          "format": "PDBx/mmCIF",
+          "record_unit": "coordinate file",
+          "record_count": 20,
+          "size": "284.756 KiB",
+          "status": "project_input_geometry_with_chemistry_caveat"
+        },
+        {
+          "stage": "清理后",
+          "asset": "1D0R_glp1_7-36NH2_all20models_curation.json",
+          "role": "curation lineage and limitations",
+          "format": "JSON",
+          "record_unit": "curation decision record",
+          "record_count": 1,
+          "size": "2.812 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "1D0R_glp1_7-36NH2_all20models_residue_mapping.tsv",
+          "role": "curation lineage and index QA",
+          "format": "TSV",
+          "record_unit": "retained residue in one coordinate model",
+          "record_count": 600,
+          "size": "19.296 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "6X18_glp1_7-36NH2_labelE_authP.cif",
+          "role": "positive-target geometry",
+          "format": "PDBx/mmCIF",
+          "record_unit": "coordinate file",
+          "record_count": 1,
+          "size": "17.201 KiB",
+          "status": "project_input_geometry_with_chemistry_caveat"
+        },
+        {
+          "stage": "清理后",
+          "asset": "6X18_glp1_7-36NH2_labelE_authP_curation.json",
+          "role": "curation lineage and limitations",
+          "format": "JSON",
+          "record_unit": "curation decision record",
+          "record_count": 1,
+          "size": "2.468 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "6X18_glp1_7-36NH2_labelE_authP_residue_mapping.tsv",
+          "role": "curation lineage and index QA",
+          "format": "TSV",
+          "record_unit": "retained residue in one coordinate model",
+          "record_count": 30,
+          "size": "1.167 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "9IVG_glp1_9-36_labelA_authP_observed.cif",
+          "role": "challenge-state geometry reference",
+          "format": "PDBx/mmCIF",
+          "record_unit": "coordinate file",
+          "record_count": 1,
+          "size": "12.352 KiB",
+          "status": "project_input_geometry_only_terminal_state_unverified"
+        },
+        {
+          "stage": "清理后",
+          "asset": "9IVG_glp1_9-36_labelA_authP_observed_curation.json",
+          "role": "curation lineage and limitations",
+          "format": "JSON",
+          "record_unit": "curation decision record",
+          "record_count": 1,
+          "size": "2.842 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "9IVG_glp1_9-36_labelA_authP_observed_residue_mapping.tsv",
+          "role": "curation lineage and index QA",
+          "format": "TSV",
+          "record_unit": "retained residue in one coordinate model",
+          "record_count": 21,
+          "size": "897 B",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "project_input_allowlist.tsv",
+          "role": "configuration input gate",
+          "format": "TSV",
+          "record_unit": "approved/conditional project asset",
+          "record_count": 9,
+          "size": "3.044 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "GLP1_project_variants.fasta",
+          "role": "sequence registry; terminal chemistry comes from JSON sidecar",
+          "format": "FASTA",
+          "record_unit": "GLP-1 sequence state",
+          "record_count": 4,
+          "size": "302 B",
+          "status": "keep_derived_input"
+        },
+        {
+          "stage": "清理后",
+          "asset": "GLP1_project_variants.json",
+          "role": "canonical target-state registry",
+          "format": "JSON",
+          "record_unit": "GLP-1 chemical/sequence state",
+          "record_count": 4,
+          "size": "6.276 KiB",
+          "status": "keep_derived_input"
+        },
+        {
+          "stage": "清理后",
+          "asset": "PubChem_CID16133831_project_record.json",
+          "role": "chemical identity reference",
+          "format": "JSON",
+          "record_unit": "filtered chemical identity record",
+          "record_count": 1,
+          "size": "2.741 KiB",
+          "status": "keep_reference_only"
+        },
+        {
+          "stage": "清理后",
+          "asset": "used_components.tsv",
+          "role": "runtime dictionary usage lineage",
+          "format": "TSV",
+          "record_unit": "CCD component used by current project sequences",
+          "record_count": 20,
+          "size": "3.941 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7eow.cif",
+          "role": "smoke-test scaffold geometry",
+          "format": "PDBx/mmCIF",
+          "record_unit": "coordinate file",
+          "record_count": 1,
+          "size": "126.114 KiB",
+          "status": "provisional_example"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7eow.yaml",
+          "role": "BoltzGen scaffold configuration example",
+          "format": "YAML",
+          "record_unit": "nanobody scaffold design recipe",
+          "record_count": 1,
+          "size": "1.068 KiB",
+          "status": "provisional_example"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7eow_curation.json",
+          "role": "curation lineage and limitations",
+          "format": "JSON",
+          "record_unit": "curation decision record",
+          "record_count": 1,
+          "size": "3.629 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7eow_residue_mapping.tsv",
+          "role": "curation lineage and index QA",
+          "format": "TSV",
+          "record_unit": "retained residue in one coordinate model",
+          "record_count": 128,
+          "size": "4.455 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7xl0.cif",
+          "role": "smoke-test scaffold geometry",
+          "format": "PDBx/mmCIF",
+          "record_unit": "coordinate file",
+          "record_count": 1,
+          "size": "105.961 KiB",
+          "status": "provisional_example"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7xl0.yaml",
+          "role": "BoltzGen scaffold configuration example",
+          "format": "YAML",
+          "record_unit": "nanobody scaffold design recipe",
+          "record_count": 1,
+          "size": "1.027 KiB",
+          "status": "provisional_example"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7xl0_curation.json",
+          "role": "curation lineage and limitations",
+          "format": "JSON",
+          "record_unit": "curation decision record",
+          "record_count": 1,
+          "size": "3.097 KiB",
+          "status": "keep_derived_audit"
+        },
+        {
+          "stage": "清理后",
+          "asset": "7xl0_residue_mapping.tsv",
+          "role": "curation lineage and index QA",
+          "format": "TSV",
+          "record_unit": "retained residue in one coordinate model",
+          "record_count": 121,
+          "size": "4.193 KiB",
+          "status": "keep_derived_audit"
+        }
+      ]
+    }
+  },
+  "package_info": {
+    "mode": "portable_html",
+    "controls": {
+      "edit": false,
+      "refresh": false,
+      "persistence": false,
+      "copyAsImage": false
+    }
+  }
+}

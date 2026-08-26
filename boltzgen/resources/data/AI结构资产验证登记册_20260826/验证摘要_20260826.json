@@ -1,0 +1,86 @@
+{
+  "challenge_panel": {
+    "experimental_negative_labels": 0,
+    "manifest_rows_verified": 25,
+    "manifest_windows_paths_resolve_locally": 0,
+    "prepared_cif_total": 36,
+    "quarantined_incomplete_conformers": 4,
+    "raw_source_hashes_verified": 25,
+    "required_label_status": "computational_challenge_unvalidated",
+    "usable_challenge_conformers": 32,
+    "usable_cohorts": [
+      "challenge_gip_2b4n",
+      "challenge_glp2_2l63",
+      "challenge_glucagon",
+      "countertarget_glp1_9_36_9ivm"
+    ],
+    "usable_target_source_groups": 4,
+    "weighting_rule": "aggregate within each source/target ensemble; keep tuning and lockbox partitions separate; macro-average only pre-standardized comparable metrics"
+  },
+  "cohort_count": 13,
+  "errors": [],
+  "input_registry_sha256": "065371ff4f73cca0c4fec8a17c2a07ca2b46abd6798b80fb2a7b82906a004b24",
+  "overall_status": "PASS",
+  "override_registry_sha256": "3b17c3812cb604d66cb9135d2bf61d8a9bfab8919f9c4dd86780aecfa52869cb",
+  "positive_ensemble": {
+    "active_representative_aliases": 0,
+    "byte_identical_mirror_pairs": 23,
+    "canonical_cif_paths": 23,
+    "compact_panel_models": [
+      10,
+      12,
+      19,
+      20
+    ],
+    "compact_panel_paths_verified": 4,
+    "derived_representative_aliases": 3,
+    "full_sensitivity_split_files_verified": 20,
+    "independence_group": "PDB:1D0R",
+    "independent_biological_samples": 1,
+    "multi_model_cif_allowed_for_execution": false,
+    "raw_1d0r_sha256_match": true,
+    "representative_coordinate_matches": 3,
+    "representative_expected": 3,
+    "submitted_conformers": 20
+  },
+  "scaffold_libraries": {
+    "ai_status_counts": {
+      "DUPLICATE_ALIAS_USE_OLD_CANONICAL": 3,
+      "NEEDS_REPAIR_OR_ACCEPTANCE": 4,
+      "PENDING_CANONICALIZATION_AND_CHECK": 7,
+      "QUARANTINE_MISSING_CDR_COORDINATES": 1,
+      "QUARANTINE_PENDING_REDESIGN": 1,
+      "STRESS_ONLY_USE_OLD_CANONICAL": 1
+    },
+    "boltzgen_cli_check": "NOT_RUN_REQUIRES_TARGET_CONTAINING_SPEC",
+    "checksum_entries_total": 72,
+    "checksum_entries_verified": 72,
+    "manifest_rows_verified": 17,
+    "new_scaffold_packages": 17,
+    "old12_instance_overlaps": 4,
+    "overlap_use_old_canonical": 4,
+    "pending_canonicalization_new_scaffolds": 7,
+    "production_active_from_new17": 0,
+    "quarantined_new_scaffolds": 2,
+    "repair_or_accept_new_scaffolds": 4,
+    "union_unique_instances": 25,
+    "unique_instances": 17,
+    "yaml_relative_references_verified": 17
+  },
+  "schema_version": "AI_VALIDATION_ASSET_REGISTRY_V1",
+  "semantic_contract": {
+    "allowed_claim": "computational robustness and off-target-risk proxy only",
+    "challenge_target_source_groups": 4,
+    "experimental_negative_labels": 0,
+    "forbidden_claim": "binding, non-binding, KD, or selectivity truth",
+    "no_binding_directory_is_label": false,
+    "positive_1d0r_independent_samples": 1,
+    "terminal_amide_atomically_proven": false
+  },
+  "source_bytes": 14884156,
+  "source_file_count": 177,
+  "structure_parse_pass": 112,
+  "structure_path_count": 112,
+  "validator_sha256": "c5d564b86e23e9569e9087d3d7832aa13e6c67afc459a3111ff35f5936c8ed3d",
+  "warnings": []
+}
