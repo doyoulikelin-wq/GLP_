@@ -1,0 +1,65 @@
+# Operating-system and editor artifacts
+.DS_Store
+._*
+.~*
+*~
+.idea/
+.vscode/
+
+# Python and notebook caches
+**/__pycache__/
+**/*.py[cod]
+**/.ipynb_checkpoints/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Environments and package caches
+**/env/
+**/.venv/
+**/venv/
+**/node_modules/
+**/site-packages/
+
+# Model assets, large data archives and native binaries
+**/runtime_cache/
+**/checkpoints/
+**/*.ckpt
+**/*.pt
+**/*.pth
+**/*.safetensors
+**/mols.zip
+**/*.tgz
+**/*.tar.gz
+**/*.sqlite
+**/*.db
+**/*.npy
+**/*.npz
+**/*.pkl
+**/*.pickle
+**/*.parquet
+**/*.h5
+**/*.hdf5
+**/*.zarr/
+**/*.so
+**/*.dylib
+
+# Full run evidence stays in external/local storage and is indexed by manifest.
+**/runs/
+**/snapshots/
+**/outputs/
+**/logs/
+**/*.log
+
+# Third-party source copies and local Codex artifacts are not published.
+**/vendor/
+.codex_artifacts/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx

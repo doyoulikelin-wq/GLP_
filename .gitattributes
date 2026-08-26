@@ -1,0 +1,16 @@
+* text=auto eol=lf
+*.py text diff=python
+*.md text diff=markdown whitespace=-blank-at-eol
+*.json text
+*.jsonl text
+*.csv text
+*.tsv text whitespace=-blank-at-eol
+*.yaml text
+*.yml text
+# PDB 使用固定宽度记录；第 79–80 列允许以空格补齐，不能按普通源码处理。
+*.pdb text whitespace=-blank-at-eol
+*.ipynb text linguist-language=Jupyter Notebook
+*.html text linguist-generated=true -diff
+
+# 这些一次性构建器的三引号 Markdown 模板使用两个行末空格表达硬换行。
+boltzgen/tools/one_off/notebook_builders/*.py whitespace=-blank-at-eol

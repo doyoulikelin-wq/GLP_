@@ -1,0 +1,9 @@
+﻿priority,issue,evidence,consequence,correction
+P0,跨靶模型数不一致,主正靶使用两个模型平均；其余正靶和负靶默认只用一个模型,正负分数不可严格比较,所有靶标固定相同模型集合、recycle、seed 状态和汇总规则
+P0,GIP 与 oxyntomodulin 坐标不完整,GIP 30/42；oxyntomodulin 26/37,负靶表面和界面分数可能偏置,补全、替换或明确采用统一建模策略，并冻结来源/哈希
+P0,上游和依赖未固定,Notebook 动态克隆未固定 main 并下载外部资产,无法重建同一环境与结果,固定 BindCraft tag/commit、AlphaFold2、ProteinMPNN、PyRosetta、模型资产和输入
+P1,9–36 不是独立实验结构,由对应 7–36 PDB 删除前两个残基,只能当 matched computational challenge，不能当独立生物学重复,保留 derived 标签，并在实验阶段使用真实 9–36 标准品
+P1,默认 margin 门冗余,positive≥0.50 且 negative≤0.35 已保证 margin≥0.15,门看似更多，实际没有新增约束,删除冗余门或预注册能增加信息的独立阈值
+P1,N 端接触加分无排序信息,"contacts∈{0,1,2}，pass 要求≥2，score 加 0.025×contacts",所有通过者都固定 +0.05,改为连续距离/接触几何评分，或只作为硬门不参与排序
+P1,1D0R 模型不独立,models 1 与 10 来自同一 NMR deposition,不能将构象数当生物学样本数,按 deposition 分层；构象只作重复测量/鲁棒性挑战
+P1,末端化学不一致,标准 PDB 聚合物记录未无歧义编码 C 端酰胺,不能声称模型已识别 NH₂ 化学选择性,建立原子级化学注册表，并与实验标准品对齐

@@ -1,0 +1,11 @@
+filter_order,filter_label_cn,pass_column,value_column,operator,threshold,unit,candidate_count,passed_count,failed_count,failure_rate
+1,未知残基 X,pass_has_x_filter,has_x,<=,0.0,count,24,24,0,0.0
+2,复合物骨架均方根偏差,pass_filter_rmsd_filter,filter_rmsd,<=,2.5,Å,24,1,23,0.9583333333333334
+3,VHH设计区骨架均方根偏差,pass_filter_rmsd_design_filter,filter_rmsd_design,<=,2.5,Å,24,18,6,0.25
+4,复折叠前 His7/Ala8 提示位点8 Å覆盖,pass_bindsite_under_8rmsd_filter,bindsite_under_8rmsd,>=,0.0001,fraction,24,9,15,0.625
+5,设计区半胱氨酸比例,pass_CYS_fraction_filter,CYS_fraction,<=,0.0,fraction,24,24,0,0.0
+6,设计区丙氨酸比例,pass_ALA_fraction_filter,ALA_fraction,<=,0.3,fraction,24,24,0,0.0
+7,设计区甘氨酸比例,pass_GLY_fraction_filter,GLY_fraction,<=,0.3,fraction,24,24,0,0.0
+8,设计区谷氨酸比例,pass_GLU_fraction_filter,GLU_fraction,<=,0.3,fraction,24,24,0,0.0
+9,设计区亮氨酸比例,pass_LEU_fraction_filter,LEU_fraction,<=,0.3,fraction,24,24,0,0.0
+10,设计区缬氨酸比例,pass_VAL_fraction_filter,VAL_fraction,<=,0.3,fraction,24,24,0,0.0

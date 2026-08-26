@@ -1,0 +1,18 @@
+instance	new_rank	new_folder	new_qc_status	new_warning	ai_status	old12_overlap	old12_folder
+pdb_00009ezu-B	1	01_pdb_00009ezu-B	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00006xym-A	2	02_pdb_00006xym-A	pass_with_warnings	CDR2_length_outside_0_10:19	STRESS_ONLY_USE_OLD_CANONICAL	true	08_pdb_00006xym-A
+pdb_00004b50-A	3	03_pdb_00004b50-A	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00002xt1-B	4	04_pdb_00002xt1-B	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00008jza-A	5	05_pdb_00008jza-A	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00006xxo-A	6	06_pdb_00006xxo-A	pass		DUPLICATE_ALIAS_USE_OLD_CANONICAL	true	04_pdb_00006xxo-A
+pdb_00007oao-FFF	7	07_pdb_00007oao-FFF	pass_with_warnings	extra_cys:55|112A	QUARANTINE_PENDING_REDESIGN	false	
+pdb_00004wem-B	8	08_pdb_00004wem-B	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00008v9x-A	9	09_pdb_00008v9x-A	pass		DUPLICATE_ALIAS_USE_OLD_CANONICAL	true	03_pdb_00008v9x-A
+pdb_00004i13-B	10	10_pdb_00004i13-B	pass		NEEDS_REPAIR_OR_ACCEPTANCE	false	
+pdb_00008q95-C	11	11_pdb_00008q95-C	pass		NEEDS_REPAIR_OR_ACCEPTANCE	false	
+pdb_00008q95-B	12	12_pdb_00008q95-B	pass		NEEDS_REPAIR_OR_ACCEPTANCE	false	
+pdb_00007xld-B	13	13_pdb_00007xld-B	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00005l21-B	14	14_pdb_00005l21-B	pass		DUPLICATE_ALIAS_USE_OLD_CANONICAL	true	05_pdb_00005l21-B
+pdb_00004x7f-C	15	15_pdb_00004x7f-C	pass		NEEDS_REPAIR_OR_ACCEPTANCE	false	
+pdb_00008pih-C	16	16_pdb_00008pih-C	pass		PENDING_CANONICALIZATION_AND_CHECK	false	
+pdb_00009ho5-C	17	17_pdb_00009ho5-C	pass_with_warnings	cdr_coordinate_gap:28|29|30|35|36	QUARANTINE_MISSING_CDR_COORDINATES	false	

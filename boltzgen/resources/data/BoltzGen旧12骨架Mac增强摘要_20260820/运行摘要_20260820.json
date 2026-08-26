@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-20T05:18:26.145999+00:00",
+  "execution_semantics": "pretrained_inference_candidate_generation_not_weight_training",
+  "counts": {
+    "complete_attempts": 24,
+    "scaffolds": 12,
+    "checkpoints": 2,
+    "candidates": 48,
+    "folding_samples": 96,
+    "filter_rows": 480,
+    "strict_filter_survivors": 0,
+    "budget_items": 24,
+    "writer_analysis_best_index_matches": 41
+  },
+  "best_index_formulas": {
+    "bindsite_under_8rmsd": "BoltzGen 在复折叠前结构上计算的 His7/Ala8 token-center 覆盖比例；取值为 0、0.5 或 1，不是接触数，也不是复折叠后的原子距离。",
+    "refold_hotspot_distances": "本脚本从 writer 输出 CIF 独立重算 His7/Ala8 到 VHH 设计残基的最小重原子和 Cα 距离。",
+    "analysis_best_sample": "0.8×design_to_target_iPTM + 0.2×design_pTM 的最大值索引。",
+    "writer_best_sample": "0.8×iPTM + 0.2×pTM 的最大值索引；writer CIF 坐标来自此样本。",
+    "observed_best_index_agreement": "主分析中 41/48 一致，7/48 不一致。",
+    "budget_item": "排序/展示预算项；它与是否通过全部十项过滤是两个独立事实。"
+  },
+  "scientific_limits": [
+    "这是预训练模型推理与候选生成，不是模型权重训练。",
+    "只使用单一 6X18 受体结合态 GLP-1(7–36) 正靶几何。",
+    "没有 GLP-1(9–36)、其他反靶或多构象反筛，因此不支持型态选择性结论。",
+    "目标 C 端酰胺未完成原子级验证。",
+    "所有分数与距离都是计算代理，不支持解离常数、亲和力或实验成功率结论。",
+    "实验性 Apple Metal Performance Shaders 分支不等同于官方 Linux + NVIDIA CUDA 基线。",
+    "本轮使用 Apple Metal Performance Shaders，且 PYTORCH_ENABLE_MPS_FALLBACK=1 允许不受支持的算子回退到中央处理器；日志未逐算子归因，不能把耗时或数值差异只归因于一种设备。",
+    "两种最佳样本公式只在 41/48 个候选上一致；另有 7 个候选选择了不同样本，writer CIF 与 Analyze 指标必须分别解释。",
+    "每个骨架每个检查点只有 2 个候选，只适合流程复盘和候选描述。"
+  ],
+  "stress_attempt_count": 1,
+  "independent_deep_probe": {
+    "status": "COMPLETE",
+    "candidates": 4,
+    "folding_samples": 4,
+    "included_in_main_counts": false
+  }
+}

@@ -1,0 +1,1194 @@
+#!/usr/bin/env python3
+"""生成 BoltzGen VHH + GLP-1 数据流与算法原理的自包含技术报告。
+
+本脚本只读取项目中已经存在的两份设计规格作为示例，不执行模型推理，也不修改
+任何 BoltzGen 输入或结果。它先生成 canonical Data Analytics artifact JSON，再由共享
+portable report builder 封装为最终 HTML。
+"""
+
+from __future__ import annotations
+
+import html
+import csv
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+WORKSPACE = Path(__file__).resolve().parents[3]
+REPORT_ROOT = Path(__file__).resolve().parent
+ARTIFACT_PATH = REPORT_ROOT / "artifact.json"
+HTML_PATH = WORKSPACE / "data" / "boltzgen_data" / "BoltzGen_VHH_GLP-1_数据流与算法原理.html"
+ARCHITECTURE_COUNTS_PATH = REPORT_ROOT / "architecture_counts.csv"
+SOURCE_TABLE_ROOT = REPORT_ROOT / "source_tables"
+
+TOP_SPEC_PATH = (
+    WORKSPACE
+    / "data"
+    / "boltzgen_data"
+    / "mvp_run_001"
+    / "inputs"
+    / "glp1_7_36_nanobody_mvp.yaml"
+)
+SCAFFOLD_SPEC_PATH = (
+    WORKSPACE
+    / "data"
+    / "boltzgen_data"
+    / "mvp_run_001"
+    / "inputs"
+    / "scaffold"
+    / "7xl0_mvp_scaffold.yaml"
+)
+
+TITLE = "BoltzGen：从骆驼科仅重链抗体可变结构域骨架与胰高血糖素样肽‑1到候选捕获蛋白"
+
+
+def escape(value: object) -> str:
+    """把示例文本安全嵌入 HTML。"""
+
+    return html.escape(str(value), quote=True)
+
+
+BASE_STYLE = """
+<style>
+  .bgx{max-width:100%;overflow-x:hidden;font:17px/1.68 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#17344b}
+  .bgx *{box-sizing:border-box}.bgx h2{margin:0 0 8px;color:#103451}.bgx h3{margin:18px 0 7px;color:#173f5d}.bgx p{margin:7px 0}
+  .bgx .intro{color:#587084;margin:0 0 15px}.bgx .caption{color:#5b7182;font-size:14px;margin-top:10px}
+  .bgx .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:stretch;margin:14px 0}
+  .bgx .node{position:relative;min-height:112px;padding:14px 14px 13px;border-radius:14px;border:1px solid #b8ccd8;background:#f5f9fb;overflow-wrap:anywhere}
+  .bgx .node strong{display:block;color:#0d3b58;font-size:16px;margin-bottom:4px}.bgx .node small{display:block;color:#61798a;line-height:1.48}
+  .bgx .node.input{border-top:5px solid #2878b8}.bgx .node.model{border-top:5px solid #7a54a5;background:#f8f4fb}.bgx .node.output{border-top:5px solid #b66a11;background:#fff8ed}.bgx .node.check{border-top:5px solid #08776f;background:#eff8f7}
+  .bgx .arrow-row{text-align:center;color:#556d7c;font-size:25px;line-height:1;margin:2px 0}.bgx .lane{border:1px solid #c7d5de;border-radius:17px;padding:14px;margin:13px 0;background:#fff}
+  .bgx .lane-title{display:flex;gap:8px;align-items:center;font-weight:800;color:#103b59;margin-bottom:9px}.bgx .lane-index{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#103b59;color:#fff;font:700 14px ui-monospace,monospace}
+  .bgx .chips{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0}.bgx .chip{padding:5px 10px;border-radius:999px;background:#eaf3f7;border:1px solid #bfd3dd;color:#1e4c67;font-size:14px}
+  .bgx .warning,.bgx .good,.bgx .plain{padding:12px 14px;border-radius:11px;margin:12px 0;border-left:5px solid #b26a10;background:#fff4df}.bgx .good{border-left-color:#08776f;background:#ebf7f5}.bgx .plain{border-left-color:#2878b8;background:#edf6fd}
+  .bgx .domain{display:grid;grid-template-columns:1.15fr .62fr 1fr .62fr 1fr .95fr 1.1fr;gap:5px;align-items:stretch;margin:15px 0}
+  .bgx .seg{padding:11px 7px;border-radius:9px;text-align:center;background:#dbeaf3;border:1px solid #a8c5d7;font-weight:750}.bgx .seg.cdr{background:#ffe1aa;border-color:#d79835;color:#6e4300}.bgx .seg span{display:block;font-size:12px;font-weight:500;margin-top:2px}
+  .bgx .target{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin:16px 0}.bgx .residue{display:grid;place-items:center;min-width:38px;height:38px;border-radius:50%;background:#d8edf0;border:1px solid #8cbfc2;font:700 13px ui-monospace,monospace}.bgx .residue.hot{background:#ffcc72;border-color:#bd7412;color:#633800}.bgx .residue.tail{opacity:.82}
+  .bgx .matrix{display:grid;grid-template-columns:repeat(8,minmax(24px,1fr));gap:4px;max-width:520px;margin:12px auto}.bgx .cell{height:30px;border-radius:5px;background:#e1ebf1;border:1px solid #bed0da}.bgx .cell.hot{background:#c8b4dc;border-color:#8a6aaa}.bgx .cell.bind{background:#f7c876;border-color:#bd781e}
+  .bgx .atom-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:14px 0}.bgx .atom{display:grid;place-items:center;width:47px;height:47px;border-radius:50%;border:2px solid #7aa0b5;background:#e8f1f6;font:700 13px ui-monospace,monospace}.bgx .atom.backbone{background:#cfe5f2;border-color:#2878b8}.bgx .atom.virtual{background:#eee5f6;border-color:#7a54a5}.bgx .atom.side{background:#ffe4b7;border-color:#b66a11}
+  .bgx .timeline{display:grid;grid-template-columns:repeat(5,minmax(125px,1fr));gap:9px;margin:14px 0}.bgx .time-step{padding:13px 10px;border-radius:12px;text-align:center;border:1px solid #bccdd6;background:#f5f8fa}.bgx .time-step b{display:block;color:#173f5d;margin-bottom:4px}.bgx .noise{background-image:radial-gradient(#7a54a5 1.1px,transparent 1.1px);background-size:8px 8px}.bgx .res-window{box-shadow:inset 0 -5px #b66a11}
+  .bgx .formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin:14px 0}.bgx .formula-grid>*,.bgx .flow>*,.bgx .io-grid>*{min-width:0}.bgx .formula{min-width:0;padding:15px;border-radius:13px;border:1px solid #c2d2db;background:#f7fafb}.bgx .formula h3{font-size:16px;margin:0 0 8px}.bgx .eq{width:100%;max-width:100%;overflow:auto;padding:12px;border-radius:9px;background:#102b3d;color:#f4f8fa;font:17px/1.65 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:nowrap}.bgx .formula p{font-size:14px;color:#526b7c}
+  .bgx details{margin:10px 0;border:1px solid #c3d3dc;border-radius:13px;background:#fff;overflow:clip}.bgx summary{cursor:pointer;list-style:none;padding:14px 16px;background:#f2f7f9;color:#123d59;font-weight:800}.bgx summary::-webkit-details-marker{display:none}.bgx summary::after{content:"＋";float:right;color:#08776f;font-size:20px}.bgx details[open] summary::after{content:"－"}.bgx summary:focus-visible{outline:3px solid #08776f;outline-offset:-3px}.bgx .detail-body{padding:15px 17px}.bgx pre{margin:10px 0;max-height:590px;overflow:auto;white-space:pre;padding:14px;border-radius:10px;background:#10283a;color:#edf5f7;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .bgx .io-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.bgx .io-card{padding:13px;border-radius:12px;border:1px solid #c4d4dd;background:#f7fafb}.bgx .io-card b{display:block;color:#113d59;margin-bottom:4px}.bgx .tag{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;background:#e2eff5;color:#25526a;font-size:12px}
+  @media(prefers-color-scheme:dark){.bgx{color:#dbe9f0}.bgx h2,.bgx h3,.bgx .lane-title{color:#eef7fb}.bgx .intro,.bgx .caption{color:#b5c8d3}.bgx .node,.bgx .lane,.bgx details{background:#172d3b;border-color:#3d5969}.bgx .node strong,.bgx .seg,.bgx summary{color:#edf6fa}.bgx .node small{color:#b6c8d2}.bgx .node.model{background:#2b2437}.bgx .node.output{background:#3d3020}.bgx .node.check{background:#183a38}.bgx .chip{background:#223c4b;border-color:#496574;color:#dceaf1}.bgx .warning{background:#4b371d}.bgx .good{background:#183a37}.bgx .plain{background:#1b3448}.bgx .seg{background:#24465a;border-color:#52738a}.bgx .seg.cdr{background:#533a17;border-color:#8f692f;color:#ffe4b6}.bgx .residue{background:#264853;border-color:#527f85}.bgx .residue.hot{background:#5c421c;border-color:#98702f;color:#ffe2a9}.bgx .cell{background:#294555;border-color:#486779}.bgx .cell.hot{background:#48375c;border-color:#795f94}.bgx .cell.bind{background:#5b421e;border-color:#90652a}.bgx .atom{background:#253f4d;border-color:#53798d}.bgx .atom.backbone{background:#24465a}.bgx .atom.virtual{background:#433551}.bgx .atom.side{background:#4e381d}.bgx .time-step,.bgx .formula,.bgx .io-card{background:#172d3b;border-color:#3d5969}.bgx summary{background:#1f3949}.bgx .detail-body{background:#172d3b}.bgx .tag{background:#24465a;color:#dbeaf1}}
+  @media(max-width:760px){.bgx{font-size:16px}.bgx .domain{grid-template-columns:1fr 1fr}.bgx .timeline{grid-template-columns:1fr}.bgx .matrix{grid-template-columns:repeat(5,minmax(24px,1fr))}.bgx .node{min-height:0}.bgx .formula-grid{grid-template-columns:1fr}.bgx .eq{font-size:14px}.bgx .arrow-row{transform:rotate(90deg);margin:8px 0}}
+</style>
+"""
+
+
+def visual(body: str) -> str:
+    """包装一个响应式、深浅色兼容的说明图。"""
+
+    return BASE_STYLE + f'<section class="bgx">{body}</section>'
+
+
+def pre(text: str) -> str:
+    """生成安全的可滚动代码块。"""
+
+    return f'<pre tabindex="0"><code>{escape(text)}</code></pre>'
+
+
+def details(title: str, body: str) -> str:
+    """生成不依赖 JavaScript 的可点击知识模块。"""
+
+    return f'<details><summary>{escape(title)}</summary><div class="detail-body">{body}</div></details>'
+
+
+def write_source_table(dataset_id: str, rows: list[dict[str, object]]) -> Path:
+    """把报告表格的规范行写成可被来源 SQL 重放的 CSV。"""
+
+    if not rows:
+        raise ValueError(f"来源表 {dataset_id} 不能为空")
+    SOURCE_TABLE_ROOT.mkdir(parents=True, exist_ok=True)
+    path = SOURCE_TABLE_ROOT / f"{dataset_id}.csv"
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+    return path
+
+
+def table_source(dataset_id: str, label: str, order_sql: str = "") -> dict[str, object]:
+    """生成 portable report builder 要求的可追溯 SQL 来源合同。"""
+
+    relative = f"data/boltzgen_data/boltzgen_vhh_glp1_explainer/source_tables/{dataset_id}.csv"
+    sql = f"SELECT *\nFROM read_csv_auto('{relative}', header=true)"
+    if order_sql:
+        sql += f"\nORDER BY {order_sql}"
+    sql += ";"
+    return {
+        "id": f"{dataset_id}_source",
+        "label": label,
+        "path": relative,
+        "query": {
+            "engine": "duckdb",
+            "language": "sql",
+            "sql": sql,
+            "description": f"读取报告规范来源表 {dataset_id}.csv；该表由生成脚本从已核对的项目输入、官方配置和方法定义写出。",
+            "tables_used": [relative],
+        },
+    }
+
+
+def build_artifact() -> dict[str, object]:
+    """构造报告 artifact。"""
+
+    top_spec = TOP_SPEC_PATH.read_text(encoding="utf-8")
+    scaffold_spec = SCAFFOLD_SPEC_PATH.read_text(encoding="utf-8")
+    with ARCHITECTURE_COUNTS_PATH.open("r", encoding="utf-8", newline="") as handle:
+        architecture_counts = [
+            {"module": row["module"], "count": int(row["count"])}
+            for row in csv.DictReader(handle)
+        ]
+    generated_at = datetime.now(timezone.utc).isoformat()
+
+    sources = [
+        {
+            "id": "paper",
+            "label": "BoltzGen: Toward Universal Binder Design — official manuscript",
+            "href": "https://hannes-stark.com/assets/boltzgen.pdf",
+        },
+        {
+            "id": "paper_v2",
+            "label": "BoltzGen manuscript version 2 on bioRxiv",
+            "href": "https://www.biorxiv.org/content/10.1101/2025.11.20.689494v2",
+        },
+        {
+            "id": "release",
+            "label": "BoltzGen software release v0.3.2",
+            "href": "https://github.com/HannesStark/boltzgen/releases/tag/v0.3.2",
+        },
+        {
+            "id": "schema_docs",
+            "label": "BoltzGen v0.3.2 design specification documentation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/README.md",
+        },
+        {
+            "id": "nanobody_example",
+            "label": "BoltzGen v0.3.2 nanobody design example",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/nanobody/penguinpox.yaml",
+        },
+        {
+            "id": "pipeline_code",
+            "label": "BoltzGen v0.3.2 pipeline implementation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py",
+        },
+        {
+            "id": "train_config",
+            "label": "BoltzGen v0.3.2 public large-model training configuration",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/resources/config/train/boltzgen.yaml",
+        },
+        {
+            "id": "design_config",
+            "label": "BoltzGen v0.3.2 public inference configuration",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/resources/config/design.yaml",
+        },
+        {
+            "id": "diffusion_code",
+            "label": "BoltzGen v0.3.2 diffusion implementation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/model/modules/diffusion.py",
+        },
+        {
+            "id": "inverse_fold_code",
+            "label": "BoltzGen v0.3.2 inverse-folding implementation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/model/modules/inverse_fold.py",
+        },
+        {
+            "id": "refold_code",
+            "label": "BoltzGen v0.3.2 generated-candidate refolding input implementation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/task/predict/data_from_generated.py",
+        },
+        {
+            "id": "filter_code",
+            "label": "BoltzGen v0.3.2 filtering and diversity-selection implementation",
+            "href": "https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/task/filter/filter.py",
+        },
+        {
+            "id": "project_top_spec",
+            "label": "Project GLP-1 nanobody top-level design specification",
+            "path": "data/boltzgen_data/mvp_run_001/inputs/glp1_7_36_nanobody_mvp.yaml",
+        },
+        {
+            "id": "project_scaffold_spec",
+            "label": "Project 7XL0 scaffold demonstration specification",
+            "path": "data/boltzgen_data/mvp_run_001/inputs/scaffold/7xl0_mvp_scaffold.yaml",
+        },
+        {
+            "id": "scaffold_database",
+            "label": "Project-screened SAbDab2 VHH scaffold database",
+            "path": "data/boltzgen_data/sabdab2_vhh_scaffolds_v1/registry/scaffold_database.sqlite",
+        },
+    ]
+
+    input_contract = [
+        {
+            "order": 1,
+            "input": "胰高血糖素样肽‑1目标结构",
+            "project_example": "6X18来源的7–36几何；链E；30个残基；位置1/2对应组氨酸7/丙氨酸8",
+            "format": "大分子晶体学信息文件（mmCIF）；每个_atom_site数据行表示一个原子",
+            "model_use": "提供目标原子类型、三维坐标、链与残基索引；作为固定结构条件",
+            "must_check": "链、残基数、坐标、端基化学、构象来源；当前C端酰胺未获原子级确认",
+        },
+        {
+            "order": 2,
+            "input": "骆驼科仅重链抗体可变结构域骨架",
+            "project_example": "经质量控制的单链框架；包含规范二硫键；三段互补决定区可设计",
+            "format": "大分子晶体学信息文件（mmCIF）",
+            "model_use": "锁定框架内部几何；为互补决定区提供锚点和拓扑",
+            "must_check": "主链完整、编号唯一、二硫键、占据率、无零坐标；每个骨架单独验证",
+        },
+        {
+            "order": 3,
+            "input": "骨架设计配方",
+            "project_example": "指定框架链、三段可设计区域、隐藏区域、删除与可变长度插入",
+            "format": "YAML配置文件",
+            "model_use": "把哪些残基固定、哪些残基重建、插入多少残基转换成模型掩码与约束",
+            "must_check": "res_index必须对应当前文件的label_seq_id；不能跨骨架机械复制编号",
+        },
+        {
+            "order": 4,
+            "input": "顶层设计规格",
+            "project_example": "同时引用目标与骨架；标记目标位置1/2为优先结合位点",
+            "format": "YAML配置文件",
+            "model_use": "定义完整分子系统、结构组、结合/非结合位点和约束",
+            "must_check": "binding标签只是同一目标内的位置引导，不是跨目标选择性损失",
+        },
+        {
+            "order": 5,
+            "input": "预训练模型权重",
+            "project_example": "结构生成、序列反设计、Boltz‑2复折叠与置信度模型",
+            "format": "PyTorch检查点（checkpoint，保存神经网络参数和状态的二进制文件；.ckpt）",
+            "model_use": "提供已经训练好的神经网络参数；最小可行产品阶段不重新训练基础模型",
+            "must_check": "版本、文件哈希、软件提交版本和运行参数必须冻结",
+        },
+        {
+            "order": 6,
+            "input": "化学组分字典与运行参数",
+            "project_example": "mols.zip；候选数、最终预算、采样批量、设备设置",
+            "format": "ZIP归档与命令行参数",
+            "model_use": "解释标准/非标准组分并控制生成规模和采样行为",
+            "must_check": "本地字典可读；候选数不应被误解为实验成功率",
+        },
+    ]
+
+    training_tasks = [
+        {
+            "task": "结构折叠",
+            "被遮蔽或设计的部分": "没有设计残基；所有分子身份已知，三维结构未知",
+            "模型学到什么": "从序列与分子条件恢复复合物全原子结构",
+            "对本项目的作用": "提供目标—骨架相互作用的结构推理基础",
+        },
+        {
+            "task": "结合蛋白设计",
+            "被遮蔽或设计的部分": "选择一个蛋白链，或只选择该链的界面区域进行设计",
+            "模型学到什么": "在其余分子条件下生成结合方的身份、构象和相对姿势",
+            "对本项目的作用": "对应固定VHH框架、生成互补决定区的任务",
+        },
+        {
+            "task": "基序支架化",
+            "被遮蔽或设计的部分": "保留一个局部几何基序并生成其余部分，或反向完成局部区域",
+            "模型学到什么": "遵守固定结构片段和成对距离条件",
+            "对本项目的作用": "帮助模型在不破坏框架的前提下补全互补决定区",
+        },
+        {
+            "task": "无条件生成",
+            "被遮蔽或设计的部分": "整个蛋白均被设计",
+            "模型学到什么": "一般蛋白结构与序列分布",
+            "对本项目的作用": "提供广泛的折叠和几何先验，但不是VHH特异标签",
+        },
+    ]
+
+    tensor_contract = [
+        {
+            "tensor": "原子槽位坐标 X",
+            "general_shape": "[批次B, 构象C, 原子槽位A, 3]",
+            "project_example": "[1, 1, 1472, 3]；1444个有效槽位+28个补齐槽位",
+            "axis_meaning": "有效行可是真实原子或设计残基的虚拟身份槽；最后3列是x、y、z；补齐行无化学含义",
+            "role": "扩散模型真正加噪和去噪的连续状态",
+        },
+        {
+            "tensor": "单令牌表示 S",
+            "general_shape": "[批次B, 令牌L, 384]",
+            "project_example": "一个155令牌样本对应[1, 155, 384]",
+            "axis_meaning": "每个蛋白残基通常一个令牌；最后384列是学习到的特征通道",
+            "role": "描述每个残基/分子单元自身",
+        },
+        {
+            "tensor": "成对表示 Z",
+            "general_shape": "[批次B, 令牌L, 令牌L, 128]",
+            "project_example": "一个155令牌样本对应[1, 155, 155, 128]",
+            "axis_meaning": "第2、3轴选择令牌i和j；最后128列描述这对令牌的关系",
+            "role": "承载距离、键、结构组和跨链几何推理",
+        },
+        {
+            "tensor": "设计掩码 design_mask",
+            "general_shape": "[批次B, 令牌L]",
+            "project_example": "[1, 155]；其中42个设计令牌",
+            "axis_meaning": "每个位置为1表示允许设计，为0表示固定/目标",
+            "role": "限定逆折叠和序列变更只发生在CDR设计区",
+        },
+        {
+            "tensor": "结合位点提示 binding_type",
+            "general_shape": "[批次B, 令牌L]",
+            "project_example": "[1, 155]；GLP‑1前两个令牌为正向提示",
+            "axis_meaning": "每个令牌一个位点类别",
+            "role": "提示设计区域靠近His7/Ala8；不是选择性标签",
+        },
+        {
+            "tensor": "原子—令牌归属 atom_to_token",
+            "general_shape": "[批次B, 原子槽位A, 令牌L]",
+            "project_example": "[1, 1472, 155]；28个补齐行没有有效归属",
+            "axis_meaning": "每个有效槽位行指向它所属的残基令牌列；补齐行全部为无效映射",
+            "role": "在原子级坐标与残基级表示之间传递信息",
+        },
+        {
+            "tensor": "原子补齐掩码 atom_pad_mask",
+            "general_shape": "[批次B, 原子槽位A]",
+            "project_example": "[1, 1472]；区分1444个有效槽位与28个补齐槽位",
+            "axis_meaning": "逐槽位标记该行是否属于真实/虚拟模型输入，还是仅为批处理补齐",
+            "role": "防止补齐坐标参与注意力、损失和统计",
+        },
+        {
+            "tensor": "氨基酸约束 aa_constraint_mask",
+            "general_shape": "[批次B, 令牌L, 20]",
+            "project_example": "[1, 155, 20]",
+            "axis_meaning": "最后20列对应20种标准氨基酸是否允许",
+            "role": "限制特定位点可被采样的氨基酸集合",
+        },
+        {
+            "tensor": "令牌类型 res_type",
+            "general_shape": "[批次B, 令牌L, 33]",
+            "project_example": "[1, 155, 33]",
+            "axis_meaning": "最后33列是残基/分子令牌类型的独热编码通道",
+            "role": "表示已知类型；设计位点身份在生成阶段由几何解码",
+        },
+    ]
+
+    pipeline_stages = [
+        {
+            "order": 1,
+            "stage": "解析与特征化",
+            "input": "目标mmCIF、骨架mmCIF、两层YAML规格",
+            "algorithm": "建立原子、残基token、成对关系、设计掩码、结构组和结合位点标签",
+            "output": "模型可读的张量与约束",
+            "scientific_meaning": "把实验结构和人为设计意图翻译成条件",
+        },
+        {
+            "order": 2,
+            "stage": "全原子扩散生成",
+            "input": "条件表示与随机三维噪声",
+            "algorithm": "条件编码主干运行一次；扩散模块反复去噪，联合形成姿势、互补决定区骨架、侧链和残基类型",
+            "output": "intermediate_designs中的候选复合物CIF与数组归档",
+            "scientific_meaning": "提出可能的VHH—GLP‑1结合结构假设",
+        },
+        {
+            "order": 3,
+            "stage": "序列反设计",
+            "input": "扩散生成的目标—VHH结构和固定框架序列",
+            "algorithm": "Boltz inverse folding模型在允许设计的位置重新采样序列，使其更可能折回给定骨架",
+            "output": "完整VHH候选序列与逆折叠结构中间文件",
+            "scientific_meaning": "把几何方案变成更可实现的氨基酸序列方案",
+        },
+        {
+            "order": 4,
+            "stage": "复合物重折叠",
+            "input": "候选完整序列、目标和目标结构模板",
+            "algorithm": "Boltz‑2在不使用多序列比对的设置下重新预测候选—目标复合物",
+            "output": "refold_cif结构、压缩数组、置信度和几何一致性指标",
+            "scientific_meaning": "检查候选序列是否会回到原设计结构；不是独立实验",
+        },
+        {
+            "order": 5,
+            "stage": "物理几何与可开发性分析",
+            "input": "重折叠复合物和候选序列",
+            "algorithm": "计算氢键、盐桥、埋藏表面积、责任基序和结构偏差；nanobody-anything跳过最大疏水斑块指标",
+            "output": "aggregate_metrics与per_target_metrics表",
+            "scientific_meaning": "把三维结果转成可排序但仍属计算代理的指标",
+        },
+        {
+            "order": 6,
+            "stage": "过滤与最坏指标排名",
+            "input": "全部候选的置信度、几何和可开发性指标",
+            "algorithm": "按每个指标分别排名，再以最差加权名次决定总体次序",
+            "output": "all_designs_metrics与预算候选表",
+            "scientific_meaning": "避免某个漂亮指标掩盖另一个严重缺陷",
+        },
+        {
+            "order": 7,
+            "stage": "质量—多样性选择",
+            "input": "排名候选和设计位点序列；本项目为三段CDR按链顺序串联",
+            "algorithm": "论文给出结构+序列多样性的通式；v0.3.2源码实际按design_mask位置序列的一致性做贪心去重",
+            "output": "最终排名CIF、CSV和结果概览",
+            "scientific_meaning": "避免最终实验清单只是同一个方案的近重复",
+        },
+        {
+            "order": 8,
+            "stage": "实验闭环",
+            "input": "通过计算门槛的完整序列",
+            "algorithm": "表达、纯化、表面等离子体共振/生物层干涉与混合样本捕获质谱",
+            "output": "真实表达、动力学、回收率和型态选择性标签",
+            "scientific_meaning": "只有此处才能确认结合与选择性",
+        },
+    ]
+
+    metrics = [
+        {
+            "metric": "复合物骨架均方根偏差",
+            "first_definition": "root-mean-square deviation（RMSD），最优刚体对齐后的平均坐标偏差；单位为埃（ångström，Å；1 Å=0.1纳米）",
+            "direction": "较低通常更好；当前默认硬门之一为不高于2.5 Å",
+            "what_it_tests": "设计模型结构与Boltz‑2重折叠结构是否自洽",
+            "not_equal_to": "不是实验结构误差，也不是亲和力",
+        },
+        {
+            "metric": "设计区域骨架均方根偏差",
+            "first_definition": "只在互补决定区/设计残基上计算的RMSD",
+            "direction": "较低通常更好",
+            "what_it_tests": "最关键的设计环是否能按序列折回",
+            "not_equal_to": "不能证明接触的是正确表位",
+        },
+        {
+            "metric": "设计—目标界面预测模板建模分数",
+            "first_definition": "interface predicted Template Modeling score（界面iPTM）",
+            "direction": "较高通常更好",
+            "what_it_tests": "模型对两条链相对装配的置信度代理",
+            "not_equal_to": "不是结合概率或解离常数",
+        },
+        {
+            "metric": "最小设计—目标预测对齐误差",
+            "first_definition": "predicted aligned error（PAE），单位埃；此处取设计区到目标的最小值",
+            "direction": "较低通常更好，但最小值可能过于乐观",
+            "what_it_tests": "至少一对设计—目标位置的相对几何置信度",
+            "not_equal_to": "不是完整界面的平均误差，也不是能量",
+        },
+        {
+            "metric": "界面氢键与盐桥计数",
+            "first_definition": "按几何规则识别的跨界面相互作用数量",
+            "direction": "通常较多更有利，但存在目标大小和构象依赖",
+            "what_it_tests": "界面是否出现合理的极性/带电接触",
+            "not_equal_to": "不是逐项相加即可得到的自由能",
+        },
+        {
+            "metric": "结合后溶剂可及表面积变化",
+            "first_definition": "solvent-accessible surface area（SASA）变化，单位平方埃",
+            "direction": "在同一目标和设置内，较大常表示更广的埋藏界面",
+            "what_it_tests": "接触面积与形状互补的粗略代理",
+            "not_equal_to": "不是通用成功阈值；v0.3.2实现侧重目标侧面积变化",
+        },
+        {
+            "metric": "是否通过过滤",
+            "first_definition": "pass_filters，表示候选是否同时满足当前配置的全部硬规则",
+            "direction": "必须为真才可称通过默认计算过滤",
+            "what_it_tests": "多个硬门的逻辑合取",
+            "not_equal_to": "最终目录中存在文件不等于通过；预算不足时可能出现排序回退",
+        },
+        {
+            "metric": "最终名次",
+            "first_definition": "在本次候选批次和本次指标配置下的相对顺序",
+            "direction": "名次数字较小表示批内优先",
+            "what_it_tests": "批内相对权衡",
+            "not_equal_to": "不是成功概率，不能跨运行直接比较",
+        },
+    ]
+
+    project_boundaries = [
+        {
+            "topic": "正靶",
+            "current_state": "GLP‑1(7–36)的30残基几何，目标位置1/2对应组氨酸7和丙氨酸8",
+            "what_model_can_do": "生成倾向接触这两个位置的互补决定区与结合姿势",
+            "what_is_missing": "多个游离肽构象；自由N端质子化的可靠显式验证",
+            "required_action": "每个构象×每个VHH骨架单独运行；显式开启热点门并分别统计His7/Ala8接触覆盖",
+        },
+        {
+            "topic": "反靶",
+            "current_state": "GLP‑1(9–36)尚未进入原生生成损失",
+            "what_model_can_do": "可对同一候选另行重折叠和计算代理",
+            "what_is_missing": "BoltzGen v0.3.2没有原生的跨目标负向选择性目标",
+            "required_action": "用相同设置对9–36多构象取最强假结合的最坏情况",
+        },
+        {
+            "topic": "C端酰胺",
+            "current_state": "当前标准聚合物mmCIF没有证明–CONH₂在解析和输出中被原子级保留",
+            "what_model_can_do": "处理30残基主链/侧链几何",
+            "what_is_missing": "非标准端基的往返化学闭环",
+            "required_action": "先完成显式非标准组分+共价键的最小解析测试，否则不得宣称精确酰胺型态",
+        },
+        {
+            "topic": "VHH骨架",
+            "current_state": "项目已筛出10个主骨架和2个备用骨架；7XL0只作连续性基准",
+            "what_model_can_do": "固定每个框架并重建其互补决定区",
+            "what_is_missing": "框架表达、单体性和目标相关可达性的实验标签",
+            "required_action": "每个骨架使用自己的编号与互补决定区配方，不能复用7XL0索引",
+        },
+        {
+            "topic": "亲和力与选择性",
+            "current_state": "nanobody-anything协议不运行小分子专用亲和力头",
+            "what_model_can_do": "提供结构自洽、界面置信和几何代理",
+            "what_is_missing": "平衡解离常数、结合/解离速率、混合样本回收率",
+            "required_action": "最终用表面等离子体共振/生物层干涉和液相色谱串联质谱实验闭环",
+        },
+    ]
+
+    for dataset_id, rows in {
+        "input_contract": input_contract,
+        "training_tasks": training_tasks,
+        "tensor_contract": tensor_contract,
+        "pipeline_stages": pipeline_stages,
+        "metrics": metrics,
+        "project_boundaries": project_boundaries,
+    }.items():
+        write_source_table(dataset_id, rows)
+
+    data_flow = visual(
+        """
+        <h2>示意图1｜从输入文件到实验候选的完整数据流</h2>
+        <p class="intro">每个框都说明它接收什么、产生什么。紫色是神经网络生成，绿色是验证/筛选，橙色是文件输出。</p>
+        <div class="lane"><div class="lane-title"><span class="lane-index">1</span>输入与约束层</div>
+          <div class="flow">
+            <div class="node input"><strong>GLP‑1目标大分子晶体学信息文件</strong><small>mmCIF格式；包含原子、链E、残基位置、三维坐标；位置1/2标为优先接触</small></div>
+            <div class="node input"><strong>VHH骨架大分子晶体学信息文件</strong><small>mmCIF格式；包含固定框架、二硫键、三段互补决定区锚点</small></div>
+            <div class="node input"><strong>两层YAML配置</strong><small>YAML是一种人类可读配置格式；声明哪些区域固定、隐藏、删除、插入或设计</small></div>
+            <div class="node input"><strong>预训练检查点</strong><small>checkpoint文件保存结构生成、序列反设计、复折叠与置信度模型参数</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">2</span>条件全原子生成层</div>
+          <div class="flow">
+            <div class="node model"><strong>解析与分子令牌化</strong><small>原子→残基令牌（token）；再建立每一对令牌的关系表示</small></div>
+            <div class="node model"><strong>条件编码主干</strong><small>成对表示变换器（PairFormer）整合序列、结构组、成对距离和结合位点</small></div>
+            <div class="node model"><strong>扩散去噪</strong><small>从随机坐标逐步生成相对姿势、互补决定区、侧链和残基类型</small></div>
+            <div class="node output"><strong>初代候选复合物</strong><small>完整VHH候选序列 + 目标—VHH全原子三维结构</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">3</span>序列稳固与结构复核层</div>
+          <div class="flow">
+            <div class="node model"><strong>Boltz inverse folding</strong><small>在允许设计的位置重新采样更可能折回该骨架的序列</small></div>
+            <div class="node check"><strong>Boltz‑2复折叠</strong><small>从候选序列重新预测与目标的复合物</small></div>
+            <div class="node check"><strong>分析与硬过滤</strong><small>结构偏差、界面置信、氢键、盐桥、表面积和可开发性</small></div>
+            <div class="node check"><strong>质量—多样性选择</strong><small>避免实验清单被单一近重复家族占满</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">4</span>实验层</div>
+          <div class="flow">
+            <div class="node output"><strong>脱氧核糖核酸（DNA）与蛋白表达</strong><small>先确认能否表达、纯化并保持单体</small></div>
+            <div class="node output"><strong>结合动力学</strong><small>测量平衡解离常数以及结合/解离速率</small></div>
+            <div class="node output"><strong>混合样本捕获</strong><small>同时加入7–36、9–36及挑战型态，测真实回收率和选择性</small></div>
+          </div>
+        </div>
+        <div class="warning"><b>关键边界：</b>计算管线只把大候选空间压缩成实验清单；真正的“捕获蛋白”必须经过实验确认。</div>
+        <p class="caption">据BoltzGen官方论文第3节与v0.3.2流水线整理；图为本报告原创示意。</p>
+        """
+    )
+
+    yaml_example = visual(
+        "<h2>真实输入示例｜顶层目标与骨架配方</h2>"
+        "<p class='intro'>下面使用本项目最小可行产品（minimum viable product，MVP）的真实文件。YAML（YAML Ain’t Markup Language，一种人类可读配置格式）本身不是模型权重；它把项目意图翻译成设计掩码和结构条件。</p>"
+        + details(
+            "点击查看顶层设计规格：GLP‑1目标、组氨酸7/丙氨酸8热点和VHH入口",
+            pre(top_spec)
+            + "<div class='warning'><b>不要误读：</b><code>binding: 1,2</code>只是要求设计区域倾向靠近目标位置1/2；它不等价于“必须识别自由N端”，也不自动排斥9–36。</div>",
+        )
+        + details(
+            "点击查看7XL0示例骨架配方：固定框架、隐藏/删除/插入互补决定区",
+            pre(scaffold_spec)
+            + "<div class='plain'><b>编号只能用于这一份骨架：</b>其他入选VHH必须读取自己的<code>label_seq_id</code>与映射文件，不能照抄26..34、52..59、98..118。</div>",
+        )
+    )
+
+    conditioning = visual(
+        """
+        <h2>示意图2｜模型究竟固定什么、生成什么</h2>
+        <p class="intro">VHH框架内部几何和GLP‑1内部几何分别保留；两者放在不同结构组，因此相互之间的旋转和平移仍可由模型生成。</p>
+        <h3>VHH：框架保留，三段互补决定区重新生成</h3>
+        <div class="domain" aria-label="VHH框架与三段互补决定区示意">
+          <div class="seg">框架区1<span>固定</span></div><div class="seg cdr">互补决定区1<span>生成</span></div>
+          <div class="seg">框架区2<span>固定</span></div><div class="seg cdr">互补决定区2<span>生成</span></div>
+          <div class="seg">框架区3<span>固定</span></div><div class="seg cdr">互补决定区3<span>生成</span></div>
+          <div class="seg">框架区4<span>固定</span></div>
+        </div>
+        <h3>GLP‑1：本轮把N端差异位点作为正向表位提示</h3>
+        <div class="target" aria-label="GLP-1序列位置示意">
+          <div class="residue hot">H7</div><div class="residue hot">A8</div><div class="residue">E9</div><div class="residue">G10</div><div class="residue">T11</div><div class="residue">F12</div><div class="residue tail">…</div><div class="residue tail">R36</div>
+        </div>
+        <p class="caption">字母是氨基酸单字母代码：H=组氨酸、A=丙氨酸、E=谷氨酸、G=甘氨酸、T=苏氨酸、F=苯丙氨酸、R=精氨酸；数字沿用GLP‑1历史残基编号，不是这条30残基肽内部从1开始的工具编号。</p>
+        <div class="arrow-row">互补决定区生成并寻找相对姿势　↕　目标结构保持为条件</div>
+        <div class="good"><b>模型同时决定三件事：</b>互补决定区的主链构象、设计残基的化学身份，以及整个VHH相对GLP‑1的结合姿势。互补决定区长度先由YAML中的插入范围在解析阶段随机取样；扩散模型在这个已经确定的长度上生成原子，不会在去噪途中动态增删残基。</div>
+        <div class="plain"><b>“固定”不是坐标冻结：</b>结构组把组内成对距离作为强条件提供给模型，但不是数学上绝不能违反的刚性约束；输出仍须与输入模板比较偏差。</div>
+        <div class="warning"><b>不会自动完成的事：</b>它没有在同一次原生目标函数中比较7–36与9–36，因此“靠近H7/A8”仍不等于“排斥9–36”。</div>
+        """
+    )
+
+    architecture = visual(
+        """
+        <h2>示意图3｜条件编码主干与扩散模块</h2>
+        <p class="intro">相对于整条去噪轨迹，条件编码主干只计算一次，随后被许多去噪步骤复用；“一次”不代表主干内部没有配置的循环回收（recycling，即把上一轮表示再次送入主干精炼）。扩散模块在同一条件下运行许多次，把随机坐标逐步变成结构。</p>
+        <div class="lane"><div class="lane-title"><span class="lane-index">A</span>原子与token表示</div>
+          <div class="flow">
+            <div class="node input"><strong>原子特征</strong><small>元素、电荷、原子位置、所属分子与链</small></div>
+            <div class="node input"><strong>分子令牌特征</strong><small>蛋白每个残基一个令牌（token）；含残基索引、已知身份、是否设计</small></div>
+            <div class="node input"><strong>成对条件</strong><small>令牌对关系、结构组距离、共价键和目标位点</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">B</span>成对表示变换器（PairFormer）条件编码主干</div>
+          <div class="flow">
+            <div class="node model"><strong>单令牌张量 S ∈ ℝ<sup>L×384</sup></strong><small>L是令牌数；每行384个特征，表示一个残基/分子单元“是什么”</small></div>
+            <div class="node model"><strong>成对张量 Z ∈ ℝ<sup>L×L×128</sup></strong><small>前两轴是令牌i和j；最后128个通道描述这对令牌的关系</small></div>
+            <div class="node model"><strong>三角乘法与三角注意力</strong><small>让i–j、j–k、i–k关系互相约束，适合三维几何推理</small></div>
+            <div class="node output"><strong>条件表示 z</strong><small>64个PairFormer模块、每模块16个注意力头；输出在全部去噪步骤中重复使用</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">C</span>全原子扩散模块</div>
+          <div class="flow">
+            <div class="node model"><strong>3层原子级注意力</strong><small>处理局部原子和化学几何</small></div>
+            <div class="node model"><strong>24层令牌级Transformer</strong><small>Transformer是一类注意力神经网络；这里处理远距离残基和跨链关系</small></div>
+            <div class="node model"><strong>3层原子级注意力</strong><small>把全局关系投回精细原子坐标</small></div>
+            <div class="node output"><strong>去噪坐标</strong><small>对所有原子的下一步三维位置估计</small></div>
+          </div>
+        </div>
+        <div class="plain"><b>坐标张量：</b>若批处理对齐后有A个原子槽位，扩散状态为X ∈ ℝ<sup>A×3</sup>；有效行可是真实原子或14原子编码中的虚拟槽位，补齐行由原子补齐掩码排除，三列依次是x、y、z坐标。<br><b>为什么要有成对表示：</b>结合设计不是只判断“每个残基喜欢什么”，而是要推理两个残基、两条链和整个界面之间的相对几何。</div>
+        """
+    )
+
+    residue_encoding = visual(
+        """
+        <h2>示意图4｜为什么模型可以同时生成结构和氨基酸类型</h2>
+        <p class="intro">待设计残基统一用14个原子槽位表示，因此模型始终只处理连续三维坐标，不需要另接一个离散字母生成器。N是主链氮原子，Cα是α碳原子，C是羰基碳原子，O是羰基氧原子。</p>
+        <div class="atom-row" aria-label="十四原子槽位示意">
+          <div class="atom backbone">N</div><div class="atom backbone">Cα</div><div class="atom backbone">C</div><div class="atom backbone">O</div>
+          <div class="atom virtual">V5</div><div class="atom virtual">V6</div><div class="atom virtual">V7</div><div class="atom virtual">V8</div><div class="atom virtual">V9</div><div class="atom virtual">V10</div><div class="atom virtual">V11</div><div class="atom virtual">V12</div><div class="atom virtual">V13</div><div class="atom virtual">V14</div>
+        </div>
+        <div class="chips"><span class="chip">蓝色：固定顺序的主链N、Cα、C、O</span><span class="chip">紫色：可作身份标记或侧链原子</span></div>
+        <div class="flow">
+          <div class="node model"><strong>去噪过程中移动14个槽位</strong><small>所有槽位都是连续的x、y、z坐标</small></div>
+          <div class="node check"><strong>在主链原子0.5埃内计数</strong><small>埃（ångström，符号Å）是长度单位；1 Å=0.1纳米。贴在N、Cα、C、O附近的虚拟原子数形成身份编码</small></div>
+          <div class="node output"><strong>解码氨基酸类型</strong><small>例如论文示例中，特定的3+4标记模式解码为苏氨酸</small></div>
+          <div class="node output"><strong>剩余槽位成为侧链</strong><small>虚拟标记被丢弃，保留真实侧链原子</small></div>
+        </div>
+        <div class="good"><b>核心价值：</b>坐标误差、键长误差和局部几何质量可以用同一个扩散训练目标共同优化；氨基酸身份也被嵌入几何。</div>
+        """
+    )
+
+    formulas = visual(
+        """
+        <h2>核心公式｜从加噪、去噪训练到筛选</h2>
+        <p class="intro">公式先给直观含义，再给符号。X是所有原子的A×3坐标矩阵；A是原子数，3列分别是x、y、z。下标θ表示神经网络可学习参数，c或z表示目标、骨架和约束条件。</p>
+        <div class="formula-grid">
+          <div class="formula"><h3>0｜真正学习的条件分布</h3><div class="eq" role="math">X<sub>design</sub> ~ pθ(X | c)</div><p>c包含GLP‑1结构、VHH框架、设计掩码、结构组、共价键和位点提示；从生成坐标再以十四原子规则解码设计区氨基酸身份。</p></div>
+          <div class="formula"><h3>1｜正向扩散：逐渐破坏真实结构</h3><div class="eq" role="math">dXₜ = √(2t) dBₜ　⇔　Xₜ=X₀+tε</div><p>X₀来自真实结构分布；t是噪声尺度而非真实时间；Bₜ是布朗运动，ε服从标准高斯分布。t越大，坐标越像随机噪声。</p></div>
+          <div class="formula"><h3>2｜去噪器目标：估计干净坐标的条件均值</h3><div class="eq" role="math">Dθ(Xₜ,t;z) ≈ E[X₀ | Xₜ,z]</div><p>Dθ是参数为θ的去噪神经网络；z是条件编码主干由目标、框架和约束计算的表示。</p></div>
+          <div class="formula"><h3>3｜论文定义的训练损失</h3><div class="eq" role="math">L(θ)=E{ w(t)[L<sub>MSE</sub>+L<sub>bond</sub>] + L<sub>smooth‑lDDT</sub> }</div><p>L<sub>MSE</sub>是均方误差（mean squared error）；L<sub>bond</sub>是成键长度损失；L<sub>smooth‑lDDT</sub>是平滑局部距离差异检验损失。它们分别约束全局对齐后的坐标、共价键和局部几何。</p></div>
+          <div class="formula"><h3>4｜复折叠自洽性</h3><div class="eq" role="math">RMSD = √[(1/M) Σₘ ‖R pₘ + u − qₘ‖²]</div><p>均方根偏差（root-mean-square deviation，RMSD）先找最佳旋转R和平移u，再比较M个对应骨架原子；值低只表示重折叠结构接近原设计。</p></div>
+          <div class="formula"><h3>5｜最坏加权名次</h3><div class="eq" role="math">sᵢ = maxⱼ(rᵢⱼ / wⱼ)</div><p>rᵢⱼ是候选i在指标j上的名次，wⱼ是指标权重；总体选择较小的sᵢ，避免一个严重短板被平均掉。排序不参与神经网络反向传播。</p></div>
+          <div class="formula"><h3>6｜质量—多样性选择</h3><div class="eq" role="math">x* = argmax[ α·Diversity(x,A) + (1−α)·Quality(x) ]</div><p>Diversity是多样性，Quality是质量，A是已选集合；α控制两者权衡。论文给出结构相似度和序列相似度的通式；v0.3.2过滤源码实际使用design_mask位置的设计序列（本项目为三段CDR按链顺序串联）的最大序列一致性（sequence identity）：Diversity=1−max sequence identity，公开配置默认α=0.001，因此几乎完全偏向质量。</p></div>
+        </div>
+        <div class="warning"><b>版本差异必须保留：</b>论文公式包含成键损失L<sub>bond</sub>，但BoltzGen v0.3.2公开的大模型训练配置把<code>add_bond_loss</code>设为<code>false</code>。源码虽然支持手动开启，却是在已加权均方误差之后直接相加成键损失，并未把成键项放进同一个噪声权重w(t)；因此即使开启，也不能假设实现严格等于论文的w(t)[L<sub>MSE</sub>+L<sub>bond</sub>]。判断某个检查点实际用了什么损失，必须查看版本化配置和源码。</div>
+        """
+        + details(
+            "点击查看去噪网络为什么需要预条件化",
+            "<div class='eq'>Dθ(x,t;z)=c<sub>skip</sub>(t)x+c<sub>out</sub>(t)Fθ(c<sub>in</sub>(t)x,c<sub>noise</sub>(t);z)</div>"
+            "<div class='eq'>c<sub>skip</sub>=σ<sub>data</sub>²/(σ<sub>data</sub>²+t²)</div>"
+            "<div class='eq'>c<sub>out</sub>=tσ<sub>data</sub>/√(σ<sub>data</sub>²+t²)　　c<sub>in</sub>=1/√(σ<sub>data</sub>²+t²)</div>"
+            "<div class='eq'>c<sub>noise</sub>=(1/4)log(t/σ<sub>data</sub>)</div>"
+            "<p>σ<sub>data</sub>是训练数据坐标尺度的超参数。跳跃系数、输出系数、输入系数和噪声嵌入把不同噪声级别的数值范围拉到较稳定区间，使同一个网络Fθ能处理从高噪声到精细结构的全部阶段。</p>",
+        )
+        + details(
+            "点击查看论文中均方误差、成键损失和噪声权重",
+            "<div class='eq'>L<sub>MSE</sub>=[Σₗ wₗ‖X̂ₗ−Xₗ<sup>aligned</sup>‖²]/[3Σₗwₗ]</div>"
+            "<div class='eq'>L<sub>bond</sub>=(1/|B|)Σ<sub>(l,m)∈B</sub>(‖X̂ₗ−X̂ₘ‖−‖Xₗ−Xₘ‖)²</div>"
+            "<div class='eq'>w(t)=(t²+σ<sub>data</sub>²)/(tσ<sub>data</sub>)²</div>"
+            "<p>先把预测和真值做最佳刚体对齐，避免把整体旋转和平移当成错误。B是已知共价键集合；原子权重让蛋白质、核酸和配体的不同原子数规模不过度主导损失。再次提醒：成键项是否实际启用由训练配置决定。</p>",
+        )
+        + details(
+            "点击查看论文算法中的一次扩散采样更新公式",
+            "<div class='eq'>t̂ᵢ = tᵢ + γᵢtᵢ</div>"
+            "<div class='eq'>x̂ᵢ = xᵢ + β√(t̂ᵢ²−tᵢ²) εᵢ</div>"
+            "<div class='eq'>dᵢ = [x̂ᵢ−Dθ(x̂ᵢ,t̂ᵢ;z)] / t̂ᵢ</div>"
+            "<div class='eq'>xᵢ₊₁ = x̂ᵢ + α(tᵢ₊₁−t̂ᵢ)dᵢ</div>"
+            "<p>每步先用β控制额外随机扰动，再用去噪器指出的方向移动。α较高或β较低通常偏向更可设计但较少样的结构；反方向通常增加多样性。若α或β偏离1，这是一种实用采样启发式，不再是严格从训练分布采样。</p>"
+            "<div class='warning'><b>论文与v0.3.2源码差异：</b>上面是论文算法的字面公式。v0.3.2扩散源码先把<code>noise_scale²</code>乘进噪声方差，随后又把<code>noise_scale</code>乘到标准差上，因此有效系数相当于再次乘入噪声尺度。精确复现必须冻结源码提交和配置，不能只抄论文公式。</div>",
+        )
+        + "<p class='caption'>条件分布、公式1–3和采样更新据官方论文第3.1–3.4节；公开默认开关据v0.3.2训练配置；公式4为项目采用的最优刚体对齐均方根偏差；公式5–6据官方论文算法2–3，v0.3.2多样性实现差异据过滤源码。</p>"
+    )
+
+    diffusion = visual(
+        """
+        <h2>示意图5｜一次候选如何在许多轮去噪中成形</h2>
+        <p class="intro">下图是概念时间轴，不代表每一步都有清晰分界。官方论文以约300次模型函数评估说明方法；BoltzGen v0.3.2公开推理配置的<code>sampling_steps</code>默认值为500。实际报告必须记录本次运行配置，不能混用两者。论文报告残基身份主要在归一化时间约0.6–0.8的窗口确定，因此在那里使用加密时间调度。</p>
+        <div class="timeline">
+          <div class="time-step noise"><b>高噪声起点</b>几乎只有随机三维点；条件z已经固定</div>
+          <div class="time-step"><b>粗粒度装配</b>目标与VHH的大致相对姿势开始出现</div>
+          <div class="time-step"><b>互补决定区成形</b>在解析阶段已抽定的环长度上，主链方向和目标接触逐渐协调</div>
+          <div class="time-step res-window"><b>身份决定窗口</b>14原子几何标记收敛，解码氨基酸类型</div>
+          <div class="time-step"><b>全原子精修</b>主链、侧链和界面局部几何进一步去噪</div>
+        </div>
+        <div class="plain"><b>为什么同一输入可生成很多不同候选：</b>随机初始噪声、每步随机扰动、可变插入长度以及step/noise scale共同产生采样差异；这不是训练出多个模型。</div>
+        <div class="warning"><b>样本越多不代表命中率线性上升：</b>大量候选仍可能集中在同一结构族，或共享相同失败模式，所以必须保留结构/序列多样性选择。</div>
+        """
+    )
+
+    inverse_and_refold = visual(
+        """
+        <h2>示意图6｜扩散已经给出序列，为什么还要逆折叠和复折叠</h2>
+        <p class="intro">三个阶段回答三个不同问题：扩散模型提出“结构+初始序列”；逆折叠模型在固定骨架上重选设计区序列；Boltz‑2再从序列重新预测结构。</p>
+        <div class="lane"><div class="lane-title"><span class="lane-index">1</span>扩散生成</div>
+          <div class="flow">
+            <div class="node input"><strong>条件与随机噪声</strong><small>GLP‑1、VHH框架、设计掩码和结构组</small></div>
+            <div class="node model"><strong>联合去噪</strong><small>同时决定界面姿势、CDR几何和初始残基身份</small></div>
+            <div class="node output"><strong>初代复合物</strong><small>完整坐标 + 第一版完整VHH序列</small></div>
+          </div>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">2</span>Boltz逆折叠模型（BoltzIF）</div>
+          <div class="flow">
+            <div class="node input"><strong>固定坐标图</strong><small>每个残基是图节点；每个节点连接空间最近的30个邻居</small></div>
+            <div class="node model"><strong>6层图编码器</strong><small>读取主链N、Cα、C、O几何、链与键关系</small></div>
+            <div class="node model"><strong>3层自回归解码器</strong><small>按随机顺序逐一采样design_mask为1的位置</small></div>
+            <div class="node output"><strong>第二版CDR序列</strong><small>GLP‑1和VHH框架序列不变；默认不在设计区新生半胱氨酸</small></div>
+          </div>
+          <div class="eq">P(a<sub>D</sub>|X,a<sub>fixed</sub>) = ∏<sub>k=1…m</sub>P(a<sub>πk</sub>|X,a<sub>fixed</sub>,a<sub>π1…π(k−1)</sub>)</div>
+          <p class="caption">D是设计位点集合；π是随机解码顺序；X是固定骨架坐标。自回归表示后一个设计位点可以参考此前已采样的位点。</p>
+        </div>
+        <div class="arrow-row">↓</div>
+        <div class="lane"><div class="lane-title"><span class="lane-index">3</span>Boltz‑2复折叠</div>
+          <div class="flow">
+            <div class="node input"><strong>完整候选序列</strong><small>固定框架 + 新CDR；目标GLP‑1序列与模板</small></div>
+            <div class="node check"><strong>撤掉整个VHH模板</strong><small>模板掩码等于“非设计链”；GLP‑1作模板，整条VHH从序列重预测</small></div>
+            <div class="node check"><strong>不使用多序列比对</strong><small>multiple sequence alignment（MSA）在该复核设置中为空</small></div>
+            <div class="node output"><strong>复折叠复合物</strong><small>再与初代结构比较均方根偏差、界面置信和几何</small></div>
+          </div>
+        </div>
+        <div class="warning"><b>两项限制：</b>逆折叠后的中间CIF里设计侧链坐标可为0，不能当最终全原子模型；<code>nanobody-anything</code>默认跳过VHH单独复折叠，因此还应另做无目标的VHH单体稳定性检查。</div>
+        """
+    )
+
+    selectivity = visual(
+        """
+        <h2>示意图7｜“接触H7/A8”与“选择7–36、排斥9–36”不是一回事</h2>
+        <p class="intro">BoltzGen v0.3.2的binding/not_binding条件描述同一个输入目标上的区域；它没有原生跨目标负向引导。</p>
+        <div class="flow">
+          <div class="node input"><strong>原生生成</strong><small>7–36正靶 + H7/A8热点 + VHH骨架 → 多个候选</small></div>
+          <div class="node check"><strong>正靶复核</strong><small>同一候选 × 7–36多个构象；保守取最差正靶表现</small></div>
+          <div class="node check"><strong>反靶复核</strong><small>同一候选 × 9–36多个构象；保守取最强假结合表现</small></div>
+          <div class="node check"><strong>挑战态复核</strong><small>7–37、9–37、N端封闭/突变态、其他相关肽</small></div>
+          <div class="node output"><strong>成对代理排名</strong><small>只能叫计算选择性代理，不能叫倍数选择性</small></div>
+        </div>
+        <div class="formula-grid">
+          <div class="formula"><h3>同一预测器下的计算代理</h3><div class="eq">ΔQ<sub>comp</sub> = Q<sub>positive</sub> − max(Q<sub>negative,j</sub>)</div><p>前提是Q方向统一为“越高越好”；max取反靶多构象中的最强假结合。Q不是平衡解离常数。</p></div>
+          <div class="formula"><h3>实验选择性</h3><div class="eq">pK<sub>D</sub>=−log₁₀(K<sub>D</sub>/1 mol·L⁻¹)　　ΔpK<sub>D</sub>=log₁₀(K<sub>D,negative</sub>/K<sub>D,positive</sub>)</div><p>K<sub>D</sub>是平衡解离常数；pK<sub>D</sub>是其无量纲负十进对数。只有成对实验测得K<sub>D</sub>后，才可写亲和力选择性；还需结合混合样本捕获回收率。</p></div>
+        </div>
+        <div class="warning"><b>当前最大化学边界：</b>标准聚合物输入尚未原子级证明C端酰胺被保留；未解决前，任何7–36NH₂/9–36NH₂精确化学型结论都应标为未验证。</div>
+        """
+    )
+
+    output_details = visual(
+        "<h2>输出文件不是同一种“结果”</h2><p class='intro'>正确的数据流必须使用正确阶段的文件；尤其不能把逆折叠骨架当最终全原子结构。</p>"
+        + details(
+            "结构生成阶段",
+            "<div class='io-grid'><div class='io-card'><b>intermediate_designs/*.cif</b>大分子晶体学信息文件；扩散模型生成的初代复合物，含候选身份与几何。<span class='tag'>候选假设</span></div><div class='io-card'><b>intermediate_designs/*.npz</b>NumPy压缩数组归档（NumPy zipped archive，NPZ）；本次v0.3.2实际仅含逐令牌的design_mask、mol_type、ss_type、token_resolved_mask和binding_type等生成元数据/条件掩码，不含坐标。<span class='tag'>逆折叠输入元数据</span></div></div>",
+        )
+        + details(
+            "序列反设计与复折叠阶段",
+            "<div class='io-grid'><div class='io-card'><b>intermediate_designs_inverse_folded/*.cif</b>序列反设计后的骨架；设计侧链坐标可能为0，不能作为最终原子模型。<span class='tag'>不要直接可视化成最终结构</span></div><div class='io-card'><b>refold_cif/*.cif</b>Boltz‑2重折叠的复合物；用于结构自洽和界面检查。<span class='tag'>主要结构复核输入</span></div><div class='io-card'><b>fold_out_npz/*.npz</b>结构采样、置信度和映射数组；必须逐键解释数组形状（shape）与每一轴。<span class='tag'>分析输入</span></div></div>",
+        )
+        + details(
+            "分析、过滤与最终选择阶段",
+            "<div class='io-grid'><div class='io-card'><b>aggregate_metrics_analyze.csv</b>逗号分隔值（comma-separated values，CSV）表；一行一个候选的聚合指标。<span class='tag'>排序特征</span></div><div class='io-card'><b>per_target_metrics_analyze.csv</b>按目标标识（target_id）聚合的数值均值；不含逐链明细。<span class='tag'>分目标批次摘要</span></div><div class='io-card'><b>all_designs_metrics.csv</b>所有候选、过滤状态和排名。<span class='tag'>先检查pass_filters</span></div><div class='io-card'><b>final_designs_metrics_&lt;budget&gt;.csv</b>预算集合；预算不足时可能含未通过项。<span class='tag'>不是自动合成清单</span></div></div>",
+        )
+    )
+
+    filter_details = visual(
+        """
+        <h2>硬过滤与排序是两层不同决策</h2>
+        <p class="intro">硬过滤先回答“有没有明显结构/序列失败”；排序再回答“在剩余候选中先看谁”。排名靠前不能覆盖硬过滤失败。</p>
+        <div class="io-grid">
+          <div class="io-card"><b>未知残基门</b>设计序列不得含未知残基X。<span class="tag">硬过滤</span></div>
+          <div class="io-card"><b>复合物主链偏差门</b>生成与复折叠复合物的主链均方根偏差不高于2.5埃。<span class="tag">硬过滤</span></div>
+          <div class="io-card"><b>设计区主链偏差门</b>仅在CDR设计区计算的主链均方根偏差不高于2.5埃。<span class="tag">硬过滤</span></div>
+          <div class="io-card"><b>新生半胱氨酸门</b>设计区半胱氨酸比例为0；固定框架的规范二硫键半胱氨酸不受影响。<span class="tag">硬过滤</span></div>
+          <div class="io-card"><b>单一残基富集门</b>设计区中丙氨酸、甘氨酸、谷氨酸、亮氨酸、缬氨酸各自比例不高于0.30。<span class="tag">硬过滤</span></div>
+          <div class="io-card"><b>项目热点门</b><code>nanobody-anything</code>默认并不会开启这一门（<code>filter_bindingsite=false</code>）；本项目MVP显式开启，要求至少一个提示位点进入8埃接触范围。它不证明His7和Ala8都形成特异相互作用。<span class="tag">必须显式开启</span></div>
+        </div>
+        <div class="warning"><b>v0.3.2实现边界：</b><code>pass_filters=false</code>的行仍可留在总表；当合格数少于预算时，最终预算目录也可能写入排序回退的失败候选。判断是否合格必须读取<code>pass_filters</code>，不能只看文件是否出现在<code>final</code>目录。</div>
+        """
+    )
+
+    glossary = visual(
+        "<h2>名词与缩写：首次出现后的统一含义</h2><p class='intro'>点击任意条目展开；这些定义限定在本报告和本项目的数据流中。</p>"
+        + details("胰高血糖素样肽‑1（glucagon-like peptide-1，GLP‑1）", "<p>由前胰高血糖素加工产生的肽类激素家族。本项目正靶是7–36型态；数字沿用前体历史编号。7–36的N端前两残基为组氨酸7和丙氨酸8。</p>")
+        + details("骆驼科仅重链抗体可变结构域（variable domain of heavy-chain-only antibody，VHH）", "<p>能脱离传统轻链独立折叠并结合抗原的单个重链可变结构域。骨架区提供稳定折叠，三段互补决定区通常承担主要抗原识别。</p>")
+        + details("互补决定区（complementarity-determining region，CDR）", "<p>抗体可变结构域中序列和构象最易变化的三段环区。BoltzGen的nanobody-anything协议通常固定VHH框架并重建CDR1、CDR2和CDR3。</p>")
+        + details("大分子晶体学信息文件（macromolecular Crystallographic Information File，mmCIF）", "<p>保存大分子结构、链、残基、原子、坐标和连接信息的文本格式。<code>_atom_site</code>循环中一行通常代表一个原子坐标记录；它不是残基矩阵。</p>")
+        + details("协议预设（protocol preset）", "<p>一组流水线开关和默认参数，不是另一个神经网络。<code>nanobody-anything</code>不会自动识别VHH或CDR；它主要关闭VHH单体复折叠和小分子亲和力模块、限制设计区新生半胱氨酸，并采用相应过滤设置。</p>")
+        + details("检查点（checkpoint）", "<p>保存已经训练好的神经网络参数和部分运行状态的二进制文件。推理加载检查点即可生成候选；本项目最小可行阶段不会用少量GLP‑1实验数据重新训练整个基础模型。</p>")
+        + details("结构组（structure group）", "<p>把一组原子/残基的内部成对距离作为条件提供给模型。同一组内部几何被强条件化，不同组之间的相对平移和旋转不提供，因此模型仍可生成VHH相对GLP‑1的结合姿势。它不是严格不可违反的刚体约束，输出仍需复核。</p>")
+        + details("扩散去噪模型（diffusion denoising model）", "<p>训练时逐渐向真实原子坐标加高斯噪声，并让神经网络学习在给定噪声级别与条件下恢复干净坐标；推理时从随机坐标反向多步去噪。噪声时间不是分子运动的真实时间。</p>")
+        + details("token与成对表示", "<p>token是模型处理的基本分子单元；蛋白中通常一残基一token。成对表示为每一对token保存关系向量，可看成带有特征通道的二维关系矩阵，而不是单一距离矩阵。</p>")
+        + details("逆折叠（inverse folding）", "<p>已知目标骨架三维结构，反过来寻找更可能折成该骨架的氨基酸序列。BoltzGen的Boltz inverse folding模型是生成后的第二阶段，不应和扩散模型直接生成残基身份混为一谈。</p>")
+        + details("N端、C端与二肽基肽酶‑4", "<p>肽链有方向：带自由α氨基的一端叫N端（氨基端），带羧基或其修饰的一端叫C端（羧基端）。二肽基肽酶‑4（dipeptidyl peptidase‑4，DPP‑4）从GLP‑1(7–36)的N端切去His7–Ala8二肽，形成9–36型态；这正是本项目强调N端识别的原因。</p>")
+        + details("埃（ångström，Å）", "<p>结构生物学常用长度单位。1 Å=10⁻¹⁰米=0.1纳米；原子间距离、预测对齐误差和均方根偏差通常用埃表示，表面积则用平方埃。</p>")
+        + details("预测对齐误差与预测模板建模分数", "<p>预测对齐误差给出相对位置的不确定性代理，单位埃；预测模板建模分数给出整体或界面装配的置信代理。两者都不是实验亲和力。</p>")
+        + details("平衡解离常数（equilibrium dissociation constant，K_D）", "<p>描述可逆结合平衡中解离倾向的实验量，通常由表面等离子体共振或生物层干涉等实验估计；数值越小通常表示结合越紧。nanobody-anything协议不输出肽靶K_D。</p>")
+    )
+
+    charts = [
+        {
+            "id": "architecture_count_chart",
+            "title": "公开大模型配置中的模块数量",
+            "subtitle": "这些是BoltzGen v0.3.2公开大模型配置的架构计数，不是本次候选数或训练样本数。",
+            "intent": "comparison",
+            "type": "horizontalBar",
+            "dataset": "architecture_counts",
+            "source": {
+                "id": "architecture_count_source",
+                "label": "从BoltzGen v0.3.2公开训练配置人工核对后形成的架构计数表",
+                "path": "data/boltzgen_data/boltzgen_vhh_glp1_explainer/architecture_counts.csv",
+                "query": {
+                    "engine": "duckdb",
+                    "language": "sql",
+                    "sql": "SELECT module, CAST(count AS INTEGER) AS count\nFROM read_csv_auto('data/boltzgen_data/boltzgen_vhh_glp1_explainer/architecture_counts.csv')\nORDER BY count DESC, module ASC;",
+                    "description": "读取经官方v0.3.2训练配置逐项核对的架构计数，并按数量降序展示。",
+                    "tables_used": ["data/boltzgen_data/boltzgen_vhh_glp1_explainer/architecture_counts.csv"],
+                },
+            },
+            "encodings": {
+                "x": {"field": "module", "type": "nominal", "label": "架构组件"},
+                "y": {"field": "count", "type": "quantitative", "label": "模块/层/注意力头数量"},
+            },
+            "valueFormat": "number",
+            "layout": "full",
+            "settings": {"showValues": True, "categoryLabelPolicy": "wrap"},
+        }
+    ]
+
+    tables = [
+        {
+            "id": "input_contract_table",
+            "title": "BoltzGen项目输入合同",
+            "subtitle": "项目示例使用GLP‑1(7–36)几何与VHH骨架；每一项都必须在推理前验证。",
+            "dataset": "input_contract",
+            "source": table_source("input_contract", "项目输入合同；由真实YAML与官方v0.3.2规格交叉核对", "CAST(order AS INTEGER) ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "order", "direction": "asc"},
+            "columns": [
+                {"field": "order", "label": "顺序", "type": "number"},
+                {"field": "input", "label": "输入对象", "type": "text"},
+                {"field": "project_example", "label": "本项目实例", "type": "text"},
+                {"field": "format", "label": "数据格式/粒度", "type": "text"},
+                {"field": "model_use", "label": "进入模型后做什么", "type": "text"},
+                {"field": "must_check", "label": "必须检查", "type": "text"},
+            ],
+        },
+        {
+            "id": "training_tasks_table",
+            "title": "同一模型训练时混合的四类任务",
+            "subtitle": "任务差异来自哪些区域被遮蔽/设计，而不是为每类任务训练完全不同的主模型。",
+            "dataset": "training_tasks",
+            "source": table_source("training_tasks", "BoltzGen官方论文训练任务的结构化摘要", "task ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "task", "direction": "asc"},
+            "columns": [
+                {"field": "task", "label": "训练任务", "type": "text"},
+                {"field": "被遮蔽或设计的部分", "label": "如何构造任务", "type": "text"},
+                {"field": "模型学到什么", "label": "监督信号", "type": "text"},
+                {"field": "对本项目的作用", "label": "与VHH+GLP‑1的关系", "type": "text"},
+            ],
+        },
+        {
+            "id": "tensor_contract_table",
+            "title": "进入模型的主要张量：每一轴代表什么",
+            "subtitle": "项目示例取一个155令牌、42设计位点的解析样本；可变CDR长度会使L和A随候选变化。",
+            "dataset": "tensor_contract",
+            "source": table_source("tensor_contract", "v0.3.2源码与项目解析样本的张量合同", "tensor ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "tensor", "direction": "asc"},
+            "columns": [
+                {"field": "tensor", "label": "张量/数组", "type": "text"},
+                {"field": "general_shape", "label": "通用形状", "type": "text"},
+                {"field": "project_example", "label": "本项目实例", "type": "text"},
+                {"field": "axis_meaning", "label": "各轴含义", "type": "text"},
+                {"field": "role", "label": "模型用途", "type": "text"},
+            ],
+        },
+        {
+            "id": "pipeline_table",
+            "title": "端到端阶段、输入、输出与科学含义",
+            "subtitle": "前七步是计算候选压缩；第八步才产生真实结合与选择性证据。",
+            "dataset": "pipeline_stages",
+            "source": table_source("pipeline_stages", "官方v0.3.2流水线与项目实验闭环的阶段合同", "CAST(order AS INTEGER) ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "order", "direction": "asc"},
+            "columns": [
+                {"field": "order", "label": "顺序", "type": "number"},
+                {"field": "stage", "label": "阶段", "type": "text"},
+                {"field": "input", "label": "输入", "type": "text"},
+                {"field": "algorithm", "label": "主要算法", "type": "text"},
+                {"field": "output", "label": "输出", "type": "text"},
+                {"field": "scientific_meaning", "label": "能回答什么", "type": "text"},
+            ],
+        },
+        {
+            "id": "metrics_table",
+            "title": "候选评价指标的正确解释",
+            "subtitle": "所有计算指标只在同一版本、同一任务与同一参数下比较；没有一个指标等于实验亲和力。",
+            "dataset": "metrics",
+            "source": table_source("metrics", "官方v0.3.2分析指标与项目解释边界", "metric ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "metric", "direction": "asc"},
+            "columns": [
+                {"field": "metric", "label": "指标", "type": "text"},
+                {"field": "first_definition", "label": "首次定义", "type": "text"},
+                {"field": "direction", "label": "方向", "type": "text"},
+                {"field": "what_it_tests", "label": "主要检查", "type": "text"},
+                {"field": "not_equal_to", "label": "不能解释成什么", "type": "text"},
+            ],
+        },
+        {
+            "id": "project_boundaries_table",
+            "title": "GLP‑1项目中的能力、缺口与必须动作",
+            "subtitle": "把模型可做的结构生成与项目仍需解决的化学型态、反靶和实验问题分开。",
+            "dataset": "project_boundaries",
+            "source": table_source("project_boundaries", "GLP-1项目能力边界与后续动作", "topic ASC"),
+            "density": "spacious",
+            "layout": "full",
+            "defaultSort": {"field": "topic", "direction": "asc"},
+            "columns": [
+                {"field": "topic", "label": "主题", "type": "text"},
+                {"field": "current_state", "label": "当前状态", "type": "text"},
+                {"field": "what_model_can_do", "label": "模型能做什么", "type": "text"},
+                {"field": "what_is_missing", "label": "还缺什么", "type": "text"},
+                {"field": "required_action", "label": "项目动作", "type": "text"},
+            ],
+        },
+    ]
+
+    blocks = [
+        {"id": "title", "type": "markdown", "body": f"# {TITLE}"},
+        {
+            "id": "technical_summary",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": (
+                "## 技术摘要\n\n"
+                "本文把胰高血糖素样肽‑1（glucagon-like peptide-1，后文简称 **GLP‑1**）与骆驼科仅重链抗体可变结构域（variable domain of heavy-chain-only antibody，后文简称 **VHH**）的设计流程拆成可审计的数据流。"
+                "三段互补决定区（complementarity-determining regions，后文简称 **CDR**）是主要被重新生成的区域。输入结构使用大分子晶体学信息文件（macromolecular Crystallographic Information File，后文简称 **mmCIF**），设计规则使用YAML（YAML Ain’t Markup Language，一种人类可读配置格式）。\n\n"
+                "**BoltzGen不是普通序列续写模型。**它先把GLP‑1原子结构、固定VHH框架、CDR设计掩码、结构组和结合位点编码成条件；随后从随机三维坐标开始反复去噪，在同一过程中联合生成CDR构象、氨基酸类型和VHH相对GLP‑1的姿势。"
+                "`nanobody-anything`只是规定流水线开关的**协议预设**，不是另一套会自动识别VHH/CDR的神经网络；CDR范围必须由骨架YAML明确提供。生成后还要经过序列反设计、Boltz‑2复折叠、结构/界面分析、硬过滤和质量—多样性选择。最终输出是完整VHH候选链及其与GLP‑1的预测复合物，不是把两者融合成一条蛋白；这些文件也**不是平衡解离常数、结合概率或型态选择性结论。**"
+            ),
+        },
+        {
+            "id": "flow_intro",
+            "type": "markdown",
+            "body": "## 真正的数据流是‘条件生成 → 序列稳固 → 复折叠复核 → 实验’\n\n第一张图给出全链路。阅读时注意：扩散生成已经同时产生结构与残基身份；后面的逆折叠（inverse folding）不是第一次得到序列，而是对生成骨架做第二次序列稳固。",
+        },
+        {"id": "data_flow", "type": "html", "body": data_flow, "sourceId": "paper"},
+        {
+            "id": "input_intro",
+            "type": "markdown",
+            "body": "## 输入不是两条序列，而是一套带结构与设计边界的数据合同\n\n只给VHH序列和GLP‑1序列不足以复现本项目路线。模型还需要原子坐标、链/残基映射、框架二硫键、CDR可设计范围、结构可见性、插入长度、目标热点以及固定版本的权重。这里的VHH与GLP‑1是**推理条件**：本次运行加载预训练检查点生成候选，并不会拿这一对输入重新训练基础模型。下表明确每种文件在模型中扮演的角色。",
+        },
+        {"id": "input_contract", "type": "table", "tableId": "input_contract_table", "layout": "full"},
+        {"id": "yaml_example", "type": "html", "body": yaml_example, "sourceId": "project_top_spec"},
+        {
+            "id": "conditioning_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## VHH框架和GLP‑1各自保持内部几何，界面姿势与CDR则由模型生成\n\n结构组保存组内成对距离，却不固定不同组之间的相对位置。对纳米抗体设计，这意味着可以保留VHH框架折叠与目标构象，同时让VHH在GLP‑1周围寻找合适姿势，并重建三段CDR。",
+        },
+        {"id": "conditioning", "type": "html", "body": conditioning, "sourceId": "paper"},
+        {
+            "id": "architecture_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 条件编码主干负责理解分子关系，扩散模块负责把关系变成三维原子\n\n蛋白每个残基被视为一个分子令牌（token）；所有令牌两两形成成对表示。官方将更新这种表示的模块命名为成对表示变换器（PairFormer）：它通过三角乘法、三角注意力和令牌注意力更新关系。得到的条件表示z在整个去噪轨迹中复用，避免每一步都重算大型主干。",
+        },
+        {"id": "architecture", "type": "html", "body": architecture, "sourceId": "paper"},
+        {"id": "architecture_counts", "type": "chart", "chartId": "architecture_count_chart", "layout": "full"},
+        {
+            "id": "tensor_intro",
+            "type": "markdown",
+            "sourceId": "pipeline_code",
+            "body": "## 模型看到的是多轴张量，不是一个混在一起的表格\n\n批次轴B区分同时处理的样本，令牌轴L区分残基，原子槽位轴A包含真实原子、设计残基的虚拟身份槽以及批处理补齐槽，构象轴C区分同一系统的结构样本；最后的特征通道记录类型或关系。原子补齐掩码决定哪些槽位有效。下表用本项目一个155令牌解析样本把抽象符号落到具体形状。",
+        },
+        {"id": "tensor_contract", "type": "table", "tableId": "tensor_contract_table", "layout": "full"},
+        {
+            "id": "encoding_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 14原子几何编码把离散氨基酸身份变成连续坐标问题\n\n待设计残基在身份未知时仍占14个原子槽位。前四个固定代表主链；其余槽位一部分贴到特定主链原子附近作为身份标记，剩余部分成为侧链。这样同一个坐标去噪网络可以同时学习结构和序列。",
+        },
+        {"id": "residue_encoding", "type": "html", "body": residue_encoding, "sourceId": "paper"},
+        {
+            "id": "formula_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 数学目标不是直接最大化亲和力，而是恢复正确原子几何并控制筛选短板\n\n论文方法定义了坐标、成键和局部距离质量项；公开v0.3.2训练配置默认关闭成键损失开关，因此实际检查点必须按版本化配置解释。推理阶段用去噪器从噪声恢复结构；筛选阶段再用结构自洽和多指标名次压缩候选。下面的每个公式都附有变量解释。",
+        },
+        {"id": "formulas", "type": "html", "body": formulas, "sourceId": "paper"},
+        {
+            "id": "training_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": (
+                "## 模型通过随机遮蔽同一批结构，联合学习折叠与设计\n\n"
+                "官方论文使用蛋白质结构数据库（Protein Data Bank）的实验结构，以及来自AlphaFold蛋白质结构数据库和Boltz‑1的自蒸馏结构；自蒸馏指用已有模型预测的结构作为额外训练样本，而不是新的湿实验测量。训练时随机裁剪结构，再随机选择哪些区域作为设计对象、哪些结构/位点作为条件。"
+                "因此模型不是只背诵纳米抗体；它从蛋白、核酸和小分子体系中学习跨模态几何规律。论文还说明没有沿用上采样的抗体和T细胞受体数据，因为那会降低生成多样性。"
+            ),
+        },
+        {"id": "training_tasks", "type": "table", "tableId": "training_tasks_table", "layout": "full"},
+        {
+            "id": "generation_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 推理从随机点云开始，经过大量去噪步骤得到全原子复合物\n\n官方论文采用带随机扰动的扩散采样器，并在氨基酸身份主要形成的时间窗口增加步数密度。论文方法以约300次模型函数评估说明采样；v0.3.2公开推理配置默认500个采样步，实际运行必须记录真实设置。步长尺度（step scale）和噪声尺度（noise scale）控制可设计性与多样性的经验权衡；它们不是可直接解释的生物学参数。",
+        },
+        {"id": "diffusion", "type": "html", "body": diffusion, "sourceId": "paper"},
+        {
+            "id": "inverse_intro",
+            "type": "markdown",
+            "sourceId": "inverse_fold_code",
+            "body": "## 逆折叠不是第一次生成序列，复折叠也不是把原结构原样读回\n\n扩散阶段已经联合产生初始CDR序列与全原子几何。Boltz逆折叠模型随后只在设计掩码范围内重选序列；Boltz‑2再撤掉整个VHH模板，从完整序列重新预测目标复合物，从而形成一条更严格的计算自洽性链。",
+        },
+        {"id": "inverse_and_refold", "type": "html", "body": inverse_and_refold, "sourceId": "inverse_fold_code"},
+        {
+            "id": "pipeline_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 核心生成之后还有六个关键决策点\n\n下表把官方计算管线和实验闭环放在同一张表中。`nanobody-anything`是纳米抗体—任意目标的协议预设，而不是单独训练的模型；它不会自动识别CDR。对这一协议，肽靶不会使用仅针对蛋白—小分子的亲和力头；协议也跳过设计蛋白单体的额外复折叠，因此项目应另加独立VHH单体结构与可开发性复核。",
+        },
+        {"id": "pipeline", "type": "table", "tableId": "pipeline_table", "layout": "full"},
+        {"id": "output_details", "type": "html", "body": output_details, "sourceId": "release"},
+        {
+            "id": "evaluation_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 评价逻辑优先排除结构不自洽，再比较界面代理和多样性\n\n均方根偏差（root-mean-square deviation，RMSD）、预测对齐误差（predicted aligned error，PAE）、界面预测模板建模分数、氢键、盐桥和溶剂可及表面积变化从不同角度描述候选。它们必须在同一模型版本、同一目标、同一采样设置下比较。",
+        },
+        {"id": "metrics", "type": "table", "tableId": "metrics_table", "layout": "full"},
+        {"id": "filter_details", "type": "html", "body": filter_details, "sourceId": "filter_code"},
+        {
+            "id": "selectivity_intro",
+            "type": "markdown",
+            "sourceId": "paper",
+            "body": "## 对GLP‑1而言，原生生成只负责提出正靶结合方案，型态选择性必须外接多状态反筛\n\nH7/A8热点提示能让CDR更重视7–36独有的N端区域，但不能代替9–36反靶。官方论文也把跨目标选择性引导列为未来可集成能力，因此本项目必须把同一候选送入统一的正靶、反靶和挑战态复核。",
+        },
+        {"id": "selectivity", "type": "html", "body": selectivity, "sourceId": "paper"},
+        {"id": "project_boundaries", "type": "table", "tableId": "project_boundaries_table", "layout": "full"},
+        {
+            "id": "limitations",
+            "type": "markdown",
+            "body": (
+                "## 限制、稳健性与不能声称的结论\n\n"
+                "- BoltzGen生成的是受训练分布与输入条件约束的计算样本，不是物理模拟的精确时间轨迹。\n"
+                "- 训练目标是去噪扩散损失；虽然采样可用概率流常微分方程表述，也不能把它写成流匹配训练。\n"
+                "- Boltz‑2复折叠与BoltzGen共享模型家族和数据思想，属于有价值但不完全独立的计算复核。\n"
+                "- GLP‑1是柔性短肽；单一受体结合构象不能代表游离溶液构象全集。\n"
+                "- binding/not_binding只约束同一输入目标上的区域，不是7–36与9–36之间的成对损失。\n"
+                "- 当前标准聚合物输入没有原子级闭环C端酰胺，不能把几何输入写成化学型已验证。\n"
+                "- 结构置信、氢键、盐桥和埋藏表面积不能换算为平衡解离常数、结合概率或倍数选择性。\n"
+                "- 官方论文明确不把系统描述成不会失败的即插即用方案；需要小规模试跑、检查结构，再扩大采样。"
+            ),
+        },
+        {
+            "id": "next_steps",
+            "type": "markdown",
+            "body": (
+                "## 本项目下一轮应如何运行\n\n"
+                "1. 从已通过质量控制的10个主VHH骨架和2个备用骨架中，按骨架分别生成设计规格；不要让随机骨架列表掩盖来源。\n"
+                "2. 为GLP‑1(7–36)准备多个构象，并完成C端酰胺与自由N端的原子级往返验证。\n"
+                "3. 先对每个骨架×构象小规模生成，保留全部输入哈希、模型版本、采样参数和候选家族。\n"
+                "4. 对通过结构门槛的同一完整VHH序列，统一复核7–36、9–36、7–37、9–37以及N端封闭/突变态。\n"
+                "5. 只把通过正靶最差情况、反靶最强假结合、单体折叠与可开发性门槛的候选送入表达。\n"
+                "6. 用表面等离子体共振或生物层干涉产生真实结合动力学，再用混合样本捕获液相色谱串联质谱确认回收率和型态选择性。\n\n"
+                "### 进一步问题\n\n"
+                "- 哪些VHH框架为GLP‑1自由N端提供更好的几何可达性？\n"
+                "- 显式C端酰胺后，候选姿势和排名是否稳定？\n"
+                "- 多构象反靶的最强假结合是否来自与受体结合态不同的9–36构象？\n"
+                "- 计算短板与实验表达失败、非特异吸附和真实动力学之间如何建立成对标签？"
+            ),
+        },
+        {
+            "id": "visible_sources",
+            "type": "markdown",
+            "body": (
+                "## 官方资料与项目输入\n\n"
+                "以下链接均为论文、软件发布或官方源码；页面运行不依赖这些网址，离线时正文和示意图仍完整可用。\n\n"
+                "- [BoltzGen官方技术报告](https://hannes-stark.com/assets/boltzgen.pdf)\n"
+                "- [BoltzGen bioRxiv第2版预印本](https://www.biorxiv.org/content/10.1101/2025.11.20.689494v2)\n"
+                "- [BoltzGen v0.3.2正式发布页](https://github.com/HannesStark/boltzgen/releases/tag/v0.3.2)\n"
+                "- [v0.3.2设计规格语言说明](https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/README.md)\n"
+                "- [v0.3.2纳米抗体输入示例](https://github.com/HannesStark/boltzgen/blob/v0.3.2/example/nanobody/penguinpox.yaml)\n"
+                "- [v0.3.2流水线实现](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/cli/boltzgen.py)\n"
+                "- [v0.3.2公开大模型训练配置](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/resources/config/train/boltzgen.yaml)\n"
+                "- [v0.3.2公开推理配置](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/resources/config/design.yaml)\n"
+                "- [v0.3.2扩散模型源码](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/model/modules/diffusion.py)\n"
+                "- [v0.3.2逆折叠模型源码](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/model/modules/inverse_fold.py)\n"
+                "- [v0.3.2复折叠输入构建源码](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/task/predict/data_from_generated.py)\n"
+                "- [v0.3.2过滤与多样性选择源码](https://github.com/HannesStark/boltzgen/blob/v0.3.2/src/boltzgen/task/filter/filter.py)\n\n"
+                "本页读取的项目输入为 `data/boltzgen_data/mvp_run_001/inputs/glp1_7_36_nanobody_mvp.yaml` 与 `data/boltzgen_data/mvp_run_001/inputs/scaffold/7xl0_mvp_scaffold.yaml`；VHH骨架注册库位于 `data/boltzgen_data/sabdab2_vhh_scaffolds_v1/registry/scaffold_database.sqlite`。"
+            ),
+        },
+        {"id": "glossary", "type": "html", "body": glossary},
+    ]
+
+    artifact = {
+        "surface": "report",
+        "manifest": {
+            "version": 1,
+            "surface": "report",
+            "title": TITLE,
+            "description": "BoltzGen从VHH骨架和GLP-1目标输入到CDR生成、序列反设计、复折叠、筛选与实验闭环的详细数据流和算法原理。",
+            "generatedAt": generated_at,
+            "cards": [],
+            "charts": charts,
+            "tables": tables,
+            "sources": sources,
+            "blocks": blocks,
+        },
+        "snapshot": {
+            "version": 1,
+            "generatedAt": generated_at,
+            "status": "ready",
+            "datasets": {
+                "input_contract": input_contract,
+                "training_tasks": training_tasks,
+                "architecture_counts": architecture_counts,
+                "tensor_contract": tensor_contract,
+                "pipeline_stages": pipeline_stages,
+                "metrics": metrics,
+                "project_boundaries": project_boundaries,
+            },
+        },
+        "package_info": {"mode": "portable_html", "source": "artifact.json"},
+    }
+    return artifact
+
+
+def main() -> None:
+    """写出 canonical artifact JSON。"""
+
+    if not TOP_SPEC_PATH.is_file() or not SCAFFOLD_SPEC_PATH.is_file() or not ARCHITECTURE_COUNTS_PATH.is_file():
+        raise FileNotFoundError("缺少项目真实YAML示例或架构计数数据，拒绝生成占位报告")
+    REPORT_ROOT.mkdir(parents=True, exist_ok=True)
+    ARTIFACT_PATH.write_text(
+        json.dumps(build_artifact(), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    print(ARTIFACT_PATH)
+    print(HTML_PATH)
+
+
+if __name__ == "__main__":
+    main()

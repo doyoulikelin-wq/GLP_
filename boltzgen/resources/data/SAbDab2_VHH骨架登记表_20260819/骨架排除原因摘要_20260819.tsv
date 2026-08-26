@@ -1,0 +1,11 @@
+reason_order	reason	excluded_count
+1	首轮只采用 X-ray 结构	1376
+2	分辨率缺失或高于 2.5 Å	956
+3	不在 camelid-origin VHH 主面板范围	934
+4	结构/编号/二硫键硬 QC 未通过	524
+5	同一 SAbDab ID 有质量更优实例	370
+6	通过但未进入 12 个多样化代表面板	233
+7	同一 framework 结构簇已有代表	79
+8	Rfree 高于 0.30	13
+9	完全相同 framework 已有质量更优代表	9
+10	链共享/融合构建体不进入首轮	2

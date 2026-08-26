@@ -1,0 +1,21 @@
+ccd_component_id	one_letter_code	source_asset_count	source_assets	dictionary_policy
+ALA	A	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+ARG	R	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+ASN	N	2	VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+ASP	D	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+CYS	C	2	VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+GLN	Q	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+GLU	E	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+GLY	G	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+HIS	H	2	GLP1_7-36_NH2;GLP1_7-37	mols.zip retained whole; this table is usage lineage only
+ILE	I	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+LEU	L	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+LYS	K	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+MET	M	2	VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+PHE	F	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+PRO	P	2	VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+SER	S	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+THR	T	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+TRP	W	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+TYR	Y	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only
+VAL	V	6	GLP1_7-36_NH2;GLP1_7-37;GLP1_9-36_terminal_state_not_asserted_by_9IVG;GLP1_9-37;VHH_7EOW_caplacizumab_observed_core;VHH_7XL0_vobarilizumab_observed_core	mols.zip retained whole; this table is usage lineage only

@@ -1,0 +1,11 @@
+stage_order	stage	remaining_count
+1	SAbDab2 SD-H antibody instances	4508
+2	camelid-origin VHH scope	3574
+3	X-ray	2198
+4	resolution ≤2.5 Å	1242
+5	metadata-qualified for structure QC	1227
+6	hard structure QC pass	703
+7	best instance per SAbDab ID	333
+8	unique exact framework	324
+9	framework cluster representatives	245
+10	selected primary + reserve	12

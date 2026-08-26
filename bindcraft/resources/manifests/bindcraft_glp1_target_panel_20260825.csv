@@ -1,0 +1,9 @@
+﻿file_name,role,source_derivation,chain,residue_count,expected_residue_count,coordinate_coverage,heavy_atom_count,sequence,size_bytes,sha256,validation_status,limitations
+GIP_7DTY.pdb,negative_homolog,7DTY chain P,P,30,42,0.7143,249,YAEGTFISDYSIAMDKIHQQDFVNWLLAQK,20177,a9a68972af1738fd8fd96e5f49926ef1ba4be732e0d2a5bcdfba355c9f25fe74,NEEDS_REVISION,当前坐标 30/42 残基；不完整
+GLP1_7_36_1D0R_model1.pdb,positive,1D0R chain A model 1,A,30,30,1.0,234,HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR,37106,78ea942c3ff16f9c3d4e94bc22bb148064eecd23667365bb984ec54964a08430,STRUCTURE_PARSED,游离肽 NMR 模型；同一 deposition
+GLP1_7_36_1D0R_model10.pdb,positive,1D0R chain A model 10,A,30,30,1.0,234,HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR,37106,3c28f0ceaa4c2fb29c9b3ad1aa8413795eb386e1a66d28eb57b966094e3cfa35,STRUCTURE_PARSED,游离肽 NMR 模型；同一 deposition
+GLP1_7_36_6X18.pdb,positive,6X18 chain P,P,30,30,1.0,233,HAEGTFTSDVSSYLEGQAAKEFIAWLVKGR,18881,3a430a6dc8c7b357c8384eaf6921bfb79dfe343e37057fc2c4a8cf6c02e2a258,STRUCTURE_PARSED,受体结合态；C 端酰胺未原子级确认
+GLP1_9_36_1D0R_model1.pdb,negative_derived,1D0R model 1 minus first 2 residues,A,28,28,1.0,219,EGTFTSDVSSYLEGQAAKEFIAWLVKGR,34757,c05508b05471479322ffab0d2df2cc84cea17212d9e4a41f583ecf1bebf35cef,NEEDS_REVISION,坐标删除派生对照，不是独立实验结构
+GLP1_9_36_6X18.pdb,negative_derived,6X18 chain P minus first 2 residues,P,28,28,1.0,218,EGTFTSDVSSYLEGQAAKEFIAWLVKGR,17666,5a2c134000c79fe5f2988c84a9bc45f4728b64a4ec4ddd0528b2ace9e4d3fb4f,NEEDS_REVISION,坐标删除派生对照，不是独立实验结构
+Glucagon_6LMK.pdb,negative_homolog,6LMK chain E,E,29,29,1.0,245,HSQGTFTSDYSKYLDSRRAQDFVQWLMNT,19853,2fc7600a666684e4536dfbc8b602a475d78469ac482f1958a1f25a8ead6ef7c6,STRUCTURE_PARSED,同源肽反靶
+Oxyntomodulin_7LLY.pdb,negative_homolog,7LLY chain P,P,26,37,0.7027,222,HSQGTFTSDYSKYLDSRRAQDFVQWL,17990,1c5472249142bc7c0e1cd650fc40ebef7c01efc3a39d4bae88bf80a9ed325931,NEEDS_REVISION,结构不完整：当前坐标 26/37 残基；与 glucagon 段高度重合
