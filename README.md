@@ -20,6 +20,7 @@
 - [项目会话总览](shared/sessions/project_session_overview_20260826.md)
 - [项目总览 HTML](shared/reports/html/glp1_project_session_resource_overview_20260826.html)
 - [全部资源索引](shared/resources/manifests/all_resources_20260826.csv)
+- [本地规范路径与兼容路径映射](shared/resources/manifests/local_workspace_layout_20260826.csv)
 - [仓库逐文件来源与 SHA-256 映射](shared/resources/manifests/repository_file_map_20260826.csv)
 - [BoltzGen 最新进展](boltzgen/sessions/boltzgen_progress_20260826.md)
 - [BoltzGen 无上下文执行方案](boltzgen/plans/boltzgen_glp1_vhh_execution_plan_20260826.md)
@@ -55,6 +56,22 @@ shared/
 ```
 
 `main/` 在这里是“正式或可复用代码目录”，与 Git 默认分支 `main` 不是一回事。
+
+## Git 外本地工作区
+
+本仓库的父目录是本地工作区根，文档中写作 `workspace://`。大型数据和冻结运行不进入 Git，规范位置固定为：
+
+```text
+workspace://boltzgen/   BoltzGen 数据、运行、报告工作副本与计划
+workspace://bindcraft/  BindCraft 数据、运行和审计材料
+workspace://shared/     两条路线共享的数据、报告、文档与模板
+workspace://private/    私有赛事材料；目录 0700、普通文件 0600
+workspace://archive/    重复副本、临时文件和来源包；当前未永久删除
+workspace://manifests/  本地迁移回执和完整 SHA-256 树清单
+workspace://data/       仅用于历史脚本和旧书签的兼容链接层
+```
+
+旧路径不是新的数据副本。它们通过相对软链接解析到规范位置；历史日志和 manifest 中的旧绝对路径保持原字节，作为当时运行证据。完整映射见 [本地规范路径与兼容路径映射](shared/resources/manifests/local_workspace_layout_20260826.csv)。
 
 ## 命名规范
 

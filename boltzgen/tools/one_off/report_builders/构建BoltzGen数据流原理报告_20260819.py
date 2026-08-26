@@ -103,7 +103,11 @@ def write_source_table(dataset_id: str, rows: list[dict[str, object]]) -> Path:
     SOURCE_TABLE_ROOT.mkdir(parents=True, exist_ok=True)
     path = SOURCE_TABLE_ROOT / f"{dataset_id}.csv"
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
     return path

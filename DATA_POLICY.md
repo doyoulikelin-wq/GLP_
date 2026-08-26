@@ -35,7 +35,9 @@ record_count, file_count, size_bytes, sha256, sha256_manifest,
 license, git_policy, repository_path, validation_status, limitations
 ```
 
-`local_workspace_path` 是相对项目工作区的逻辑位置，不包含用户名或机器绝对路径。未来迁移到对象存储时，新增内容寻址 URI，不覆盖历史来源。
+`local_workspace_path` 是相对项目工作区的规范逻辑位置，不包含用户名或机器绝对路径。`workspace://` 解析到 Git 仓库的父目录，`repo://` 解析到 Git 仓库根；校验清单必须使用这两个显式 URI 之一。未来迁移到对象存储时，新增内容寻址 URI，不覆盖历史来源。
+
+本地规范路径、旧兼容路径和完整树清单的关系记录在 [`shared/resources/manifests/local_workspace_layout_20260826.csv`](shared/resources/manifests/local_workspace_layout_20260826.csv)。`data/` 下的旧路径只作为兼容层，不再作为新任务的数据根；仓库也不提交指向 Git 外资产的软链接。
 
 ## 数据角色
 

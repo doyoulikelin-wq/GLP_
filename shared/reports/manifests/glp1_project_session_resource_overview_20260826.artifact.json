@@ -795,7 +795,7 @@
           "purpose": "GLP-1 1D0R 的 20 个正靶构象规范副本",
           "asset_class": "conformer_panel",
           "record_count": "20 models from one NMR deposition",
-          "size_bytes": 1944791,
+          "size_bytes": 2277908,
           "git_policy": "EXTERNAL_ONLY_INDEXED",
           "validation_status": "CANONICAL_SOURCE_SELECTED",
           "repository_path": "仅外置索引",
