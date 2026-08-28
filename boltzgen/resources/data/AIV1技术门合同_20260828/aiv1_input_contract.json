@@ -1,0 +1,57 @@
+{
+  "schema_version": "AIV1_INPUT_CONTRACT_V1",
+  "campaign_type": "AIV1_TECHNICAL_GATE",
+  "candidate_count": 10,
+  "logical_states_per_candidate": 16,
+  "fold_run": 1,
+  "samples_per_task": 5,
+  "expected_logical_tasks": 160,
+  "expected_sample_rows": 800,
+  "development_state_contract_sha256": "42868449daf4a3e74ae3000ec85257b3621066117d05f9fd6c8fcfe622846dea",
+  "experience_registry_schema_sha256": "413a4eec844de2e31a73e9fe05a8c19ed3405cfa2425ce9db49b15cb04fa1546",
+  "generation_contract": {
+    "source_stage": "STEP8_G2_ACCEPTANCE",
+    "generation_cell_id": "7xl0_adherence__attempt_001",
+    "shard_id": "acceptance",
+    "scaffold_id": "01_pdb_00007xl0-A",
+    "scaffold_sha256": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+    "checkpoint_id": "adherence",
+    "checkpoint_sha256": "ac7078b3dc13064c68e0c3fd542e5bc538c33558bf6607f65e499eb336ca5e5d",
+    "platform_class": "LINUX_NVIDIA"
+  },
+  "state_role_counts": {
+    "positive_primary": 1,
+    "positive_fixed_control": 1,
+    "positive_compact_medoid": 3,
+    "tuning_primary_truncation": 1,
+    "tuning_family_glp2": 10
+  },
+  "allowed_cohorts": [
+    "positive_6x18_reference",
+    "positive_1d0r_all",
+    "countertarget_glp1_9_36_9ivm",
+    "challenge_glp2_2l63"
+  ],
+  "forbidden_cohort_markers": [
+    "lockbox",
+    "quarantine"
+  ],
+  "forbidden_target_markers": [
+    "2B4N",
+    "6LMK",
+    "GIP",
+    "GLUCAGON"
+  ],
+  "execution_mode": "REFOLD_REQUIRED",
+  "scientific_boundary": {
+    "proves_only": "the AIV1 input and execution contract is technically replayable",
+    "does_not_prove": [
+      "binding",
+      "non-binding",
+      "affinity or KD",
+      "selectivity",
+      "cross-scaffold generalization",
+      "experimental success"
+    ]
+  }
+}

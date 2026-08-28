@@ -1,0 +1,68 @@
+{
+  "schema_version": "AIV1_PREFLIGHT_REPOSITORY_SUMMARY_V1",
+  "status": "AIV1_PREPARATION_PARTIAL_BLOCKED",
+  "completed_at_utc": "2026-08-28T15:15:13.792534Z",
+  "scope": "AIV0 handoff, exact development-state allowlist, G2 anchor input contract, deterministic task-matrix construction, append-only registry bootstrap schema, and local readiness preflight",
+  "authoritative_evidence": {
+    "preflight_attempt_uri": "workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/logs/stages/aiv1_readiness_preflight/attempt_004/receipt.json",
+    "preflight_attempt_sha256": "ed84de95d7b425360839a96d098f3eb34b08529995a7bb2d2881dbbbaffda647",
+    "preflight_report_uri": "workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/logs/stages/aiv1_readiness_preflight/attempt_004/preflight_report.json",
+    "preflight_report_sha256": "2f13ae76fde66056643324e45ef0c42914353ef35c6e183487c121e36829d7ab",
+    "preflight_inputs_manifest_uri": "workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/logs/stages/aiv1_readiness_preflight/attempt_004/inputs.SHA256SUMS",
+    "preflight_inputs_manifest_sha256": "630062e4be85c1711f431c217ea50d4f88a307d9e214d6f224a830a9e7723120",
+    "preflight_outputs_manifest_uri": "workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/logs/stages/aiv1_readiness_preflight/attempt_004/outputs.SHA256SUMS",
+    "preflight_outputs_manifest_sha256": "bdbdf9b1791c5e0c9a7766a9f58727827196322be57ccf048d19da3822014a3b",
+    "contract_test_log_uri": "workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/logs/stages/aiv1_readiness_preflight/attempt_004/contract_tests.log",
+    "contract_test_log_sha256": "41ab73e44ffbe612a0ddef5a27281dfbe834aaf8aed69f250b6f9a22ce71d738",
+    "aiv0_final_check_receipt_sha256": "efa92f7bd8ddb345f072de2451be27c8f2c170c59467eb74ea8a5dff90a5fe5c"
+  },
+  "frozen_contracts": {
+    "aiv1_input_contract_sha256": "145fd069ab6f48b45c3ffa7c73f33977ff635a9ea8d0a367f12ae9767dbd3e00",
+    "development_state_contract_sha256": "42868449daf4a3e74ae3000ec85257b3621066117d05f9fd6c8fcfe622846dea",
+    "experience_registry_schema_sha256": "413a4eec844de2e31a73e9fe05a8c19ed3405cfa2425ce9db49b15cb04fa1546",
+    "matrix_builder_sha256": "a5a637462e401cf0ee071b5366ae3fa637f3729d3c4cb06fb2be7719203929a4",
+    "preflight_runner_sha256": "4b86968946226fa22ece8d809b2547dd77a56b6bf58afb45ddc5dfdc19ea4aa0",
+    "contract_test_script_sha256": "eac63b26c2cd556fa0a7383a510e891842a41701e1b213dee7c34704c8f259b4"
+  },
+  "verified": {
+    "aiv0_handoff": "PASS",
+    "development_state_contract": "PASS",
+    "development_states": 16,
+    "development_state_files_byte_hash_match": 16,
+    "lockbox_states": 0,
+    "contract_test_count": 42,
+    "contract_test_passed": 42,
+    "contract_test_failed": 0,
+    "contract_test_skipped": 0,
+    "synthetic_logical_tasks": 160,
+    "synthetic_sample_result_slots": 800,
+    "synthetic_g2_cells_with_direct_output_validation": 3,
+    "forged_gpu_memory_declaration_blocked": true,
+    "model_training_started": false,
+    "formal_inference_started": false,
+    "formal_anchor_count": 0,
+    "formal_task_count": 0,
+    "formal_sample_result_count": 0,
+    "lockbox_access_count": 0
+  },
+  "local_platform_observation": {
+    "os_family": "Darwin",
+    "architecture": "arm64",
+    "formal_linux_nvidia_ready": false,
+    "disk_free_bytes": 70712303616,
+    "recommended_scratch_min_bytes": 268435456000,
+    "formal_implementation_ready_units": 0,
+    "formal_implementation_required_units": 6
+  },
+  "blockers": [
+    "BLOCKED_EXTERNAL_INFRASTRUCTURE",
+    "BLOCKED_INSUFFICIENT_SCRATCH",
+    "BLOCKED_MISSING_AIV1_IMPLEMENTATION",
+    "BLOCKED_MISSING_G2_ANCHORS"
+  ],
+  "next_gate": "Complete formal Linux/NVIDIA G1 and G2, freeze the exact ten 7xl0_adherence__attempt_001 candidates, implement and test the remaining metric/execution/registry/final-validation stack, then close AIV1_DATA_COMPLETE followed by AIV1_HANDOFF_PASS.",
+  "scientific_boundary": {
+    "allows": "continue AIV1 implementation and prepare formal Linux/NVIDIA execution",
+    "does_not_allow": "claim AIV1 PASS, candidate binding, non-binding, affinity, selectivity, model improvement, cross-scaffold generalization, or experimental readiness"
+  }
+}

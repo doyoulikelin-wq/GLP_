@@ -11,13 +11,15 @@
 
 ## 2026-08-28 AI 验证修订（优先于本文旧 AIV0 路径）
 
-本文其余生产步骤仍以未来的 `workspace://boltzgen/runs/glp1_vhh_production_v1/`
+本文其余生产步骤仍以未来的 `workspace://data/boltzgen_data/glp1_vhh_production_v1/`
 为生产根；当前已经执行的 M0/AIV0 是一个独立、只读前置 campaign：
 `workspace://boltzgen/runs/glp1_vhh_formal_campaign_20260828/`。AIV0 的 V2 数据合同、
 专业名词、停止规则和经验事件以
 `repo://boltzgen/plans/glp1_vhh_aiv0_m0_20260828.md` 为准。本文后续所有
 `ai_validation_assets_v1`、20260826 V1 登记册或旧 `data/` 扫描式 AIV0 指令仅作
 历史背景，不得重新执行或覆盖 V2。
+
+非专业读者应先阅读上述补充方案第 10 节“专业名词表”；其中用中文解释 AIV0/AIV1/AIV4、G1/G2、PDB ID、mmCIF、GPU、CUDA、BF16、MPS、`nvidia-smi`、scratch、anchor、state、allowlist、builder、runner、validator、schema、SQL、handoff、JSON、TSV、CSV、NPZ、GiB 和 SHA-256。本文中的英文短名只用于与机器字段、脚本和收据逐字对应。
 
 未来创建 production 根时，必须把 formal campaign 的最终只读 AIV0 receipt、
 派生登记册 manifest、V2 静态合同哈希和本修订的 Git commit 复制为
@@ -559,10 +561,10 @@ build_report_artifact.py      ba121f73ad069e8a0979cd595e530e8dcc7805646f487bba2a
 | provenance 收集合同 | `EMBEDDED_IN_STEPS_1_6_7_8_11_12` | 收集命令、版本、设备、环境、哈希、随机状态、时间 | SUCCESS/selection provenance/lineage 任一断链即失败 |
 | 合并/谱系校验代码 | `EMBEDDED_IN_STEP_12` | 官方 merge 后全序列去重、保留一对多谱系 | 不覆盖原始 run；不把重复候选当独立训练样本 |
 | `compute_project_metrics.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV1` | 建 ATOM_MAP_V1，逐 sample 计算位点/RMSD/界面和候选聚合 | pad/resolved/Writer 原子回程；五 sample 不混接；算法 manifest |
-| `build_ai_validation_matrix.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV1` | 从 `structure_inventory.tsv` 的显式 allowlist 生成 candidate × target identity × conformer × fold-run 任务矩阵 | 重复镜像/代表别名/隔离项不得入矩阵；tuning 与 lockbox 分离；ensemble 分母精确 |
+| `build_ai_validation_matrix.py` | `INPUT_CONTRACT_IMPLEMENTED_AND_SYNTHETIC_TESTED_2026-08-28; FORMAL_G2_INPUT_PENDING` | 从精确 16-state allowlist 与正式 G2 10-anchor manifest 生成 candidate × target identity × conformer × fold-run 任务矩阵 | 9/重复/wrong-origin/Mac-MPS anchors、哈希漂移、隔离/lockbox 项均拒绝；只在真实 G2 receipt 闭合后物化 160/800 |
 | `run_multistate_ai_validation.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV1` | 对固定候选跨正靶构象与挑战态统一 refold/score，生成逐 sample 和分层聚合表 | 不把 iPTM/PAE/RMSD 换算亲和力；缺一 target/conformer 即候选不可排名；ensemble 内先聚合 |
-| `freeze_ai_eval_spec.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV2` | 用 AIV1 只冻结 schema/公式/方向/缺失/聚合/bootstrap 与 baseline-envelope 生成算法；AIV2 baseline 后机械实例化 reference envelope | 单一 7XL0 cell 不定跨 scaffold 阈值；任何 config-variant 前冻结 envelope；不得读取 variant/AIV3/lockbox 后改规则 |
-| `update_ai_experience_registry.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV1` | 向 append-only AI campaign/event/metric/decision 库登记配置、证据、成功与失败 | 不允许 UPDATE/DELETE 历史事实；同 operation receipt 幂等；所有决定可回放 |
+| `freeze_ai_eval_spec.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_FORMAL_AIV1` | AIV1 首次 160/800 前冻结 provisional schema/公式/方向/缺失/聚合规则；AIV1 后形成 final spec 和 baseline-envelope 生成算法，AIV2 baseline 后只机械实例化 reference envelope | provisional/final 规范字段不同即对同一 160/800 全量重跑并重签；单一 7XL0 cell 不定跨 scaffold 阈值；不得读取 variant/AIV3/lockbox 后改规则 |
+| `update_ai_experience_registry.py` | `AIV1_BOOTSTRAP_SCHEMA_PARTIAL; WRITER_TO_IMPLEMENT_AND_TEST_BEFORE_AIV1` | 当前只具备 AIV1 启动所需的最小 append-only campaign/event/task/sample-result/metric 骨架；登记配置、证据、成功与失败的正式 writer 仍未实现 | 该骨架不是完整经验库 schema；AIV2 前必须通过版本化 SQL migration 补齐 config/candidate/ensemble/decision/artifact/lockbox 等正式实体、迁移测试、`PRAGMA user_version` 和 schema manifest 后重新签发 schema receipt |
 | `build_codex_ai_decision_bundle.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV2` | 构建供 Codex 筛选的完整、盲态、固定 schema 证据包并核验配置 diff | baseline 必须存在；每轮仅 1–2 个预注册变量；无完整分母/不确定性/失败证据即不决策 |
 | `select_experimental_panel.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV4` | 开箱前按非锁箱特征冻结 ordered 96–192 预面板、8–16 sentinel、exclusions/reasons；PASS 后只物化同一 membership | exact bytes/order/set hashes；覆盖骨架/簇/风险层/controls；lockbox 不能改变任何成员或选择字段 |
 | `open_lockbox_once.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_AIV4` | 内存构造 P×21 matrix hash，先提交不可回滚 OPENING_CONSUMED，再发布 matrix/stage CIF/运行或恢复 | 崩溃后访问仍计 1；只恢复同 intent；候选集/config/eval 任一变化阻断；P×21/P×105 分母闭合 |
@@ -3545,7 +3547,9 @@ G2 通过后还必须执行 **AIV1 技术验收**：只冻结 7XL0×adherence ac
 
 development panel 固定为每候选 16 个 logical target-conformer tasks、`fold_run=1`、每 task 5 samples，因此 AIV1 期望 160 logical tasks/800 sample rows。若 6X18 的 5 samples 与生成阶段在 candidate/config/code/schema/hash 上精确闭合，可登记为 `REUSED_VERIFIED`，仅新增 15×10 个 refold jobs；否则重跑全部 16×10。AIV1 只验收 task matrix、原子映射、逐 sample 指标、ensemble 聚合、缺失处理、失败码和经验库写入；不得读取 GIP/6LMK lockbox，也不得据单一 cell 的 10 条冻结跨 scaffold 数值阈值或宣称算法改进。
 
-AIV1 通过后、查看 240 条结果前，用 `freeze_ai_eval_spec.py` 冻结 schema、指标公式/方向、缺失惩罚、聚合顺序、bootstrap 单位、Pareto/无退化算法、baseline-envelope 的确定性生成算法和 lockbox guardrail 公式。AIV2 的 240 baseline 覆盖旧 12×2；其结果只能按已冻结算法机械生成 `reference_envelope_v1`，并必须在任何 config variant 结果产生前冻结。数值容忍区间不得从单一 7XL0 cell 主观外推或在看到 variant/lockbox 后修改。
+AIV1 首次运行 160/800 前，必须先冻结 provisional evaluation spec（临时评价规则），其中只含 schema、指标公式/方向、缺失惩罚、聚合顺序和失败语义，不含从单一 7XL0 cell 外推的跨 scaffold 数值阈值。160/800、原子映射、失败分母和经验库按该 provisional spec 闭合后，才可发布与其哈希绑定的 `AIV1_DATA_COMPLETE`，但此时尚未授权 AIV2。
+
+随后、查看 240 条结果前，用 `freeze_ai_eval_spec.py` 形成 final evaluation spec（最终评价规则），冻结 schema、指标公式/方向、缺失惩罚、聚合顺序、bootstrap 单位、Pareto/无退化算法、baseline-envelope 的确定性生成算法和 lockbox guardrail 公式。若 final spec 相对 provisional spec 在 schema、公式、方向、缺失或聚合任一规范字段有变化，旧 `AIV1_DATA_COMPLETE` 只保留为历史证据：必须对**同一 10 anchors × 16 states、同一 160 tasks/800 sample rows**按 final spec 全量重跑，发布新的 `AIV1_DATA_COMPLETE` 并重新签发全部输入/代码/spec/输出哈希；禁止只重算已完成子集或沿用旧签名。只有 final spec、最后一份 160/800 完成收据和从 `AIV1_BOOTSTRAP_SCHEMA_PARTIAL` 迁移出的完整经验库 schema receipt 全部逐字闭合后，才发布 `AIV1_HANDOFF_PASS`。AIV2 的 240 baseline 覆盖旧 12×2；其结果只能按已冻结算法机械生成 `reference_envelope_v1`，并必须在任何 config variant 结果产生前冻结。数值容忍区间不得从单一 7XL0 cell 主观外推或在看到 variant/lockbox 后修改。
 
 G2 或 AIV1 任一失败不得进入作业数组。
 
@@ -6747,7 +6751,7 @@ is_atom_pad, is_reference_resolved, is_backbone, is_target, is_vhh, is_cdr, is_d
 
 所有依赖版本从 `requirements.production.lock.txt` 读取并记入 `metric_algorithm_manifest.json`；原理参考源文件必须逐个核对：`task/analyze/analyze_utils.py` SHA-256 `a5c74cfa93a1fba7e71e6e47e127c3763cfd25620a07cbdafbd0a4905a534051`，`data/rmsd_computation.py` `139f91fee1b753d2e72616f30fe95c2280fff7d34baf46663ffefe562e22cc52`，`task/predict/writer.py` `5338dad02460795eb87b9a7f120ac78f219a057eb75d2cd32a92684e41190520`，`data/data.py` `6d6edac16695a1671dbdc3be3ad434dacd375ef599dd4ae632fff7b661b43dac`。任一不符即不得沿用该 algorithm ID。这些新增界面指标首轮只作排序特征/敏感性分析，在与独立结构工具和人工抽查一致之前不作硬过滤门。
 
-`compute_project_metrics.py` 状态为 `TO_IMPLEMENT_AND_TEST_AFTER_G5`。实现必须读取 canonical aggregate、lineage 和 source-cell NPZ/CIF，不能读取被隔离的 per-target 表。由于该脚本可能在 Step 7 首次同步后才实现，先在 Mac 上将它和测试以独立哈希清单增量同步：
+`compute_project_metrics.py` 的 AIV1 技术模式状态为 `TO_IMPLEMENT_AND_TEST_BEFORE_AIV1`；生产规模模式在 G5 后对 canonical aggregate 使用同一冻结算法。两种模式必须共享 ATOM_MAP/逐 sample 算法和测试，但分别绑定输入 schema，不能把“生产规模调用在 G5 后”误写成“AIV1 前无需实现”。实现必须读取对应阶段的 canonical aggregate、lineage 和 source-cell NPZ/CIF，不能读取被隔离的 per-target 表。先在 Mac 上将它和测试以独立哈希清单增量同步：
 
 ```bash
 set -euo pipefail
@@ -6933,7 +6937,7 @@ rsync --archive --checksum --itemize-changes \
 | Gate | 输入 | 必须交付 | 通过含义 |
 |---|---|---|---|
 | AIV0 资产门 | 新增样本/no_binding/scaffold + 旧基线 | `$AI_OUTPUT_ROOT/validation_summary.json`、逐文件/结构/重复/隔离清单与最终 receipt | 数据身份与用途可审计；当前已 PASS，不代表模型有效 |
-| AIV1 技术门 | Step 8 的 10 个冻结 anchor；不含 lockbox | 完整多状态矩阵、逐 sample 指标、ensemble 聚合、失败码、经验库首条 campaign、冻结 `ai_eval_spec.yaml` | 多状态评价链可重放；不评价命中率 |
+| AIV1 技术门 | Step 8 的 10 个冻结 anchor；不含 lockbox | 先按 provisional spec 发布 160/800 闭合的 `AIV1_DATA_COMPLETE`；随后冻结只含 schema/公式/方向/缺失/聚合算法的 final `ai_eval_spec.yaml`。若规范字段改变，对同一 160/800 全量重跑并重签 DATA_COMPLETE；完成版本化完整经验库 schema migration 后，最后发布 `AIV1_HANDOFF_PASS` | 多状态评价链可重放；不评价命中率；不从单一 7XL0 cell 定跨 scaffold 数值阈值 |
 | AIV2 覆盖门 | 初始 240 baseline；最多两个 config-variant comparison rounds，每轮同时生成 240 baseline control + 240 variant（480） | 旧 12×2 分层完整；每轮 baseline/variant 同期、同预算；Codex 决策和全部失败留痕 | 选出 baseline 或一个可证伪 config variant；锁箱仍密封 |
 | AIV3 配置冻结门 | 被选配置的 2,400 诊断批 | 工程门、AI 无退化门、完整分母、配置/代码/评价规则冻结 receipt | 决定是否允许 12,000；此后禁止科学调参 |
 | AIV4 一次性锁箱门 | 12,000 母集上的非锁箱指标、预冻结面板成员/选择算法、1D0R sensitivity、GIP/glucagon lockbox | lockbox access receipt、群体级 guardrail、最终 Codex 决策、`AIV4_PASS` 或 `AIV4_FAIL` | PASS 仅表示通过当前 AI 风险筛；FAIL 则本 campaign 不放行实验 |
@@ -6963,6 +6967,10 @@ validator 还必须扫描 production `spec_manifest.tsv`、24/48/96 task matrice
 9HO5-C 只有在证明 5 个缺坐标 CDR1 residues 全部位于再生成 design mask、20/20 输出主链连续且人工复核通过，或完成可追溯结构重建后，才可解除隔离；单独 `boltzgen check PASS` 不够。7OAO-FFF 只有两条互斥出口：(a) 保留固定框架 Cys（label_seq_id 50/IMGT 55）时，必须同时把其配对 Cys（label_seq_id 104/IMGT 112A）固定在 design mask 外，并证明规范输入及 20/20 输出均保持该 Cys–Cys 二硫键的原子、连接/合理几何且无未配对游离 Cys；任一候选出现未配对固定 Cys、配对 Cys 被设计或二硫键不闭合，立即记 `CYS_DISULFIDE_NOT_PRESERVED` hard fail；(b) 若修改固定框架 Cys，则必须创建新的 derivative scaffold ID、序列/坐标哈希和原 INSTANCE 谱系，显式处置原配对 Cys（label_seq_id 104/IMGT 112A），证明 derivative canonical 及 20/20 输出均无未配对游离 Cys，并从 canonicalization、target-containing `boltzgen check` 到 20 candidates/320 tasks/1,600 rows admission probe 全链重跑。任一证据不全时原 raw INSTANCE 继续为 quarantine，禁止静默改写或仅凭 `boltzgen check PASS` 放行。
 
 #### 13A.3 评价单位、分母与聚合
+
+2026-08-28 起，AIV1 静态输入合同冻结在 `repo://boltzgen/resources/data/AIV1技术门合同_20260828/`：`development_state_contract.tsv` 明确列出 `DEV_00..DEV_15`、规范 `target_identity/conformer_id`、合同坐标指纹值和 1D0R `6/10/4` 权重；预检只证明这些坐标指纹值与 AIV0 `structure_inventory.tsv` 的冻结值一致，并对当前源文件重新计算字节级 SHA-256，**没有重新运行 AIV0 的坐标指纹算法**。`aiv1_input_contract.json` 冻结正式 anchor header、G2 来源和 10/16/160/800 算术。builder 不再猜历史字段名：静态合同的 `required_status` 必须逐行等于 V2 inventory 的真实 `status`；标签语义直接复验真实 `experimental_negative=false` 与 `binding_label=unknown_or_not_applicable`。只筛 `active_for_ai=true` 属于错误实现，因为会额外纳入 sensitivity 和 lockbox。
+
+AIV1 预检使用独立的 `workspace://boltzgen/runs/glp1_vhh_aiv1_preflight_20260828/`，正式 campaign 使用本方案既有的 `workspace://data/boltzgen_data/glp1_vhh_production_v1/`。二者都只能只读导入 AIV0 `attempt_007` receipt 哈希；禁止向已经冻结的 `workspace://boltzgen/runs/glp1_vhh_formal_campaign_20260828/` 追加 AIV1 文件。
 
 原始事实表的唯一行粒度固定为：
 
@@ -7058,11 +7066,14 @@ PASS_AI_RISK_SCREEN
 
 ```text
 asset_snapshot(asset_snapshot_id, registry_hashes, created_at_utc)
-campaign(campaign_id, parent_campaign_id, campaign_type, stage, status, partition_policy_sha256)
+campaign(campaign_id, parent_campaign_id, campaign_type, stage, input_snapshot_sha256, partition_policy_sha256, created_at_utc)
+campaign_event(event_id, campaign_id, event_order, event_type, status_code, evidence_sha256, created_at_utc)
 config_snapshot(config_id, canonical_config_json, config_sha256, diff_from_parent)
 candidate(candidate_id, full_sequence_sha256, lineage_sha256)
-task(task_id, campaign_id, generation_cell_id, shard_id, candidate_id, target_identity, conformer_id, expected, execution_mode, status)
-metric_sample(task_id, fold_run, sample_index, metric_id, value, unit, valid)
+task(task_id, campaign_id, generation_cell_id, shard_id, candidate_id, target_identity, conformer_id, expected, execution_mode, expected_sample_count, task_contract_sha256)
+task_attempt_event(attempt_event_id, task_id, attempt_number, event_order, status_code, output_manifest_sha256, created_at_utc)
+sample_result(sample_result_id, task_id, fold_run, sample_index, result_status, raw_artifact_sha256, atom_mapping_sha256, created_at_utc)
+metric_sample(sample_result_id, metric_id, value, unit, valid, missing_reason, algorithm_sha256)
 metric_ensemble(campaign_id, candidate_id, independence_group, metric_id, aggregate, value)
 failure_event(event_id, campaign_id, candidate_id_or_null, primary_code, secondary_code, evidence_sha256, causal_confidence)
 codex_decision(decision_id, campaign_id, input_bundle_sha256, decision, rationale, allowed_changes, output_config_sha256)
@@ -7071,7 +7082,9 @@ lockbox_access_completion(completion_id, access_id, status, completed_at_utc, ex
 artifact(artifact_id, campaign_id, role, path, bytes, sha256)
 ```
 
-数据库必须启用 `PRAGMA foreign_keys=ON`，历史 campaign/config/metric/failure/decision/lockbox 行禁止 `UPDATE` 和 `DELETE`。重试用稳定 operation ID 幂等追加 attempt；事实更正通过新 event 的 `supersedes_event_id` 表达。每个 campaign receipt 绑定：父 campaign、全部输入/模型/代码/环境哈希、期望/完成/失败分母、配置 diff、聚合算法、输出树、Codex decision bundle 和经验库事务哈希。
+当前仓库中的 SQL 只标记为 `AIV1_BOOTSTRAP_SCHEMA_PARTIAL`：它用于验证 AIV1 的 160-task/800-sample 分母、身份/状态分离和只追加约束，不等于上表所列完整经验库已经实现。进入 AIV2 前，必须用不可变、顺序编号的 SQL migration 补齐上表全部实体和约束，记录旧/新 schema 版本、迁移脚本与数据库前后哈希，通过空库建库、已有 AIV1 库升级、回放和负向测试，并发布完整 schema receipt；不得直接改写已使用的 bootstrap SQL 后继续运行。
+
+数据库必须启用 `PRAGMA foreign_keys=ON`，历史 campaign/task/config/metric/failure/decision/lockbox 行禁止 `UPDATE` 和 `DELETE`。`campaign` 与 `task` 只保存不可变身份；可变状态进入 `campaign_event` 与 `task_attempt_event`。`sample_result` 一行对应一个 task/fold/sample，因此 AIV1 完整分母精确为 800；`metric_sample` 是指向它的逐指标长表，行数为 `800×指标数`，不得用作 800 行完整性判断。重试用稳定 operation ID 幂等追加 attempt；事实更正通过新 event 的 `supersedes_event_id` 表达。每个 campaign receipt 绑定：父 campaign、全部输入/模型/代码/环境哈希、期望/完成/失败分母、配置 diff、聚合算法、输出树、Codex decision bundle 和经验库事务哈希。
 
 经验库的用途是让 Codex避免重复无效配置、复用已证实的工程修复，并追踪失败是否在新 campaign 消失。实验前它只包含计算事件，不能作为监督 binder 数据；实验标签进入 Step 15 的独立 registry 后，才可通过不可变 candidate/sequence key 做受控连接。
 
@@ -12841,7 +12854,7 @@ python src/boltzgen/resources/main.py \
 | G0 本地环境与基础数据完整性 | Step 0.1 项目环境 clean rebuild；URL/revision/bytes/SHA；旧 12 scaffold；target 30 residues；His7/Ala8=1/2；许可 | 基础数据已通过历史审计；正式 campaign 的环境与数据均需重跑 |
 | G1 环境 | 官方 commit、CUDA、BF16、GPU、依赖冻结、磁盘 | 等待 Linux/NVIDIA 基础设施 |
 | G2 单元端到端 | 7XL0 10 条五阶段完整；6XYM × 两 checkpoint × 10 条、batch=5；产物/哈希完整、无 OOM/NaN、峰值显存≤90% | 未执行官方 NVIDIA 版 |
-| AIV1 多状态技术门 | 10 anchor 完整覆盖 positive compact + tuning challenge；评价 schema/失败码/经验库可重放；`ai_eval_spec.yaml` 冻结；lockbox 未访问 | 未执行 |
+| AIV1 多状态技术门 | 10 anchor 完整覆盖 positive compact + tuning challenge；评价 schema/失败码/经验库可重放；先 `AIV1_DATA_COMPLETE`、后 `AIV1_HANDOFF_PASS`；lockbox 未访问 | **PREPARATION_PARTIAL / BLOCKED（2026-08-28）**：AIV0 handoff 与真实 16/16 state 合同已通过；160/800 合成矩阵及负测的最终项数只以权威测试 receipt 的 `test_count/test_passed/test_failed` 为准；正式推理未启动。阻塞于 Linux/NVIDIA、G2 10 anchors、scratch 与其余 AIV1 执行/指标代码；不得写 AIV1 PASS |
 | G3/AIV2 240 条覆盖门 | 24 baseline cells 无缺口；跨状态分母/谱系/指标完整；最多两个 1–2 变量 challenger；Codex 决策留痕；lockbox 未访问 | 未执行 |
 | G4/AIV3 2,400 条配置冻结门 | 工程 go/no-go + AI 多目标无退化门；配置/代码/评价规则冻结；lockbox 未访问 | 未执行 |
 | G5 12,000 条生产 | 只在 AIV3 PASS 后；96 cells 独立、完整合并；生产期间不调参 | 未执行 |
@@ -12944,7 +12957,7 @@ python src/boltzgen/resources/main.py \
 8. 执行 Step 5A 与 Step 5.1：冻结模型输入，并在 Mac 物化/测试包括 `verify_gpu_env_stage.sh` 与 `submit_phase_once.sh` 在内的 GPU 运行脚本；此时不得运行 5B。
 9. 若没有 `GPU_HOST/GPU_PROJECT_ROOT`，记录 `BLOCKED_EXTERNAL_INFRASTRUCTURE`，继续完成本地清单、代码、测试、AI schema 和报告框架，不伪造 GPU 或 AI 结果。
 10. GPU 可用后，严格依次执行 Step 5.2 远端 bootstrap → Step 6 建立并冻结 GPU 环境 → Step 7 同步全部冻结资产 → Step 5B 的 12/12 `boltzgen check` → 拉回检查产物与人工结构审阅 → `verify_specs.py` 冻结 G1/G2 gate；上述全部通过后才执行 Step 8 的 10 条 acceptance。
-11. 只用 7XL0×adherence 的 10 个冻结 anchor 执行 AIV1；6XYM 的 20 个候选只作工程探针。development 16 态必须闭合 160 tasks/800 sample rows；验证聚合/失败码/经验库，然后在 240 结果前冻结 `ai_eval_spec.yaml` 的算法。lockbox 访问数必须为 0。
+11. 只用 7XL0×adherence 的 10 个冻结 anchor 执行 AIV1；6XYM 的 20 个候选只作工程探针。先冻结不含跨 scaffold 数值阈值的 provisional spec，再闭合 development 16 态的 160 tasks/800 sample rows、聚合、失败码和经验库；在查看 240 结果前冻结 final spec 的 schema/公式/方向/缺失/聚合规则。若这些规范字段相对 provisional spec 有任何变化，必须对同一 160/800 全量重跑并重新签发 `AIV1_DATA_COMPLETE`；完整经验库 schema 的版本化 migration 和 receipt 也必须闭合，之后才可发布 `AIV1_HANDOFF_PASS`。lockbox 访问数必须为 0。
 12. 执行 240 baseline 的 AIV2（3,840 tasks/19,200 rows）。Codex 先按失败 taxonomy 归因；如需调整，每轮最多 1–2 个预注册变量、最多两个 `CONFIG_VARIANT_240` comparison rounds；每轮必须同时生成 240 baseline control + 240 variant，即 480 candidates/7,680 tasks/38,400 rows，并作非配对分层比较；接受/回退/停止全部写经验库。
 13. 执行选定配置的 2,400 AIV3；工程门和多目标无退化门均 PASS 后冻结生成配置、代码、指标方向、阈值、聚合和选择规则。lockbox 仍不得访问。
 14. 只有 AIV3 PASS 后运行 12,000 生产批；中途只允许同配置技术重试，不允许按分数调参。
