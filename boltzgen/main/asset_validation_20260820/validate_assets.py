@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """Validate and inventory the local BoltzGen AI-validation assets.
 
-Run with the frozen project interpreter that already contains Gemmi/PyYAML:
+The 2026-08-26 workspace migration moved large assets out of the Git repository
+and retained compatibility symlinks.  This validator therefore keeps two path
+identities for every asset: a stable *logical* path used by registries and a
+canonical *physical* path used only for reads and hashing.  It never derives a
+logical identity by resolving a symlink.
 
-    data/boltzgen_data/mvp_run_001/env/bin/python -I \
-      data/boltzgen_data/ai_validation_assets_v1/validate_assets.py --write
-
-The script never edits source data.  ``--write`` atomically refreshes only the
-derived TSV/JSON files beside this script; ``--check`` compares a fresh in-memory
-render with the committed derived files.
+The script never edits source data. ``--write`` atomically refreshes only the
+derived TSV/JSON files in an explicitly selected registry directory; ``--check``
+compares a fresh in-memory render with those files.  Neither mode performs model
+training or claims experimental binding truth.
 """
 
 from __future__ import annotations
@@ -22,20 +24,25 @@ import json
 import math
 import os
 from collections import Counter, defaultdict
-from pathlib import Path
+from dataclasses import dataclass
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 import gemmi
 import yaml
 
 
-SCHEMA_VERSION = "AI_VALIDATION_ASSET_REGISTRY_V1"
-SOURCE_ROOTS = (
-    "data/样本数据",
-    "data/not_binding",
-    "data/多构象-1",
-    "data/sd-h骨架",
-)
+SCHEMA_VERSION = "AI_VALIDATION_ASSET_REGISTRY_V2"
+HISTORICAL_SOURCE_FILE_COUNT = 177
+HISTORICAL_SOURCE_BYTES = 14_884_156
+EXPECTED_STRUCTURE_PATH_COUNT = 112
+EXPECTED_STRUCTURE_PARSE_PASS = 112
+EXPECTED_ASSET_MOUNT_COUNT = 10
+EXPECTED_COHORT_COUNT = 13
+EXPECTED_FILE_OVERRIDE_COUNT = 18
+EXPECTED_COMPATIBILITY_ALIAS_COUNT = 9
+EXPECTED_HISTORICAL_OUTPUT_HASH_COUNT = 5
+EXPECTED_NEW_SCAFFOLD_CHECKSUM_COUNT = 72
 ACTIVE_STATUSES = {
     "USE_PRIMARY",
     "USE_SENSITIVITY",
@@ -69,13 +76,288 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+@dataclass(frozen=True)
+class AssetRef:
+    """One stable logical asset identity backed by one physical file."""
+
+    logical_relative_path: str
+    physical_path: Path
+
+
+@dataclass(frozen=True)
+class AssetMount:
+    """A declared mapping from a logical path prefix to a canonical asset."""
+
+    mount_id: str
+    logical_path: str
+    canonical_uri: str
+    asset_kind: str
+    inventory_scope: str
+    include_in_source_inventory: bool
+    expected_file_count: int
+    expected_bytes: int
+
+
+def normalize_logical_path(value: str) -> str:
+    """Return a canonical POSIX relative path without touching the filesystem."""
+
+    if not value or "\\" in value:
+        raise ValueError(f"invalid logical path: {value!r}")
+    candidate = PurePosixPath(value)
+    if candidate.is_absolute() or any(part in {"", ".", ".."} for part in candidate.parts):
+        raise ValueError(f"logical path must be a normalized relative POSIX path: {value!r}")
+    normalized = candidate.as_posix()
+    if normalized != value:
+        raise ValueError(f"logical path is not canonical: {value!r}")
+    return normalized
+
+
+def workspace_uri_to_lexical_path(uri: str, workspace_root: Path) -> Path:
+    """Map ``workspace://`` to a lexical path without following symlinks."""
+
+    prefix = "workspace://"
+    if not uri.startswith(prefix):
+        raise ValueError(f"only workspace:// URIs are allowed: {uri!r}")
+    relative = normalize_logical_path(uri[len(prefix) :])
+    return workspace_root.absolute() / PurePosixPath(relative)
+
+
+def _is_within(path: Path, root: Path) -> bool:
+    try:
+        path.relative_to(root)
+    except ValueError:
+        return False
+    return True
+
+
+def resolve_workspace_uri(uri: str, workspace_root: Path) -> Path:
+    """Resolve an existing workspace URI and reject workspace escapes."""
+
+    root = workspace_root.resolve(strict=True)
+    lexical = workspace_uri_to_lexical_path(uri, root)
+    resolved = lexical.resolve(strict=True)
+    if not _is_within(resolved, root):
+        raise ValueError(f"workspace URI resolves outside the workspace: {uri!r}")
+    return resolved
+
+
 def relpath(path: Path, root: Path) -> str:
-    return path.resolve().relative_to(root.resolve()).as_posix()
+    """Return a lexical path; retained for callers that must not resolve aliases."""
+
+    return path.absolute().relative_to(root.absolute()).as_posix()
 
 
 def read_tsv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle, delimiter="\t"))
+
+
+def read_asset_mounts(path: Path) -> list[AssetMount]:
+    """Load and validate the explicit logical-to-physical mount contract."""
+
+    mounts: list[AssetMount] = []
+    seen_ids: set[str] = set()
+    seen_logical: set[str] = set()
+    for row in read_tsv(path):
+        mount_id = row["mount_id"]
+        logical_path = normalize_logical_path(row["logical_path"])
+        if mount_id in seen_ids:
+            raise ValueError(f"duplicate mount_id: {mount_id}")
+        if logical_path in seen_logical:
+            raise ValueError(f"duplicate logical mount: {logical_path}")
+        if row["asset_kind"] not in {"tree", "file"}:
+            raise ValueError(f"invalid asset_kind for {mount_id}: {row['asset_kind']}")
+        if not row["canonical_uri"].startswith("workspace://"):
+            raise ValueError(f"canonical_uri must use workspace:// for {mount_id}")
+        include_value = row["include_in_source_inventory"].lower()
+        if include_value not in {"true", "false"}:
+            raise ValueError(
+                f"include_in_source_inventory must be true or false for {mount_id}"
+            )
+        mounts.append(
+            AssetMount(
+                mount_id=mount_id,
+                logical_path=logical_path,
+                canonical_uri=row["canonical_uri"],
+                asset_kind=row["asset_kind"],
+                inventory_scope=row["inventory_scope"],
+                include_in_source_inventory=include_value == "true",
+                expected_file_count=int(row["expected_file_count"] or 0),
+                expected_bytes=int(row["expected_bytes"] or 0),
+            )
+        )
+        seen_ids.add(mount_id)
+        seen_logical.add(logical_path)
+    return mounts
+
+
+def list_mount_files(
+    mount: AssetMount, workspace_root: Path
+) -> tuple[Path, list[Path]]:
+    """Return regular files for a mount and reject undeclared nested symlinks."""
+
+    physical_root = resolve_workspace_uri(mount.canonical_uri, workspace_root)
+    if mount.asset_kind == "file":
+        if not physical_root.is_file():
+            raise ValueError(f"file mount is not a regular file: {mount.mount_id}")
+        return physical_root, [physical_root]
+
+    if not physical_root.is_dir():
+        raise ValueError(f"tree mount is not a directory: {mount.mount_id}")
+    entries = sorted(physical_root.rglob("*"), key=lambda item: item.as_posix())
+    nested_symlinks = [entry for entry in entries if entry.is_symlink()]
+    if nested_symlinks:
+        relative = nested_symlinks[0].relative_to(physical_root).as_posix()
+        raise ValueError(
+            f"undeclared nested symlink in {mount.mount_id}: {relative}"
+        )
+    files = [entry.resolve(strict=True) for entry in entries if entry.is_file()]
+    if any(not _is_within(path, physical_root) for path in files):
+        raise ValueError(f"file escaped canonical mount: {mount.mount_id}")
+    return physical_root, files
+
+
+def validate_asset_mount_contract(
+    workspace_root: Path, mounts: list[AssetMount], errors: list[str]
+) -> None:
+    """Validate every mount, including non-inventory execution dependencies."""
+
+    if len(mounts) != EXPECTED_ASSET_MOUNT_COUNT:
+        errors.append(
+            f"expected {EXPECTED_ASSET_MOUNT_COUNT} asset mounts, found {len(mounts)}"
+        )
+    for mount in mounts:
+        try:
+            _, files = list_mount_files(mount, workspace_root)
+            observed_bytes = sum(path.stat().st_size for path in files)
+            if len(files) != mount.expected_file_count:
+                errors.append(
+                    f"{mount.mount_id}: expected {mount.expected_file_count} files, "
+                    f"found {len(files)}"
+                )
+            if observed_bytes != mount.expected_bytes:
+                errors.append(
+                    f"{mount.mount_id}: expected {mount.expected_bytes} bytes, "
+                    f"found {observed_bytes}"
+                )
+        except (OSError, RuntimeError, ValueError) as exc:
+            errors.append(f"{mount.mount_id}: mount validation failed: {exc}")
+
+
+def _mount_for_logical_path(logical_path: str, mounts: list[AssetMount]) -> AssetMount:
+    logical = normalize_logical_path(logical_path)
+    candidates = [
+        mount
+        for mount in mounts
+        if logical == mount.logical_path
+        or logical.startswith(mount.logical_path.rstrip("/") + "/")
+    ]
+    if not candidates:
+        raise ValueError(f"no declared asset mount for logical path: {logical}")
+    return max(candidates, key=lambda item: len(item.logical_path))
+
+
+def resolve_logical_path(
+    logical_path: str, workspace_root: Path, mounts: list[AssetMount]
+) -> AssetRef:
+    """Resolve a logical file through its declared mount without identity drift."""
+
+    logical = normalize_logical_path(logical_path)
+    mount = _mount_for_logical_path(logical, mounts)
+    physical_root = resolve_workspace_uri(mount.canonical_uri, workspace_root)
+    if mount.asset_kind == "file":
+        if logical != mount.logical_path:
+            raise ValueError(f"file mount cannot contain child path: {logical}")
+        physical = physical_root
+    else:
+        suffix = PurePosixPath(logical).relative_to(PurePosixPath(mount.logical_path))
+        candidate = physical_root / suffix
+        cursor = physical_root
+        for part in suffix.parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                raise ValueError(f"undeclared nested symlink in asset path: {logical}")
+        physical = candidate.resolve(strict=True)
+        if not _is_within(physical, physical_root):
+            raise ValueError(f"asset path escapes declared mount: {logical}")
+    if not physical.is_file():
+        raise ValueError(f"logical asset is not a file: {logical}")
+    return AssetRef(logical, physical)
+
+
+def expand_logical_glob(
+    logical_glob: str, workspace_root: Path, mounts: list[AssetMount]
+) -> list[AssetRef]:
+    """Expand one logical glob only inside its longest declared mount."""
+
+    if "\\" in logical_glob or logical_glob.startswith("/") or ".." in PurePosixPath(logical_glob).parts:
+        raise ValueError(f"invalid logical glob: {logical_glob!r}")
+    static_prefix = logical_glob
+    for marker in ("*", "?", "["):
+        static_prefix = static_prefix.split(marker, 1)[0]
+    static_prefix = static_prefix.rstrip("/")
+    mount = _mount_for_logical_path(static_prefix, mounts)
+    physical_root = resolve_workspace_uri(mount.canonical_uri, workspace_root)
+    if mount.asset_kind == "file":
+        if logical_glob != mount.logical_path:
+            return []
+        return [AssetRef(mount.logical_path, physical_root)] if physical_root.is_file() else []
+    pattern_suffix = PurePosixPath(logical_glob).relative_to(
+        PurePosixPath(mount.logical_path)
+    ).as_posix()
+    matches: list[AssetRef] = []
+    for value in sorted(glob.glob(str(physical_root / pattern_suffix))):
+        candidate = Path(value)
+        relative_candidate = candidate.relative_to(physical_root)
+        cursor = physical_root
+        for part in relative_candidate.parts:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                raise ValueError(
+                    f"undeclared nested symlink in cohort glob: "
+                    f"{relative_candidate.as_posix()}"
+                )
+        physical = candidate.resolve(strict=True)
+        if not physical.is_file() or not _is_within(physical, physical_root):
+            continue
+        suffix = physical.relative_to(physical_root).as_posix()
+        logical = f"{mount.logical_path}/{suffix}"
+        matches.append(AssetRef(normalize_logical_path(logical), physical))
+    return matches
+
+
+def validate_compatibility_aliases(
+    path: Path, workspace_root: Path, errors: list[str]
+) -> int:
+    """Verify declared compatibility symlinks without trusting their targets."""
+
+    if not path.is_file():
+        errors.append(f"missing compatibility alias contract: {path.name}")
+        return 0
+    verified = 0
+    for row in read_tsv(path):
+        legacy_uri = row["legacy_uri"]
+        target_uri = row["target_uri"]
+        expected_link = row["relative_link_text"]
+        try:
+            legacy = workspace_uri_to_lexical_path(legacy_uri, workspace_root)
+            target = resolve_workspace_uri(target_uri, workspace_root)
+            if not legacy.is_symlink():
+                raise ValueError("legacy path is not a symlink")
+            observed_link = os.readlink(legacy)
+            if os.path.isabs(observed_link):
+                raise ValueError("absolute symlink is forbidden")
+            if observed_link != expected_link:
+                raise ValueError(
+                    f"link text differs: observed={observed_link!r} expected={expected_link!r}"
+                )
+            observed_target = legacy.resolve(strict=True)
+            if observed_target != target:
+                raise ValueError("resolved target differs from declared target")
+            verified += 1
+        except (OSError, RuntimeError, ValueError) as exc:
+            errors.append(f"compatibility alias invalid ({legacy_uri}): {exc}")
+    return verified
 
 
 def render_tsv(rows: Iterable[dict[str, Any]], fields: list[str]) -> str:
@@ -238,7 +520,8 @@ def parse_structure(path: Path) -> dict[str, Any]:
 
 
 def expand_cohorts(
-    project_root: Path,
+    workspace_root: Path,
+    mounts: list[AssetMount],
     cohort_rows: list[dict[str, str]],
     overrides: dict[str, dict[str, str]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[str], list[str]]:
@@ -248,11 +531,13 @@ def expand_cohorts(
     warnings: list[str] = []
 
     for cohort in cohort_rows:
-        matches = [
-            Path(path)
-            for path in sorted(glob.glob(str(project_root / cohort["canonical_glob"])))
-            if Path(path).is_file()
-        ]
+        try:
+            matches = expand_logical_glob(
+                cohort["canonical_glob"], workspace_root, mounts
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            matches = []
+            errors.append(f"{cohort['cohort_id']}: logical glob failed: {exc}")
         expected_count = int(cohort["expected_file_count"])
         if len(matches) != expected_count:
             errors.append(
@@ -262,8 +547,9 @@ def expand_cohorts(
         status_counts: Counter[str] = Counter()
         parse_pass = 0
         complete_count = 0
-        for path in matches:
-            relative = relpath(path, project_root)
+        for asset in matches:
+            path = asset.physical_path
+            relative = asset.logical_relative_path
             override = overrides.get(relative, {})
             status = override.get("status", cohort["default_status"])
             reason = override.get("reason", cohort["limitations"])
@@ -371,40 +657,59 @@ def expand_cohorts(
     return structures, summaries, errors, warnings
 
 
-def inventory_source_files(project_root: Path) -> list[dict[str, Any]]:
-    paths: set[Path] = set()
-    for relative_root in SOURCE_ROOTS:
-        source_root = project_root / relative_root
-        if source_root.is_dir():
-            paths.update(path for path in source_root.rglob("*") if path.is_file())
-    extra_paths = (
-        project_root
-        / "data/boltzgen_data/mvp_assets_v0.3.2/raw_sources/rcsb_structures/1D0R.cif",
-        project_root
-        / "data/boltzgen_data/boltzgen_mac_enhanced_old12_glp1_20260820/inputs/target/6X18_GLP1_7-36_geometry.cif",
-    )
-    paths.update(path for path in extra_paths if path.is_file())
+def inventory_source_files(
+    workspace_root: Path, mounts: list[AssetMount], errors: list[str]
+) -> list[dict[str, Any]]:
+    """Inventory each declared logical mount, preserving intentional mirrors."""
+
+    assets: list[tuple[AssetMount, AssetRef]] = []
+    seen_logical: set[str] = set()
+    for mount in mounts:
+        if not mount.include_in_source_inventory:
+            continue
+        try:
+            physical_root, physical_paths = list_mount_files(mount, workspace_root)
+            observed_bytes = sum(path.stat().st_size for path in physical_paths)
+            if len(physical_paths) != mount.expected_file_count:
+                errors.append(
+                    f"{mount.mount_id}: expected {mount.expected_file_count} source files, "
+                    f"found {len(physical_paths)}"
+                )
+            if observed_bytes != mount.expected_bytes:
+                errors.append(
+                    f"{mount.mount_id}: expected {mount.expected_bytes} bytes, "
+                    f"found {observed_bytes}"
+                )
+            for physical in physical_paths:
+                if mount.asset_kind == "file":
+                    logical = mount.logical_path
+                else:
+                    suffix = physical.relative_to(physical_root).as_posix()
+                    logical = normalize_logical_path(f"{mount.logical_path}/{suffix}")
+                if logical in seen_logical:
+                    errors.append(f"duplicate logical source identity: {logical}")
+                    continue
+                seen_logical.add(logical)
+                assets.append((mount, AssetRef(logical, physical)))
+        except (OSError, RuntimeError, ValueError) as exc:
+            errors.append(f"{mount.mount_id}: source inventory failed: {exc}")
 
     rows: list[dict[str, Any]] = []
-    for path in sorted(paths, key=lambda item: relpath(item, project_root)):
-        relative = relpath(path, project_root)
+    for mount, asset in sorted(assets, key=lambda item: item[1].logical_relative_path):
+        path = asset.physical_path
+        relative = asset.logical_relative_path
+        logical_path = PurePosixPath(relative)
         digest = sha256_file(path)
         rows.append(
             {
                 "relative_path": relative,
                 "bytes": path.stat().st_size,
-                "suffix": path.suffix.lower(),
+                "suffix": logical_path.suffix.lower(),
                 "sha256": digest,
-                "inventory_scope": next(
-                    (
-                        source_root
-                        for source_root in SOURCE_ROOTS
-                        if relative == source_root or relative.startswith(source_root + "/")
-                    ),
-                    "explicit_baseline_or_raw_reference",
-                ),
+                "inventory_scope": mount.inventory_scope,
                 "excluded_from_model_input": str(
-                    path.name == ".DS_Store" or "原始文件" in path.parts
+                    logical_path.name == ".DS_Store"
+                    or "原始文件" in logical_path.parts
                 ).lower(),
             }
         )
@@ -441,7 +746,10 @@ def build_duplicate_groups(
 
 
 def verify_positive_aliases(
-    project_root: Path, structures: list[dict[str, Any]], errors: list[str]
+    workspace_root: Path,
+    mounts: list[AssetMount],
+    structures: list[dict[str, Any]],
+    errors: list[str],
 ) -> dict[str, Any]:
     by_path = {row["relative_path"]: row for row in structures}
     canonical_root = "data/样本数据/binding-多构象"
@@ -533,12 +841,16 @@ def verify_positive_aliases(
             f"expected 20 canonical split 1D0R models, found {len(split_model_paths)}"
         )
 
-    raw_path = (
-        project_root
-        / "data/boltzgen_data/mvp_assets_v0.3.2/raw_sources/rcsb_structures/1D0R.cif"
+    raw_logical = (
+        "data/boltzgen_data/mvp_assets_v0.3.2/"
+        "raw_sources/rcsb_structures/1D0R.cif"
     )
     expected_raw_hash = "efa9eefd43129b2b2c1124a5da3099c8abb315f017560d1e678fa354b2a2bcf8"
-    raw_hash_match = raw_path.is_file() and sha256_file(raw_path) == expected_raw_hash
+    try:
+        raw_path = resolve_logical_path(raw_logical, workspace_root, mounts).physical_path
+        raw_hash_match = sha256_file(raw_path) == expected_raw_hash
+    except (OSError, RuntimeError, ValueError):
+        raw_hash_match = False
     if not raw_hash_match:
         errors.append("1D0R raw source missing or SHA-256 mismatch")
     return {
@@ -560,15 +872,21 @@ def verify_positive_aliases(
 
 
 def verify_negative_manifest(
-    project_root: Path, structures: list[dict[str, Any]], errors: list[str]
+    workspace_root: Path,
+    mounts: list[AssetMount],
+    structures: list[dict[str, Any]],
+    errors: list[str],
 ) -> dict[str, Any]:
-    manifest_path = (
-        project_root
-        / "data/样本数据/not_binding/not_binding/structure_manifest.csv"
-    )
-    run_summary_path = (
-        project_root / "data/样本数据/not_binding/not_binding/run_summary.json"
-    )
+    manifest_path = resolve_logical_path(
+        "data/样本数据/not_binding/not_binding/structure_manifest.csv",
+        workspace_root,
+        mounts,
+    ).physical_path
+    run_summary_path = resolve_logical_path(
+        "data/样本数据/not_binding/not_binding/run_summary.json",
+        workspace_root,
+        mounts,
+    ).physical_path
     with manifest_path.open(encoding="utf-8-sig", newline="") as handle:
         manifest_rows = list(csv.DictReader(handle))
     summary = json.loads(run_summary_path.read_text(encoding="utf-8-sig"))
@@ -604,9 +922,20 @@ def verify_negative_manifest(
             continue
         manifest_matches += 1
 
-        raw = project_root / "data/样本数据/not_binding/原始文件" / f"{manifest['pdb_id']}.cif"
-        if raw.is_file() and sha256_file(raw) == manifest["raw_sha256"]:
-            raw_hash_matches += 1
+        raw_logical = (
+            "data/样本数据/not_binding/原始文件/"
+            f"{manifest['pdb_id']}.cif"
+        )
+        try:
+            raw = resolve_logical_path(raw_logical, workspace_root, mounts).physical_path
+            if sha256_file(raw) == manifest["raw_sha256"]:
+                raw_hash_matches += 1
+            else:
+                errors.append(f"raw source SHA-256 mismatch: {manifest['pdb_id']}")
+        except (OSError, RuntimeError, ValueError) as error:
+            errors.append(
+                f"raw source could not be verified: {manifest['pdb_id']}: {error}"
+            )
 
     challenge_rows = [
         row
@@ -655,10 +984,67 @@ def parse_checksum_manifest(path: Path) -> list[tuple[str, str]]:
     return entries
 
 
+def verify_checksum_manifest(
+    manifest_path: Path,
+    library_root: Path,
+    errors: list[str],
+    *,
+    expected_count: int = EXPECTED_NEW_SCAFFOLD_CHECKSUM_COUNT,
+) -> tuple[int, int]:
+    """Verify an exact-size checksum contract without accepting duplicate paths."""
+
+    entries = parse_checksum_manifest(manifest_path)
+    if len(entries) != expected_count:
+        errors.append(
+            f"new scaffold checksums.sha256 expected {expected_count} entries, "
+            f"found {len(entries)}"
+        )
+
+    verified = 0
+    seen_paths: set[str] = set()
+    canonical_root = library_root.resolve(strict=True)
+    for expected, relative in entries:
+        try:
+            normalized = normalize_logical_path(relative)
+        except ValueError as error:
+            errors.append(f"invalid new scaffold checksum path {relative!r}: {error}")
+            continue
+        if normalized in seen_paths:
+            errors.append(f"duplicate new scaffold checksum path: {normalized}")
+            continue
+        seen_paths.add(normalized)
+        path = library_root / PurePosixPath(normalized)
+        try:
+            resolved = path.resolve(strict=True)
+        except OSError:
+            errors.append(f"new scaffold checksums.sha256 file missing: {normalized}")
+            continue
+        if not _is_within(resolved, canonical_root) or not resolved.is_file():
+            errors.append(f"new scaffold checksum path escapes its package: {normalized}")
+            continue
+        if sha256_file(resolved) != expected:
+            errors.append(f"new scaffold checksums.sha256 mismatch: {normalized}")
+            continue
+        verified += 1
+
+    if verified != expected_count:
+        errors.append(
+            f"new scaffold checksums.sha256 expected {expected_count} verified entries, "
+            f"found {verified}"
+        )
+    return len(entries), verified
+
+
 def verify_scaffolds(
-    project_root: Path, structures: list[dict[str, Any]], errors: list[str]
+    workspace_root: Path,
+    mounts: list[AssetMount],
+    structures: list[dict[str, Any]],
+    errors: list[str],
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    library_root = project_root / "data/样本数据/boltzgen_vhh_scaffolds"
+    library_mount = _mount_for_logical_path(
+        "data/样本数据/boltzgen_vhh_scaffolds", mounts
+    )
+    library_root = resolve_workspace_uri(library_mount.canonical_uri, workspace_root)
     manifest_path = library_root / "manifest.csv"
     with manifest_path.open(encoding="utf-8-sig", newline="") as handle:
         manifest_rows = list(csv.DictReader(handle))
@@ -700,7 +1086,10 @@ def verify_scaffolds(
             errors.append(f"new scaffold YAML path mismatch: {item['folder']}")
             continue
         yaml_references_verified += 1
-        relative_cif = relpath(cif_path, project_root)
+        relative_cif = (
+            f"{library_mount.logical_path}/"
+            f"{cif_path.resolve(strict=True).relative_to(library_root).as_posix()}"
+        )
         structure_row = structure_by_path.get(relative_cif)
         if structure_row is None or structure_row.get("parse_status") != "PASS":
             errors.append(f"new scaffold CIF not parsed: {item['folder']}")
@@ -719,16 +1108,16 @@ def verify_scaffolds(
             }
         )
 
-    checksum_entries = parse_checksum_manifest(library_root / "checksums.sha256")
-    checksum_verified = 0
-    for expected, relative in checksum_entries:
-        path = library_root / relative
-        if not path.is_file() or sha256_file(path) != expected:
-            errors.append(f"new scaffold checksums.sha256 mismatch: {relative}")
-        else:
-            checksum_verified += 1
+    checksum_total, checksum_verified = verify_checksum_manifest(
+        library_root / "checksums.sha256",
+        library_root,
+        errors,
+    )
 
-    old_root = project_root / "data/boltzgen_data/sabdab2_vhh_scaffolds_v1/selected"
+    old_mount = _mount_for_logical_path(
+        "data/boltzgen_data/sabdab2_vhh_scaffolds_v1/selected", mounts
+    )
+    old_root = resolve_workspace_uri(old_mount.canonical_uri, workspace_root)
     old_folders = {
         folder.name.split("_", 1)[1]: folder.name
         for folder in old_root.iterdir()
@@ -761,7 +1150,7 @@ def verify_scaffolds(
         "manifest_rows_verified": manifest_verified,
         "yaml_relative_references_verified": yaml_references_verified,
         "checksum_entries_verified": checksum_verified,
-        "checksum_entries_total": len(checksum_entries),
+        "checksum_entries_total": checksum_total,
         "unique_instances": len({row["INSTANCE"] for row in manifest_rows}),
         "old12_instance_overlaps": overlaps,
         "union_unique_instances": 12 + len(manifest_rows) - overlaps,
@@ -777,39 +1166,210 @@ def verify_scaffolds(
     }
 
 
+def assert_inventory_hard_gates(
+    *,
+    source_inventory: list[dict[str, Any]],
+    structures: list[dict[str, Any]],
+) -> None:
+    """Raise when frozen row, identity, or parse gates do not close."""
+
+    logical_source_paths = [row["relative_path"] for row in source_inventory]
+    logical_structure_paths = [row["relative_path"] for row in structures]
+    failures: list[str] = []
+    if len(source_inventory) != HISTORICAL_SOURCE_FILE_COUNT:
+        failures.append(
+            f"expected {HISTORICAL_SOURCE_FILE_COUNT} historical logical source files, "
+            f"found {len(source_inventory)}"
+        )
+    if len(set(logical_source_paths)) != HISTORICAL_SOURCE_FILE_COUNT:
+        failures.append("historical source logical paths are not unique")
+    if len(structures) != EXPECTED_STRUCTURE_PATH_COUNT:
+        failures.append(
+            f"expected {EXPECTED_STRUCTURE_PATH_COUNT} structure paths, "
+            f"found {len(structures)}"
+        )
+    if len(set(logical_structure_paths)) != EXPECTED_STRUCTURE_PATH_COUNT:
+        failures.append("structure logical paths are not unique")
+    parse_pass = sum(row.get("parse_status") == "PASS" for row in structures)
+    if parse_pass != EXPECTED_STRUCTURE_PARSE_PASS:
+        failures.append(
+            f"expected {EXPECTED_STRUCTURE_PARSE_PASS} parsed structures, found {parse_pass}"
+        )
+    if failures:
+        raise ValueError("; ".join(failures))
+
+
+def validate_frozen_invariants(
+    source_inventory: list[dict[str, Any]],
+    structures: list[dict[str, Any]],
+    errors: list[str],
+) -> None:
+    """Apply the migration-regression gates before derived assets can publish."""
+
+    try:
+        assert_inventory_hard_gates(
+            source_inventory=source_inventory,
+            structures=structures,
+        )
+    except ValueError as exc:
+        errors.append(str(exc))
+    observed_bytes = sum(int(row["bytes"]) for row in source_inventory)
+    if observed_bytes != HISTORICAL_SOURCE_BYTES:
+        errors.append(
+            f"expected {HISTORICAL_SOURCE_BYTES} historical logical source bytes, "
+            f"found {observed_bytes}"
+        )
+
+
+def discover_workspace_root(script_path: Path) -> Path:
+    """Find the workspace by its migration manifest, without machine paths."""
+
+    for candidate in script_path.resolve().parents:
+        if (
+            candidate
+            / "manifests/local_assets_20260826/local_workspace_migration_20260826.csv"
+        ).is_file():
+            return candidate
+    raise SystemExit("workspace root not found; pass --workspace-root")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--write", action="store_true")
     mode.add_argument("--check", action="store_true")
-    parser.add_argument("--project-root", type=Path)
+    parser.add_argument("--workspace-root", type=Path)
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        help="deprecated alias for --workspace-root",
+    )
+    parser.add_argument(
+        "--registry-root",
+        type=Path,
+        help="backward-compatible shorthand setting both contract and output root",
+    )
+    parser.add_argument(
+        "--contract-root",
+        type=Path,
+        help="directory containing versioned static registry contracts",
+    )
+    parser.add_argument(
+        "--output-root",
+        type=Path,
+        help="external directory containing derived registry files",
+    )
     args = parser.parse_args()
 
-    output_dir = Path(__file__).resolve().parent
-    project_root = (
-        args.project_root.resolve()
-        if args.project_root
-        else output_dir.parents[2].resolve()
+    if args.workspace_root and args.project_root:
+        raise SystemExit("pass only one of --workspace-root or --project-root")
+    requested_workspace = args.workspace_root or args.project_root
+    workspace_root = (
+        requested_workspace.resolve(strict=True)
+        if requested_workspace
+        else discover_workspace_root(Path(__file__))
     )
-    if not (project_root / "data").is_dir():
-        raise SystemExit(f"invalid project root: {project_root}")
-    cohort_path = output_dir / "cohort_registry.tsv"
-    override_path = output_dir / "file_overrides.tsv"
+    if not (workspace_root / "manifests/local_assets_20260826").is_dir():
+        raise SystemExit("invalid workspace root: migration manifest directory is absent")
+    if args.registry_root and (args.contract_root or args.output_root):
+        raise SystemExit(
+            "--registry-root cannot be combined with --contract-root or --output-root"
+        )
+    default_contract = (
+        Path(__file__).resolve().parents[2]
+        / "resources/data/AI结构资产验证登记册_20260828"
+    )
+    contract_dir = (
+        args.registry_root.resolve(strict=True)
+        if args.registry_root
+        else args.contract_root.resolve(strict=True)
+        if args.contract_root
+        else default_contract.resolve(strict=True)
+    )
+    output_dir = (
+        args.registry_root.resolve(strict=True)
+        if args.registry_root
+        else args.output_root.resolve(strict=True)
+        if args.output_root
+        else (
+            workspace_root
+            / "boltzgen/data/ai_structure_asset_validation_registry_20260828"
+        ).resolve(strict=True)
+    )
+    if not contract_dir.is_dir():
+        raise SystemExit("contract root does not exist")
+    if not output_dir.is_dir():
+        raise SystemExit("output root does not exist")
+    if args.write and output_dir.name == "ai_structure_asset_validation_registry_20260826":
+        raise SystemExit("historical 20260826 registry is immutable; select a new registry root")
+
+    cohort_path = contract_dir / "cohort_registry.tsv"
+    override_path = contract_dir / "file_overrides.tsv"
+    mount_path = contract_dir / "asset_mounts.tsv"
+    alias_path = contract_dir / "compatibility_aliases.tsv"
+    historical_hash_path = contract_dir / "historical_output_hashes.tsv"
     cohorts = read_tsv(cohort_path)
-    overrides = {
-        row["relative_path"]: row for row in read_tsv(override_path)
-    }
+    mounts = read_asset_mounts(mount_path)
+    contract_errors: list[str] = []
+    if len(cohorts) != EXPECTED_COHORT_COUNT:
+        contract_errors.append(
+            f"expected {EXPECTED_COHORT_COUNT} cohorts, found {len(cohorts)}"
+        )
+    cohort_ids = [row["cohort_id"] for row in cohorts]
+    if len(set(cohort_ids)) != len(cohort_ids):
+        contract_errors.append("cohort_id values are not unique")
+    validate_asset_mount_contract(workspace_root, mounts, contract_errors)
+
+    override_rows = read_tsv(override_path)
+    if len(override_rows) != EXPECTED_FILE_OVERRIDE_COUNT:
+        contract_errors.append(
+            f"expected {EXPECTED_FILE_OVERRIDE_COUNT} file overrides, "
+            f"found {len(override_rows)}"
+        )
+    override_paths = [
+        normalize_logical_path(row["relative_path"]) for row in override_rows
+    ]
+    if len(set(override_paths)) != len(override_paths):
+        contract_errors.append("file override logical paths are not unique")
+    overrides = {path: row for path, row in zip(override_paths, override_rows)}
+
+    alias_rows = read_tsv(alias_path)
+    if len(alias_rows) != EXPECTED_COMPATIBILITY_ALIAS_COUNT:
+        contract_errors.append(
+            f"expected {EXPECTED_COMPATIBILITY_ALIAS_COUNT} compatibility aliases, "
+            f"found {len(alias_rows)}"
+        )
+    alias_legacy_uris = [row["legacy_uri"] for row in alias_rows]
+    if len(set(alias_legacy_uris)) != len(alias_legacy_uris):
+        contract_errors.append("compatibility alias legacy_uri values are not unique")
 
     structures, cohort_summaries, errors, warnings = expand_cohorts(
-        project_root, cohorts, overrides
+        workspace_root, mounts, cohorts, overrides
     )
-    source_inventory = inventory_source_files(project_root)
+    errors = contract_errors + errors
+    structure_paths = {row["relative_path"] for row in structures}
+    unmatched_overrides = sorted(set(overrides) - structure_paths)
+    if unmatched_overrides:
+        errors.append(
+            "file overrides did not match structure inventory: "
+            + ", ".join(unmatched_overrides)
+        )
+    source_inventory = inventory_source_files(workspace_root, mounts, errors)
     duplicate_groups = build_duplicate_groups(source_inventory)
-    positive = verify_positive_aliases(project_root, structures, errors)
-    negative = verify_negative_manifest(project_root, structures, errors)
-    scaffold_comparison, scaffolds = verify_scaffolds(
-        project_root, structures, errors
+    compatibility_aliases_verified = validate_compatibility_aliases(
+        alias_path, workspace_root, errors
     )
+    if compatibility_aliases_verified != EXPECTED_COMPATIBILITY_ALIAS_COUNT:
+        errors.append(
+            f"expected {EXPECTED_COMPATIBILITY_ALIAS_COUNT} verified compatibility "
+            f"aliases, found {compatibility_aliases_verified}"
+        )
+    positive = verify_positive_aliases(workspace_root, mounts, structures, errors)
+    negative = verify_negative_manifest(workspace_root, mounts, structures, errors)
+    scaffold_comparison, scaffolds = verify_scaffolds(
+        workspace_root, mounts, structures, errors
+    )
+    validate_frozen_invariants(source_inventory, structures, errors)
 
     # The folder name is not evidence.  These values are deliberately hard-coded
     # to zero until a future assay import supplies a measured VHH/target outcome.
@@ -909,15 +1469,71 @@ def main() -> int:
         ],
     )
 
+    historical_hash_rows = read_tsv(historical_hash_path)
+    if len(historical_hash_rows) != EXPECTED_HISTORICAL_OUTPUT_HASH_COUNT:
+        errors.append(
+            f"expected {EXPECTED_HISTORICAL_OUTPUT_HASH_COUNT} historical output "
+            f"hashes, found {len(historical_hash_rows)}"
+        )
+    historical_filenames = [row["filename"] for row in historical_hash_rows]
+    if len(set(historical_filenames)) != len(historical_filenames):
+        errors.append("historical output hash filenames are not unique")
+    historical_hashes_verified = 0
+    for row in historical_hash_rows:
+        filename = PurePosixPath(row["filename"])
+        if len(filename.parts) != 1 or filename.name != row["filename"]:
+            errors.append(f"invalid historical output filename: {row['filename']!r}")
+            continue
+        rendered = outputs.get(output_dir / filename.name)
+        if rendered is None:
+            errors.append(f"historical output contract names unknown file: {filename.name}")
+            continue
+        observed_hash = sha256_text(rendered)
+        if observed_hash != row["sha256"]:
+            errors.append(
+                f"historical output differs after migration: {filename.name} "
+                f"observed={observed_hash} expected={row['sha256']}"
+            )
+            continue
+        historical_hashes_verified += 1
+    if historical_hashes_verified != EXPECTED_HISTORICAL_OUTPUT_HASH_COUNT:
+        errors.append(
+            f"expected {EXPECTED_HISTORICAL_OUTPUT_HASH_COUNT} verified historical "
+            f"output hashes, found {historical_hashes_verified}"
+        )
+
     overall_status = "PASS" if not errors else "FAIL"
     summary = {
         "schema_version": SCHEMA_VERSION,
         "overall_status": overall_status,
         "source_file_count": len(source_inventory),
         "source_bytes": sum(int(row["bytes"]) for row in source_inventory),
+        "source_count_semantics": {
+            "historical_logical_files": len(source_inventory),
+            "non_system_metadata_logical_files": sum(
+                Path(row["relative_path"]).name != ".DS_Store"
+                for row in source_inventory
+            ),
+            "system_metadata_files_excluded_from_model_input": sum(
+                Path(row["relative_path"]).name == ".DS_Store"
+                for row in source_inventory
+            ),
+            "intentional_positive_mirror_logical_files": sum(
+                row["relative_path"].startswith("data/多构象-1/")
+                for row in source_inventory
+            ),
+            "note": (
+                "177 is a reproducibility count of logical inventory rows, not "
+                "177 independent scientific samples; it includes one archived mirror "
+                "tree and two Finder metadata files"
+            ),
+        },
         "structure_path_count": len(structures),
         "structure_parse_pass": sum(row["parse_status"] == "PASS" for row in structures),
         "cohort_count": len(cohorts),
+        "asset_mount_count": len(mounts),
+        "compatibility_aliases_verified": compatibility_aliases_verified,
+        "historical_output_hashes_verified": historical_hashes_verified,
         "positive_ensemble": positive,
         "challenge_panel": negative,
         "scaffold_libraries": scaffolds,
@@ -934,9 +1550,18 @@ def main() -> int:
         },
         "input_registry_sha256": sha256_file(cohort_path),
         "override_registry_sha256": sha256_file(override_path),
+        "asset_mount_registry_sha256": sha256_file(mount_path),
+        "compatibility_alias_registry_sha256": sha256_file(alias_path),
+        "historical_output_hash_registry_sha256": sha256_file(
+            historical_hash_path
+        ),
         "validator_sha256": sha256_file(Path(__file__).resolve()),
     }
     outputs[output_dir / "validation_summary.json"] = render_json(summary)
+
+    if overall_status != "PASS":
+        print(render_json(summary), end="")
+        return 1
 
     mode_name = "write" if args.write else "check"
     for path, text in outputs.items():

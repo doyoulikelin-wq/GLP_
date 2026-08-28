@@ -1,0 +1,6 @@
+filename	sha256	contract
+source_file_inventory.tsv	3fe043797096dbea892afe4594e01b0d04cdb9e1ed2a5377718c0eb7f265e152	20260826 logical inventory must reproduce byte-for-byte after migration
+structure_inventory.tsv	46efed765b89ac2435551be925e4d03e85dafcb58093e79e1b000d26282dba22	20260826 structure identities and validation semantics must reproduce byte-for-byte
+duplicate_groups.tsv	e79dddaca4dd5dc09884c5c6f0abcb343dfdde57e94a237ecd06a11729794c57	20260826 duplicate grouping must reproduce byte-for-byte
+cohort_summary.tsv	e53c77e986fb3949f3b0517006176f3135936cb21edd6ca5d023c24c19ac9d95	20260826 cohort accounting must reproduce byte-for-byte
+scaffold_comparison.tsv	5c3291a3b0574bc862951a285e02c046b711e864863bee2b7884a6ace9065c1c	20260826 new17 versus old12 partition must reproduce byte-for-byte

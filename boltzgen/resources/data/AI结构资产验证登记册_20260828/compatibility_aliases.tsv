@@ -1,0 +1,10 @@
+legacy_uri	target_uri	relative_link_text
+workspace://data/boltzgen_data/mvp_assets_v0.3.2	workspace://boltzgen/data/boltzgen_v0_3_2_runtime_and_mvp_inputs_20260819	../../boltzgen/data/boltzgen_v0_3_2_runtime_and_mvp_inputs_20260819
+workspace://data/boltzgen_data/sabdab2_vhh_scaffolds_v1	workspace://boltzgen/data/vhh_scaffold_database_20260819	../../boltzgen/data/vhh_scaffold_database_20260819
+workspace://data/boltzgen_data/boltzgen_mac_enhanced_old12_glp1_20260820	workspace://boltzgen/runs/old12_glp1_mac_enhanced_20260820	../../boltzgen/runs/old12_glp1_mac_enhanced_20260820
+workspace://data/样本数据/binding-多构象	workspace://shared/data/glp1_positive_conformer_ensemble_20260819	../../shared/data/glp1_positive_conformer_ensemble_20260819
+workspace://data/多构象-1	workspace://shared/data/glp1_positive_conformer_ensemble_20260819	../shared/data/glp1_positive_conformer_ensemble_20260819
+workspace://data/样本数据/not_binding	workspace://shared/data/peptide_lockbox_countertargets_20260823	../../shared/data/peptide_lockbox_countertargets_20260823
+workspace://data/not_binding	workspace://shared/data/glp2_tuning_countertargets_20260824	../shared/data/glp2_tuning_countertargets_20260824
+workspace://data/样本数据/boltzgen_vhh_scaffolds	workspace://shared/data/vhh_challenger_scaffolds_20260823	../../shared/data/vhh_challenger_scaffolds_20260823
+workspace://data/sd-h骨架	workspace://archive/shared/vhh_challenger_source_package_20260819	../archive/shared/vhh_challenger_source_package_20260819

@@ -1,11 +1,35 @@
 # BoltzGen × 活性 GLP-1 选择性 VHH：无上下文可执行实施方案
 
-> 文档版本：1.1  
+> 文档版本：1.2  
 > 冻结日期：2026-08-26（Asia/Shanghai）  
 > 项目根目录：`$PROJECT_ROOT`  
 > 数据根目录：`$PROJECT_ROOT/data/boltzgen_data`  
 > 适用软件基线：BoltzGen `v0.3.2`，Git 提交 `31d9d9b9c72245b4ed6fe8742d6fbf4e1a3552a0`  
 > 本文定位：交给一个对历史对话完全不知情的执行代理，作为唯一任务上下文、数据索引、实施合同和验收清单。
+
+---
+
+## 2026-08-28 AI 验证修订（优先于本文旧 AIV0 路径）
+
+本文其余生产步骤仍以未来的 `workspace://boltzgen/runs/glp1_vhh_production_v1/`
+为生产根；当前已经执行的 M0/AIV0 是一个独立、只读前置 campaign：
+`workspace://boltzgen/runs/glp1_vhh_formal_campaign_20260828/`。AIV0 的 V2 数据合同、
+专业名词、停止规则和经验事件以
+`repo://boltzgen/plans/glp1_vhh_aiv0_m0_20260828.md` 为准。本文后续所有
+`ai_validation_assets_v1`、20260826 V1 登记册或旧 `data/` 扫描式 AIV0 指令仅作
+历史背景，不得重新执行或覆盖 V2。
+
+未来创建 production 根时，必须把 formal campaign 的最终只读 AIV0 receipt、
+派生登记册 manifest、V2 静态合同哈希和本修订的 Git commit 复制为
+`00_contract/aiv0_preflight_import/` 下的不可变快照，并发布 handoff receipt；不得用
+软链接或“最新文件”引用替代。handoff 完成前，production 状态只能是
+`BLOCKED_PENDING_AIV0_PREFLIGHT_IMPORT`。
+
+本次前置 campaign 的最终派生根是
+`workspace://boltzgen/data/ai_structure_asset_validation_registry_20260828_211504/`；
+受控空根写入为 `attempt_006`，最终只读复核为 `attempt_007`。精确收据与哈希以
+`repo://boltzgen/resources/data/AI结构资产验证登记册_20260828/AIV0验证摘要_20260828.json`
+为准；无 suffix 的 20260828 早期快照及 `attempt_001`–`005` 仅保留为经验记录。
 
 ---
 
@@ -31,7 +55,7 @@ pK_D=-\log_{10}\left(K_D/\mathrm{M}\right)
 
 **当前不做 BoltzGen 基础模型全量训练，也不从新增目录名制造监督标签。** 当前路线固定为：
 
-1. 先执行新增数据的 AIV0 资产门：冻结 `ai_validation_assets_v1` 清单，按 deposition/target identity 去伪重复，并把不完整结构、重复镜像和高风险 scaffold 隔离；
+1. 先执行新增数据的 AIV0 资产门：使用 20260828 V2 静态合同与外置派生登记册，按 deposition/target identity 去伪重复，并把不完整结构、重复镜像和高风险 scaffold 隔离；
 2. 冻结官方 BoltzGen 权重，以旧 12 个已检查 VHH scaffold 为不可变 baseline；新 17 包只作为 scaffold-admission source，完成 canonicalization、INSTANCE 冲突检查、风险处置和逐项 target-containing `boltzgen check` 后只可进入独立 admission probe；本版首轮 12,000 始终使用旧 12；
 3. 按 10 → 240 → 2,400 → 12,000 的阶梯做冻结权重推理；6X18 为主正靶，1D0R models 10/12/19/20 为紧凑正靶构象面板，全 20 models 只作敏感性分析；
 4. 对同一候选做跨目标 refold/score：9IVM GLP-1(9–36) 和 2L63 GLP-2 用于调参挑战，2B4N GIP 与 6LMK glucagon 作为配置冻结前不可见的 lockbox。Codex 只可依据正靶/调参挑战的完整证据包筛选失败类型、每轮最多批准 1–2 个预注册变量变化，并始终保留固定 baseline control；lockbox 只作一次性群体放行，不能触发同一 campaign 调参；
@@ -96,7 +120,7 @@ export PYTHONDONTWRITEBYTECODE=1
 | 12 个可执行设计规范 | 每个骨架的框架、三个互补决定区（Complementarity-Determining Region，简称 **CDR**）、正靶 His7/Ala8 位点 | 12/12 `boltzgen check` 通过并完成结构可视检查 |
 | 冻结权重推理结果 | diverse 与 adherence 两个设计检查点分开运行、完整日志、中间文件、候选谱系 | 每个候选可追溯到输入、权重、命令和随机状态可用性；CLI 未暴露 seed 时明确记为未暴露 |
 | 计算评价表 | 结构一致性、位点覆盖、置信度、不确定性、序列责任性、骨架分层 | 保留连续值；过滤配置版本化；不把通过写成真值 |
-| AI 验证资产登记册 | 177 个源文件清单、112 个结构路径、重复/隔离规则、正靶与挑战态粒度、新旧 scaffold 去重 | `validate_assets.py --check` 返回 PASS；32 个可用 challenge/4 个来源组/0 个实验负标签不可漂移 |
+| AI 验证资产登记册 | 177 条历史逻辑清单记录（去除 2 条 Finder 元数据后为 175 条逻辑文件）、112 个结构路径、重复/隔离规则、正靶与挑战态粒度、新旧 scaffold 去重 | `validate_assets.py --check` 返回 PASS；32 个可用 challenge/4 个来源组/0 个实验负标签不可漂移 |
 | AI 验证与经验库 | 固定 baseline、campaign/config diff、候选×target×conformer 结果、失败码、Codex 决策、lockbox receipt | append-only；每轮只改变 1–2 个预注册变量；无 baseline/哈希/完整分母即不作决策 |
 | 实验面板 | 96–192 条去重序列，覆盖骨架/簇/分数区间，含正负对照 | 面板选择脚本可重放；不只挑最高分 |
 | 实验数据表 | 正靶与负靶配对测量、检测上下限、重复、批次、表达/单体/热稳定性 | 单位统一，删失信息未丢失，QC 状态明确 |
@@ -122,7 +146,7 @@ export PYTHONDONTWRITEBYTECODE=1
 
 本方案当前第一里程碑是“AI 验证闭环完成并具备实验放行条件”，定义为：
 
-- `ai_validation_assets_v1/validation_summary.json` 为 PASS，且新增数据粒度、重复、隔离和标签语义全部冻结；
+- V2 `validation_summary.json` 与最终只读 AIV0 receipt 均为 PASS，且新增数据粒度、重复、隔离和标签语义全部冻结；
 - 在 Linux + NVIDIA CUDA 环境完成官方 `v0.3.2` 的旧 12 scaffold × 2 checkpoint baseline 阶梯推理；新 scaffold 只能按 Step 13A 的 admission probe 逐项验证，合格项记入下一版候选库，不得进入本版首轮 12,000 或把 raw 17 包整体冒充已验收输入；
 - 10/240/2,400 三层均有完整谱系、逐 target-state 指标、失败分类和 baseline 对照；配置改动按经验库可回放；
 - 只有 2,400 层的工程门和 AI 多状态门同时通过，才执行首轮 **12,000 个生成尝试**；
@@ -311,7 +335,9 @@ export PROJECT_ROOT="$PROJECT_ROOT"
 export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
 export ASSET_ROOT="$DATA_ROOT/mvp_assets_v0.3.2"
 export SCAFFOLD_ROOT="$DATA_ROOT/sabdab2_vhh_scaffolds_v1"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
+export AI_VALIDATOR="$PROJECT_ROOT/GLP_/boltzgen/main/asset_validation_20260820/validate_assets.py"
 export MAC_BASELINE_ROOT="$DATA_ROOT/boltzgen_mac_enhanced_old12_glp1_20260820"
 export RUN_ROOT="$DATA_ROOT/glp1_vhh_production_v1"
 
@@ -319,7 +345,9 @@ test -d "$PROJECT_ROOT" || exit 10
 test -d "$DATA_ROOT" || exit 11
 test -d "$ASSET_ROOT" || exit 12
 test -d "$SCAFFOLD_ROOT" || exit 13
-test -d "$AI_ASSET_ROOT" || exit 14
+test -d "$AI_CONTRACT_ROOT" || exit 14
+test -d "$AI_OUTPUT_ROOT" || exit 14
+test -f "$AI_VALIDATOR" || exit 14
 test -d "$MAC_BASELINE_ROOT" || exit 15
 ```
 
@@ -343,7 +371,11 @@ test -d "$MAC_BASELINE_ROOT" || exit 15
 
 ### 4.2A 新增 AI 验证资产登记册（AIV0）
 
-新增数据不搬动、不覆盖；其规范用途由 `$AI_ASSET_ROOT` 的登记册控制。2026-08-26 已用 Gemmi `0.7.5` 和冻结解释器完成只读审计：177 个源文件、14,884,156 B、112 个 mmCIF 路径，112/112 可解析。`validation_summary.json.overall_status=PASS` 只代表资产身份、哈希、结构完整性、重复和用途规则闭合，不代表任何候选已结合或未结合。
+新增数据不搬动、不覆盖；其规范用途由 `$AI_CONTRACT_ROOT` 的静态合同和
+`$AI_OUTPUT_ROOT` 的派生登记册共同控制。2026-08-28 的 `attempt_006` 空根写入与
+`attempt_007` 独立只读复核已用冻结解释器闭合：177 条历史逻辑记录、
+14,884,156 B、112 个 mmCIF 路径且 112/112 可解析。`overall_status=PASS` 只代表
+资产身份、哈希、结构完整性、重复和用途规则闭合，不代表任何候选已结合或未结合。
 
 | 数据族 | 路径/规模 | 规范统计粒度 | 当前用途 | 强制限制 |
 |---|---|---|---|---|
@@ -354,15 +386,17 @@ test -d "$MAC_BASELINE_ROOT" || exit 15
 规范机器入口：
 
 ```text
-$AI_ASSET_ROOT/cohort_registry.tsv
-$AI_ASSET_ROOT/file_overrides.tsv
-$AI_ASSET_ROOT/source_file_inventory.tsv
-$AI_ASSET_ROOT/structure_inventory.tsv
-$AI_ASSET_ROOT/duplicate_groups.tsv
-$AI_ASSET_ROOT/cohort_summary.tsv
-$AI_ASSET_ROOT/scaffold_comparison.tsv
-$AI_ASSET_ROOT/validation_summary.json
-$AI_ASSET_ROOT/validation_report.md
+$AI_CONTRACT_ROOT/asset_mounts.tsv
+$AI_CONTRACT_ROOT/cohort_registry.tsv
+$AI_CONTRACT_ROOT/compatibility_aliases.tsv
+$AI_CONTRACT_ROOT/file_overrides.tsv
+$AI_CONTRACT_ROOT/historical_output_hashes.tsv
+$AI_OUTPUT_ROOT/source_file_inventory.tsv
+$AI_OUTPUT_ROOT/structure_inventory.tsv
+$AI_OUTPUT_ROOT/duplicate_groups.tsv
+$AI_OUTPUT_ROOT/cohort_summary.tsv
+$AI_OUTPUT_ROOT/scaffold_comparison.tsv
+$AI_OUTPUT_ROOT/validation_summary.json
 ```
 
 只读复验命令固定为：
@@ -370,12 +404,16 @@ $AI_ASSET_ROOT/validation_report.md
 ```bash
 set -euo pipefail
 export PROJECT_ROOT="$PROJECT_ROOT"
-export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
-AI_VALIDATOR_PY="$DATA_ROOT/mvp_run_001/env/bin/python"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
+export AI_VALIDATOR="$PROJECT_ROOT/GLP_/boltzgen/main/asset_validation_20260820/validate_assets.py"
+AI_VALIDATOR_PY="$PROJECT_ROOT/boltzgen/runs/nanobody_mps_smoke_20260819/env/bin/python"
 test -x "$AI_VALIDATOR_PY"
-"$AI_VALIDATOR_PY" -I -c 'import sys; sys.exit(0 if __debug__ else 70)'
-"$AI_VALIDATOR_PY" -I "$AI_ASSET_ROOT/validate_assets.py" --check
+"$AI_VALIDATOR_PY" -B -I -c 'import sys; sys.exit(0 if __debug__ else 70)'
+"$AI_VALIDATOR_PY" -B -I "$AI_VALIDATOR" --check \
+  --workspace-root "$PROJECT_ROOT" \
+  --contract-root "$AI_CONTRACT_ROOT" \
+  --output-root "$AI_OUTPUT_ROOT"
 ```
 
 日常执行只能使用 `--check`。只有数据源或登记政策经过书面审核、先保留旧版登记册后，才可运行 `--write` 生成新版本；不得用 `--write` 消除未经解释的漂移。
@@ -502,7 +540,7 @@ build_report_artifact.py      ba121f73ad069e8a0979cd595e530e8dcc7805646f487bba2a
 
 | 文件 | 当前状态 | 单一职责 | 必测边界 |
 |---|---|---|---|
-| `$AI_ASSET_ROOT/validate_assets.py` | `IMPLEMENTED_AND_CHECKED_2026-08-26` | 只读复验新增源文件、结构、重复、隔离、粒度和标签语义 | 177 files、112 CIF parse、32 usable challenges/4 groups/4 quarantined、0 experimental negatives；任一漂移非零退出 |
+| `repo://boltzgen/main/asset_validation_20260820/validate_assets.py` | `IMPLEMENTED_AND_CHECKED_2026-08-28` | 只读复验新增源文件、结构、重复、隔离、粒度和标签语义 | 177/175 逻辑文件口径、112/112 CIF parse、72/72 scaffold checksum、32 usable challenges/4 groups/4 quarantined、0 experimental negatives；任一漂移非零退出 |
 | `build_input_manifest.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_G0` | 从两份白名单、GLP-1 注册表和 selected_scaffolds 生成冻结输入清单 | 拒绝 raw_sources 自动入模；拒绝 9IVG 作为完整负靶；拒绝把目录名或构象数变成标签 |
 | `canonicalize_scaffold_admission.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_SCAFFOLD_ADMISSION_PROBE` | 以 INSTANCE 为实体键，冻结 altloc/缺失原子/额外 Cys 处置并生成新 scaffold canonical 包 | 同 INSTANCE 序列冲突即隔离；重叠 4 个复用旧 canonical；7OAO/9HO5 隔离；逐项 target-containing check |
 | `build_scaffold_admission_matrix.py` | `TO_IMPLEMENT_AND_TEST_BEFORE_SCAFFOLD_ADMISSION_PROBE` | 为每个已规范化 INSTANCE 生成独立 2-cell admission matrix，不复用主线 12-scaffold builder | campaign_type/role 固定；2 checkpoints×10、budget2、batch1；输出根与 production 隔离 |
@@ -1135,7 +1173,7 @@ completion 的 key 顺序固定为 `schema_version,submission_contract,status,in
 
 新增 AI 多状态验证的唯一机器白名单是：
 
-`$AI_ASSET_ROOT/structure_inventory.tsv`
+`$AI_OUTPUT_ROOT/structure_inventory.tsv`
 
 执行代码必须同时读取冻结的 `cohort_registry.tsv` 和 `file_overrides.tsv`，只选择明确允许的 `model_use_status`；不得因路径位于 `binding` 或 `no_binding` 目录而自动纳入。不得递归扫描 `$ASSET_ROOT/raw_sources/`、`data/样本数据/**/原始文件/`、两个 NMR 目录或新 scaffold raw 包来“发现更多样本”。以下边界写成自动测试：
 
@@ -1224,13 +1262,17 @@ export PROJECT_ROOT="$PROJECT_ROOT"
 export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
 export ASSET_ROOT="$DATA_ROOT/mvp_assets_v0.3.2"
 export SCAFFOLD_ROOT="$DATA_ROOT/sabdab2_vhh_scaffolds_v1"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
+export AI_VALIDATOR="$PROJECT_ROOT/GLP_/boltzgen/main/asset_validation_20260820/validate_assets.py"
 export RUN_ROOT="$DATA_ROOT/glp1_vhh_production_v1"
 
 test -d "$PROJECT_ROOT"
 test -d "$ASSET_ROOT/runtime_cache"
 test -d "$SCAFFOLD_ROOT/selected"
-test -d "$AI_ASSET_ROOT"
+test -d "$AI_CONTRACT_ROOT"
+test -d "$AI_OUTPUT_ROOT"
+test -f "$AI_VALIDATOR"
 
 mkdir -p "$RUN_ROOT/00_contract" \
          "$RUN_ROOT/01_provenance" \
@@ -1640,9 +1682,11 @@ export PROJECT_ROOT="$PROJECT_ROOT"
 export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
 export ASSET_ROOT="$DATA_ROOT/mvp_assets_v0.3.2"
 export SCAFFOLD_ROOT="$DATA_ROOT/sabdab2_vhh_scaffolds_v1"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
+export AI_VALIDATOR="$PROJECT_ROOT/GLP_/boltzgen/main/asset_validation_20260820/validate_assets.py"
 export RUN_ROOT="$DATA_ROOT/glp1_vhh_production_v1"
-AI_VALIDATOR_PY="$DATA_ROOT/mvp_run_001/env/bin/python"
+AI_VALIDATOR_PY="$PROJECT_ROOT/boltzgen/runs/nanobody_mps_smoke_20260819/env/bin/python"
 test -x "$AI_VALIDATOR_PY"
 
 VERIFY_LOG="$RUN_ROOT/logs/asset_verification.log"
@@ -1659,8 +1703,11 @@ set +e
   shasum -a 256 -c SHA256SUMS
 
   cd "$PROJECT_ROOT"
-  "$AI_VALIDATOR_PY" -I -c 'import sys; sys.exit(0 if __debug__ else 70)'
-  "$AI_VALIDATOR_PY" -I "$AI_ASSET_ROOT/validate_assets.py" --check
+  "$AI_VALIDATOR_PY" -B -I -c 'import sys; sys.exit(0 if __debug__ else 70)'
+  "$AI_VALIDATOR_PY" -B -I "$AI_VALIDATOR" --check \
+    --workspace-root "$PROJECT_ROOT" \
+    --contract-root "$AI_CONTRACT_ROOT" \
+    --output-root "$AI_OUTPUT_ROOT"
 } 2>&1 | tee "$VERIFY_LOG"
 VERIFY_EXIT="${PIPESTATUS[0]}"
 set -e
@@ -1673,7 +1720,7 @@ printf '%s\n' PASS > "$RUN_ROOT/logs/asset_verification.status.txt"
 cd "$RUN_ROOT"
 ```
 
-预期结果：运行资产 `5/5 OK`；原始公开来源 `14/14 OK`；骨架交付包清单全部 OK；AI 登记册 `overall_status=PASS`，且 177 source files、112/112 CIF parse、32 个可用 challenge/4 个 independence groups/4 个隔离项/0 个实验负标签与冻结摘要一致。任一失败：
+预期结果：运行资产 `5/5 OK`；原始公开来源 `14/14 OK`；骨架交付包清单全部 OK；AI 登记册 `overall_status=PASS`，且 177 条历史逻辑清单记录/175 条去系统元数据逻辑文件、112/112 CIF parse、72/72 scaffold checksum、32 个可用 challenge/4 个 independence groups/4 个隔离项/0 个实验负标签与冻结摘要一致。任一失败：
 
 1. 保存完整输出到 `logs/asset_verification.log`；
 2. 标记 `BLOCKED_CHECKSUM_MISMATCH`；
@@ -1690,7 +1737,8 @@ cd "$RUN_ROOT"
 - `$SCAFFOLD_ROOT/registry/selected_scaffolds.tsv`；
 - `$SCAFFOLD_ROOT/registry/export_artifacts.tsv`；
 - `$SCAFFOLD_ROOT/criteria/scaffold_screening_v1.json`；
-- `$AI_ASSET_ROOT/{cohort_registry.tsv,file_overrides.tsv,structure_inventory.tsv,scaffold_comparison.tsv,validation_summary.json}`。
+- `$AI_CONTRACT_ROOT/{cohort_registry.tsv,file_overrides.tsv}`；
+- `$AI_OUTPUT_ROOT/{structure_inventory.tsv,scaffold_comparison.tsv,validation_summary.json}`。
 
 输出 `$RUN_ROOT/01_provenance/source_manifest.tsv`，至少包含：
 
@@ -1710,7 +1758,8 @@ export PROJECT_ROOT="$PROJECT_ROOT"
 export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
 export ASSET_ROOT="$DATA_ROOT/mvp_assets_v0.3.2"
 export SCAFFOLD_ROOT="$DATA_ROOT/sabdab2_vhh_scaffolds_v1"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
 export RUN_ROOT="$DATA_ROOT/glp1_vhh_production_v1"
 PROJECT_PY="$RUN_ROOT/env_project/bin/python"
 test -x "$PROJECT_PY"
@@ -1725,11 +1774,11 @@ source "$RUN_ROOT/01_provenance/project_env/verify_project_env_stage.sh" \
   --selected-scaffolds "$SCAFFOLD_ROOT/registry/selected_scaffolds.tsv" \
   --export-artifacts "$SCAFFOLD_ROOT/registry/export_artifacts.tsv" \
   --screening-criteria "$SCAFFOLD_ROOT/criteria/scaffold_screening_v1.json" \
-  --ai-cohorts "$AI_ASSET_ROOT/cohort_registry.tsv" \
-  --ai-overrides "$AI_ASSET_ROOT/file_overrides.tsv" \
-  --ai-structures "$AI_ASSET_ROOT/structure_inventory.tsv" \
-  --ai-scaffolds "$AI_ASSET_ROOT/scaffold_comparison.tsv" \
-  --ai-validation-summary "$AI_ASSET_ROOT/validation_summary.json" \
+  --ai-cohorts "$AI_CONTRACT_ROOT/cohort_registry.tsv" \
+  --ai-overrides "$AI_CONTRACT_ROOT/file_overrides.tsv" \
+  --ai-structures "$AI_OUTPUT_ROOT/structure_inventory.tsv" \
+  --ai-scaffolds "$AI_OUTPUT_ROOT/scaffold_comparison.tsv" \
+  --ai-validation-summary "$AI_OUTPUT_ROOT/validation_summary.json" \
   --output "$RUN_ROOT/01_provenance/source_manifest.tsv"
 test "$(($(wc -l < "$RUN_ROOT/01_provenance/source_manifest.tsv") - 1))" -ge 17
 ```
@@ -1807,18 +1856,25 @@ AI 登记册和非锁箱结构必须通过机器清单另行精确物化，禁�
 set -euo pipefail
 export PROJECT_ROOT="$PROJECT_ROOT"
 export DATA_ROOT="$PROJECT_ROOT/data/boltzgen_data"
-export AI_ASSET_ROOT="$DATA_ROOT/ai_validation_assets_v1"
+export AI_CONTRACT_ROOT="$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828"
+export AI_OUTPUT_ROOT="$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504"
 export RUN_ROOT="$DATA_ROOT/glp1_vhh_production_v1"
 PROJECT_PY="$RUN_ROOT/env_project/bin/python"
 test -x "$PROJECT_PY"
 source "$RUN_ROOT/01_provenance/project_env/verify_project_env_stage.sh" \
   "$RUN_ROOT" step03_stage_ai_inputs
 
-for registry_file in cohort_registry.tsv file_overrides.tsv source_file_inventory.tsv \
-                     structure_inventory.tsv duplicate_groups.tsv cohort_summary.tsv \
-                     scaffold_comparison.tsv validation_summary.json validation_report.md; do
+for registry_file in asset_mounts.tsv cohort_registry.tsv compatibility_aliases.tsv \
+                     file_overrides.tsv historical_output_hashes.tsv; do
   copy_if_absent_or_identical \
-    "$AI_ASSET_ROOT/$registry_file" \
+    "$AI_CONTRACT_ROOT/$registry_file" \
+    "$RUN_ROOT/02_inputs/ai_validation/asset_registry_snapshot/$registry_file"
+done
+for registry_file in source_file_inventory.tsv structure_inventory.tsv \
+                     duplicate_groups.tsv cohort_summary.tsv scaffold_comparison.tsv \
+                     validation_summary.json; do
+  copy_if_absent_or_identical \
+    "$AI_OUTPUT_ROOT/$registry_file" \
     "$RUN_ROOT/02_inputs/ai_validation/asset_registry_snapshot/$registry_file"
 done
 
@@ -6876,7 +6932,7 @@ rsync --archive --checksum --itemize-changes \
 
 | Gate | 输入 | 必须交付 | 通过含义 |
 |---|---|---|---|
-| AIV0 资产门 | 新增样本/no_binding/scaffold + 旧基线 | `$AI_ASSET_ROOT/validation_summary.json`、逐文件/结构/重复/隔离清单 | 数据身份与用途可审计；当前已 PASS，不代表模型有效 |
+| AIV0 资产门 | 新增样本/no_binding/scaffold + 旧基线 | `$AI_OUTPUT_ROOT/validation_summary.json`、逐文件/结构/重复/隔离清单与最终 receipt | 数据身份与用途可审计；当前已 PASS，不代表模型有效 |
 | AIV1 技术门 | Step 8 的 10 个冻结 anchor；不含 lockbox | 完整多状态矩阵、逐 sample 指标、ensemble 聚合、失败码、经验库首条 campaign、冻结 `ai_eval_spec.yaml` | 多状态评价链可重放；不评价命中率 |
 | AIV2 覆盖门 | 初始 240 baseline；最多两个 config-variant comparison rounds，每轮同时生成 240 baseline control + 240 variant（480） | 旧 12×2 分层完整；每轮 baseline/variant 同期、同预算；Codex 决策和全部失败留痕 | 选出 baseline 或一个可证伪 config variant；锁箱仍密封 |
 | AIV3 配置冻结门 | 被选配置的 2,400 诊断批 | 工程门、AI 无退化门、完整分母、配置/代码/评价规则冻结 receipt | 决定是否允许 12,000；此后禁止科学调参 |
@@ -12781,7 +12837,7 @@ python src/boltzgen/resources/main.py \
 
 | Gate | 必须满足 | 当前状态 |
 |---|---|---|
-| AIV0 新增数据资产 | `validate_assets.py --check`；177 files；112/112 CIF；challenge=32 usable/4 groups/4 incomplete quarantine/0 labels；new scaffold=4 overlap/2 quarantine/4 repair-or-accept/7 canonicalize、active=0 | **PASS（2026-08-26）**；只表示登记通过；正式 campaign Step 1 仍需只读复验 |
+| AIV0 新增数据资产 | V2 `validate_assets.py --check`；177/175 逻辑文件口径；112/112 CIF；72/72 scaffold checksum；challenge=32 usable/4 groups/4 incomplete quarantine/0 labels；new scaffold=4 overlap/2 quarantine/4 repair-or-accept/7 canonicalize、active=0 | **PASS（2026-08-28，attempt_007）**；只表示资产与语义就绪；production handoff 仍须导入并复验该不可变证据 |
 | G0 本地环境与基础数据完整性 | Step 0.1 项目环境 clean rebuild；URL/revision/bytes/SHA；旧 12 scaffold；target 30 residues；His7/Ala8=1/2；许可 | 基础数据已通过历史审计；正式 campaign 的环境与数据均需重跑 |
 | G1 环境 | 官方 commit、CUDA、BF16、GPU、依赖冻结、磁盘 | 等待 Linux/NVIDIA 基础设施 |
 | G2 单元端到端 | 7XL0 10 条五阶段完整；6XYM × 两 checkpoint × 10 条、batch=5；产物/哈希完整、无 OOM/NaN、峰值显存≤90% | 未执行官方 NVIDIA 版 |
@@ -12879,11 +12935,11 @@ python src/boltzgen/resources/main.py \
 执行代理接到本文后，按以下顺序行动，不得从中间开始：
 
 1. 阅读第 0 节并在 `decision_log.md` 写明“当前不做基础模型全量训练；先完成 AI 风险筛，再进入实验真值闭环”。
-2. 确认项目根目录、基础资产、旧 12 scaffold、Mac baseline 和 `$AI_ASSET_ROOT` 均存在；不得把新 17 raw 包算成已验收 production scaffold。
-3. 执行 Step 0，创建新 campaign 并冻结本文；不得改写已有 Mac campaign或 `$AI_ASSET_ROOT` 的审计产物。
+2. 确认项目根目录、基础资产、旧 12 scaffold、Mac baseline、`$AI_CONTRACT_ROOT` 和 `$AI_OUTPUT_ROOT` 均存在；不得把新 17 raw 包算成已验收 production scaffold。
+3. 执行 Step 0，创建新 campaign 并冻结本文；不得改写已有 Mac campaign、AIV0 静态合同或派生登记册。
 4. **先执行 Step 0.1**，用固定 CPython 3.12.13 建立并离线重建 `env_project`；这一步不通过，不得实现或运行任何项目 Python 脚本。
-5. 执行 Step 1 的基础哈希与 AIV0 `validate_assets.py --check`；任何漂移立即停止，不运行 `--write` 自行刷新。
-6. 阅读 `curation_manifest.json`、`selected_scaffolds.tsv`、`export_artifacts.tsv`、本地 Mac `run_summary.json`，以及 `$AI_ASSET_ROOT/{README.md,validation_report.md,cohort_registry.tsv,file_overrides.tsv,structure_inventory.tsv,scaffold_comparison.tsv}`。
+5. 执行 Step 1 的基础哈希与 V2 AIV0 `validate_assets.py --check`；任何漂移立即停止，不运行 `--write` 自行刷新。
+6. 阅读 `curation_manifest.json`、`selected_scaffolds.tsv`、`export_artifacts.tsv`、本地 Mac `run_summary.json`，以及 `$AI_CONTRACT_ROOT/{README.md,cohort_registry.tsv,file_overrides.tsv}` 与 `$AI_OUTPUT_ROOT/{structure_inventory.tsv,scaffold_comparison.tsv,validation_summary.json}`。
 7. 实现并测试 `build_input_manifest.py`、`build_design_specs.py` 和 AI 验证脚本；生成旧 12 baseline spec。新 scaffold 先完成 INSTANCE 去重/canonicalization/风险处置/逐项 check，否则 challenger active 数必须为 0。
 8. 执行 Step 5A 与 Step 5.1：冻结模型输入，并在 Mac 物化/测试包括 `verify_gpu_env_stage.sh` 与 `submit_phase_once.sh` 在内的 GPU 运行脚本；此时不得运行 5B。
 9. 若没有 `GPU_HOST/GPU_PROJECT_ROOT`，记录 `BLOCKED_EXTERNAL_INFRASTRUCTURE`，继续完成本地清单、代码、测试、AI schema 和报告框架，不伪造 GPU 或 AI 结果。
@@ -12956,11 +13012,11 @@ $PROJECT_ROOT/data/boltzgen_data/sabdab2_vhh_scaffolds_v1/registry/export_artifa
 $PROJECT_ROOT/data/boltzgen_data/sabdab2_vhh_scaffolds_v1/registry/scaffold_database.sqlite
 $PROJECT_ROOT/data/boltzgen_data/boltzgen_mac_enhanced_old12_glp1_20260820/analysis/run_summary.json
 $PROJECT_ROOT/data/boltzgen_data/boltzgen_mac_enhanced_old12_glp1_20260820/analysis/validation.json
-$PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/README.md
-$PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/validation_report.md
-$PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/validation_summary.json
-$PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/structure_inventory.tsv
-$PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/scaffold_comparison.tsv
+$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828/README.md
+$PROJECT_ROOT/GLP_/boltzgen/resources/data/AI结构资产验证登记册_20260828/AIV0验证摘要_20260828.json
+$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504/validation_summary.json
+$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504/structure_inventory.tsv
+$PROJECT_ROOT/boltzgen/data/ai_structure_asset_validation_registry_20260828_211504/scaffold_comparison.tsv
 ```
 
 ### 12.3 本文审计结论
@@ -12970,7 +13026,7 @@ $PROJECT_ROOT/data/boltzgen_data/ai_validation_assets_v1/scaffold_comparison.tsv
 - SAbDab2 骨架库与 12 个导出包逐文件 SHA-256 全部通过；
 - 12/12 scaffold 已通过 BoltzGen `v0.3.2` 输入检查；
 - 6X18 只可称 30 残基 GLP-1 geometry；
-- 新增数据共登记 177 个源文件和 112 个 mmCIF 路径，112/112 可解析；AIV0 资产登记状态 PASS；
+- 新增数据共登记 177 条历史逻辑清单记录（去除 2 条 Finder 元数据后为 175 条逻辑文件）和 112 个 mmCIF 路径，112/112 可解析；AIV0 资产登记状态 PASS；
 - 1D0R 两份目录是同一 deposition 的镜像；20 models 是相关构象，紧凑面板固定 models 10/12/19/20，不是结合阳性标签；
 - `no_binding` 中 32 个结构可作 4 个 target/source groups 的计算挑战，9IVG/9N0E/6PHI/7DTY 共 4 个不完整结构隔离；实验负标签仍为 0；
 - 新 17 scaffold 包内部一致，但与旧 12 重叠 4、唯一并集 25；2 个隔离、4 个待修复/接受、7 个待 canonicalization/check，当前 raw challenger 不进 production；

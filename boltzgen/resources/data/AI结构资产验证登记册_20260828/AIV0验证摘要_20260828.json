@@ -1,0 +1,56 @@
+{
+  "schema_version": "AIV0_M0_REPOSITORY_SUMMARY_V1",
+  "status": "M0_PASS_ASSET_AND_SEMANTIC_READINESS",
+  "completed_at_utc": "2026-08-28T13:19:56.265536Z",
+  "scope": "data identity, migration reproducibility, mmCIF parsing, partition semantics, and scaffold admission state",
+  "authoritative_evidence": {
+    "derived_summary_uri": "workspace://boltzgen/data/ai_structure_asset_validation_registry_20260828_211504/validation_summary.json",
+    "derived_summary_sha256": "471dfeb9797710cfa866641385cbb958956ec5682c9ea2231b3f30949f497d93",
+    "initialization_receipt_uri": "workspace://boltzgen/runs/glp1_vhh_formal_campaign_20260828/logs/stages/aiv0_asset_validation/attempt_006/receipt.json",
+    "initialization_receipt_sha256": "08ec6bbc464d2da5b3026e4fc93851a8a141aa5e370aa5caa57c031c68dc71cd",
+    "final_check_receipt_uri": "workspace://boltzgen/runs/glp1_vhh_formal_campaign_20260828/logs/stages/aiv0_asset_validation/attempt_007/receipt.json",
+    "final_check_receipt_sha256": "efa92f7bd8ddb345f072de2451be27c8f2c170c59467eb74ea8a5dff90a5fe5c",
+    "final_derived_manifest_sha256": "f9dd7a737028ed45fc365ae93ff1ec5c8ca6ea79b3f66a091ade610a5c3749ea",
+    "final_input_manifest_sha256": "7d4d8d1d32cc908c8dbc1275b5ddc88d27c69aa1899bfc6641228710263bbd8e",
+    "final_runtime_fingerprint_sha256": "1ff2a3acdc12af975ccca6928f55e6f96d744c2cc27a6de5d6b37a24684b4ac8"
+  },
+  "migration_evidence": {
+    "migration_receipt_uri": "workspace://manifests/local_assets_20260826/local_workspace_migration_receipt_20260826.json",
+    "migration_receipt_sha256": "ccdb86a39671187134c500476b4fe22ca90ce7ced3e635c5302c5759966c291c",
+    "post_asset_root_receipt_uri": "workspace://manifests/local_assets_20260826/asset_tree_receipt_post_20260826.json",
+    "post_asset_root_receipt_sha256": "82c971402f32b24080866adf67356dcdf4152542f48b832350aaf61584980c52",
+    "post_asset_root_summary_uri": "workspace://manifests/local_assets_20260826/asset_tree_summary_post_20260826.csv",
+    "post_asset_root_summary_sha256": "7eb2f71a8cb59e7a6dbcbb8be46a8e5af700241624ebbd24d4828a5c83215933"
+  },
+  "gates": {
+    "historical_logical_source_files": 177,
+    "historical_logical_source_bytes": 14884156,
+    "non_system_metadata_logical_files": 175,
+    "intentional_positive_mirror_logical_files": 24,
+    "structure_paths": 112,
+    "structure_parse_pass": 112,
+    "compatibility_aliases_verified": 9,
+    "historical_tsv_hashes_verified": 5,
+    "challenge_manifest_rows_verified": 25,
+    "challenge_raw_source_hashes_verified": 25,
+    "challenge_prepared_conformers": 36,
+    "challenge_usable_conformers": 32,
+    "challenge_quarantined_conformers": 4,
+    "challenge_target_source_groups": 4,
+    "experimental_negative_labels": 0,
+    "positive_1d0r_independent_depositions": 1,
+    "new_scaffold_packages_verified": 17,
+    "new_scaffold_checksum_entries_verified": 72,
+    "new_scaffold_production_active": 0
+  },
+  "scientific_boundary": {
+    "allows": "proceed to AIV1 technical preparation under the frozen contract",
+    "does_not_prove": [
+      "VHH binding",
+      "non-binding",
+      "affinity or KD",
+      "selectivity",
+      "expression, stability, or experimental success"
+    ]
+  }
+}

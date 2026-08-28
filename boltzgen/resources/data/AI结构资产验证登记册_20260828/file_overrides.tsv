@@ -1,0 +1,19 @@
+relative_path	status	reason
+data/样本数据/binding-多构象/all_conformers/1D0R_model10.cif	USE_POSITIVE_FIXED_CONTROL	RCSB lowest-energy representative; add beside the three low-silhouette medoids in the compact positive panel
+data/样本数据/binding-多构象/all_conformers/1D0R_model12.cif	USE_POSITIVE_COMPACT	Canonical split medoid model 12; representative alias is excluded
+data/样本数据/binding-多构象/all_conformers/1D0R_model19.cif	USE_POSITIVE_COMPACT	Canonical split medoid model 19; representative alias is excluded
+data/样本数据/binding-多构象/all_conformers/1D0R_model20.cif	USE_POSITIVE_COMPACT	Canonical split medoid model 20; representative alias is excluded
+data/样本数据/not_binding/not_binding/GIP_1_42/GIP_1_42_conf01.cif	EXCLUDE_INCOMPLETE	7DTY observes only residues 1-30 of 42
+data/样本数据/not_binding/not_binding/glucagon_1_29/glucagon_1_29_conf02.cif	EXCLUDE_INCOMPLETE	6PHI lacks N-terminal His1
+data/样本数据/not_binding/not_binding/oxyntomodulin_1_37/oxyntomodulin_1_37_conf01.cif	EXCLUDE_INCOMPLETE	9N0E lacks residues 28-37
+data/样本数据/not_binding/not_binding/GLP1_9_36_NH2/GLP1_9_36_NH2_conf01.cif	EXCLUDE_INCOMPLETE	9IVG lacks residues 22-28 and amide exists only as metadata
+data/样本数据/boltzgen_vhh_scaffolds/02_pdb_00006xym-A/pdb_00006xym_A_+_ab.cif	STRESS_ONLY_USE_OLD_CANONICAL	Overlaps old12; use the checked old curated CIF, and keep long CDR2/CDR3 as a separate stress stratum
+data/样本数据/boltzgen_vhh_scaffolds/06_pdb_00006xxo-A/pdb_00006xxo_A_+_ab.cif	DUPLICATE_ALIAS_USE_OLD_CANONICAL	Overlaps old12; do not count or execute the raw duplicate independently
+data/样本数据/boltzgen_vhh_scaffolds/07_pdb_00007oao-FFF/pdb_00007oao_FFF_+_ab.cif	QUARANTINE_PENDING_REDESIGN	Extra fixed-framework Cys may become unpaired if its CDR3 partner is redesigned; do not use in production until explicitly repaired or constrained
+data/样本数据/boltzgen_vhh_scaffolds/09_pdb_00008v9x-A/pdb_00008v9x_A_+_ab.cif	DUPLICATE_ALIAS_USE_OLD_CANONICAL	Overlaps old12; do not count or execute the raw duplicate independently
+data/样本数据/boltzgen_vhh_scaffolds/10_pdb_00004i13-B/pdb_00004i13_B_+_ab.cif	NEEDS_REPAIR_OR_ACCEPTANCE	Seven unresolved atoms occur in fixed framework positions; curate and explicitly accept before check
+data/样本数据/boltzgen_vhh_scaffolds/11_pdb_00008q95-C/pdb_00008q95_C_+_ab.cif	NEEDS_REPAIR_OR_ACCEPTANCE	Eighteen unresolved atoms occur in fixed framework positions; curate and explicitly accept before check
+data/样本数据/boltzgen_vhh_scaffolds/12_pdb_00008q95-B/pdb_00008q95_B_+_ab.cif	NEEDS_REPAIR_OR_ACCEPTANCE	Sixteen unresolved atoms occur in fixed framework positions; curate and explicitly accept before check
+data/样本数据/boltzgen_vhh_scaffolds/14_pdb_00005l21-B/pdb_00005l21_B_+_ab.cif	DUPLICATE_ALIAS_USE_OLD_CANONICAL	Overlaps old12; do not count or execute the raw duplicate independently
+data/样本数据/boltzgen_vhh_scaffolds/15_pdb_00004x7f-C/pdb_00004x7f_C_+_ab.cif	NEEDS_REPAIR_OR_ACCEPTANCE	Sixteen unresolved atoms occur in fixed framework positions; curate and explicitly accept before check
+data/样本数据/boltzgen_vhh_scaffolds/17_pdb_00009ho5-C/pdb_00009ho5_C_+_ab.cif	QUARANTINE_MISSING_CDR_COORDINATES	Five complete CDR1 residues lack coordinates; check alone is insufficient, require design-mask proof plus 20/20 backbone continuity or traceable reconstruction and approval

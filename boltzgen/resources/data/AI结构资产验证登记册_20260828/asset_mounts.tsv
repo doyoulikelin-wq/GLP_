@@ -1,0 +1,11 @@
+mount_id	logical_path	canonical_uri	asset_kind	inventory_scope	include_in_source_inventory	expected_file_count	expected_bytes
+positive_canonical_tree	data/样本数据/binding-多构象	workspace://shared/data/glp1_positive_conformer_ensemble_20260819	tree	data/样本数据	true	24	2277908
+positive_historical_mirror_tree	data/多构象-1	workspace://archive/shared/glp1_positive_conformer_mirror_20260819	tree	data/多构象-1	true	24	2277908
+peptide_lockbox_tree	data/样本数据/not_binding	workspace://shared/data/peptide_lockbox_countertargets_20260823	tree	data/样本数据	true	38	6811892
+glp2_tuning_tree	data/not_binding	workspace://shared/data/glp2_tuning_countertargets_20260824	tree	data/not_binding	true	12	487799
+vhh_challenger_tree	data/样本数据/boltzgen_vhh_scaffolds	workspace://shared/data/vhh_challenger_scaffolds_20260823	tree	data/样本数据	true	73	1602575
+vhh_source_package_tree	data/sd-h骨架	workspace://archive/shared/vhh_challenger_source_package_20260819	tree	data/sd-h骨架	true	3	567567
+sample_data_finder_metadata	data/样本数据/.DS_Store	workspace://archive/macos_metadata_20260826/sample_data.DS_Store	file	data/样本数据	true	1	6148
+raw_1d0r_reference	data/boltzgen_data/mvp_assets_v0.3.2/raw_sources/rcsb_structures/1D0R.cif	workspace://boltzgen/data/boltzgen_v0_3_2_runtime_and_mvp_inputs_20260819/raw_sources/rcsb_structures/1D0R.cif	file	explicit_baseline_or_raw_reference	true	1	834745
+glp1_6x18_reference	data/boltzgen_data/boltzgen_mac_enhanced_old12_glp1_20260820/inputs/target/6X18_GLP1_7-36_geometry.cif	workspace://boltzgen/runs/old12_glp1_mac_enhanced_20260820/inputs/target/6X18_GLP1_7-36_geometry.cif	file	explicit_baseline_or_raw_reference	true	1	17614
+old12_scaffold_tree	data/boltzgen_data/sabdab2_vhh_scaffolds_v1/selected	workspace://boltzgen/data/vhh_scaffold_database_20260819/selected	tree	not_in_source_inventory	false	132	7503831
