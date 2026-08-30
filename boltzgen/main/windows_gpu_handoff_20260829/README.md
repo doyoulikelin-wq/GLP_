@@ -4,6 +4,12 @@
 成品用于把 Mac 上已经冻结的项目代码、公开开发数据、BoltzGen `v0.3.2`
 源码和 GPU 运行资产交给 Windows 5070 Ti 笔记本中的 WSL2 Codex。
 
+如果只想先在自己的 Windows 电脑上加载现成权重，完成一次 VHH 推理、候选生成和
+筛选，请阅读源码中的 `QUICK_START_PERSONAL_INFERENCE_ZH.md`；在交付成品中，它会成为
+同级个人入口附加包的 `README_FIRST_ZH.md`。这个小包不复制大权重，用户只运行一条
+PowerShell 命令；原有 T0/T1/T2 审计链仍保留给后续正式 AI 验证，不需要在第一次个人
+冒烟时手工操作。
+
 ## 当前能力边界
 
 - AIV0（AI 验证第 0 阶段，数据身份检查）已通过，权威运行是
@@ -68,6 +74,19 @@ bash "$PROJECT_REPO/boltzgen/main/windows_gpu_handoff_20260829/scripts/build_han
 
 构建器拒绝覆盖同名目录，复验五个运行资产、精确 16 个开发态和 12 个骨架，
 生成不超过 1.9 GiB 的大资产分卷，并在临时目录完整解包复核后才发布成品。
+
+基础包完成后，Mac 端再生成不复制权重的个人推理入口附加包：
+
+```bash
+BASE_BUNDLE="$WORKSPACE_ROOT/transfer/WINDOWS_CODEX_GPU_HANDOFF_20260829_V1"
+BASE_TRANSFER_SHA256="$(shasum -a 256 "$BASE_BUNDLE/TRANSFER.SHA256SUMS" | awk '{print $1}')"
+bash "$PROJECT_REPO/boltzgen/main/windows_gpu_handoff_20260829/scripts/build_personal_inference_overlay.sh" \
+  "$BASE_BUNDLE" \
+  "$WORKSPACE_ROOT/transfer" \
+  "$BASE_TRANSFER_SHA256"
+```
+
+附加包必须与基础包放在同一目录；构建器拒绝把它写进基础包或 Git 仓库。
 
 成品是一个“目录型压缩交接包”，不是单个 ZIP：请把整个
 `WINDOWS_CODEX_GPU_HANDOFF_20260829_V1` 目录及同级的
