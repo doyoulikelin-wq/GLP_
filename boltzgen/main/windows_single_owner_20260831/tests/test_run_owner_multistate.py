@@ -15,7 +15,7 @@ SPEC.loader.exec_module(MODULE)
 
 
 class RunOwnerMultistateTest(unittest.TestCase):
-    def test_panel_is_frozen_to_ten_tasks_and_fifty_rows(self) -> None:
+    def test_default_panel_is_ten_tasks_and_fifty_rows(self) -> None:
         self.assertEqual(MODULE.DEFAULT_CANDIDATES, ("design_1", "design_3"))
         self.assertEqual(
             MODULE.DEFAULT_STATES,
@@ -27,6 +27,16 @@ class RunOwnerMultistateTest(unittest.TestCase):
             * MODULE.SAMPLES_PER_TASK,
             50,
         )
+
+    def test_custom_panel_ids_are_safe_unique_and_ordered(self) -> None:
+        self.assertEqual(
+            MODULE.validated_ids(["DEV_00", "DEV_06", "DEV_15"], "states"),
+            ("DEV_00", "DEV_06", "DEV_15"),
+        )
+        with self.assertRaisesRegex(MODULE.RunFailure, "unique"):
+            MODULE.validated_ids(["DEV_00", "DEV_00"], "states")
+        with self.assertRaisesRegex(MODULE.RunFailure, "unsafe"):
+            MODULE.validated_ids(["../DEV_00"], "states")
 
     def test_manifest_verification_rejects_escape_and_detects_change(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

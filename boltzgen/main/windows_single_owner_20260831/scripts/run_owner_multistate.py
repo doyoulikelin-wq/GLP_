@@ -29,6 +29,7 @@ from typing import Iterable, Mapping, Sequence
 
 
 PANEL_ID_RE = re.compile(r"[a-z0-9][a-z0-9_.-]{0,95}")
+REQUEST_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}")
 SHA256_RE = re.compile(r"[0-9a-f]{64}")
 DEFAULT_CANDIDATES = ("design_1", "design_3")
 DEFAULT_STATES = ("DEV_00", "DEV_01", "DEV_05", "DEV_06", "DEV_15")
@@ -507,13 +508,32 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workspace-root", required=True, type=Path)
     parser.add_argument("--panel-id", required=True)
     parser.add_argument("--anchor-set", required=True, type=Path)
+    parser.add_argument("--candidate-ids", nargs="+", default=list(DEFAULT_CANDIDATES))
+    parser.add_argument("--state-ids", nargs="+", default=list(DEFAULT_STATES))
+    parser.add_argument("--baseline-state", default="DEV_00")
     return parser.parse_args()
+
+
+def validated_ids(values: Iterable[str], label: str) -> tuple[str, ...]:
+    result = tuple(values)
+    if not result or len(set(result)) != len(result):
+        raise RunFailure(f"{label} must be a non-empty unique list")
+    if any(REQUEST_ID_RE.fullmatch(value) is None for value in result):
+        raise RunFailure(f"{label} contains an unsafe ID")
+    return result
 
 
 def main() -> int:  # noqa: PLR0915
     args = parse_args()
     if PANEL_ID_RE.fullmatch(args.panel_id) is None:
         raise SystemExit(f"unsafe panel ID: {args.panel_id!r}")
+    try:
+        candidate_ids = validated_ids(args.candidate_ids, "candidate IDs")
+        state_ids = validated_ids(args.state_ids, "state IDs")
+    except RunFailure as exc:
+        raise SystemExit(str(exc)) from exc
+    if args.baseline_state not in state_ids:
+        raise SystemExit("baseline state must be included in state IDs")
     workspace = args.workspace_root.resolve(strict=True)
     if not str(workspace).startswith("/home/"):
         raise SystemExit(f"workspace root must be under /home: {workspace}")
@@ -603,8 +623,8 @@ def main() -> int:  # noqa: PLR0915
             "--anchor-set", str(anchor_set),
             "--output", str(run_root),
             "--runtime-root", str(runtime_root),
-            "--candidate-ids", *DEFAULT_CANDIDATES,
-            "--state-ids", *DEFAULT_STATES,
+            "--candidate-ids", *candidate_ids,
+            "--state-ids", *state_ids,
         ]
         materialize_started = time.monotonic()
         with materialize_stdout.open("wb") as stdout, materialize_stderr.open("wb") as stderr:
@@ -689,14 +709,17 @@ def main() -> int:  # noqa: PLR0915
 
         summary_duration = run_logged(
             "summary",
-            [str(python_bin), "-I", str(summarizer), "--run-root", str(run_root), "--baseline-state", "DEV_00"],
+            [
+                str(python_bin), "-I", str(summarizer), "--run-root", str(run_root),
+                "--baseline-state", args.baseline_state,
+            ],
             logs,
             cwd=repo,
         )
         output_contract = json_object(logs / "multistate_contract.json")
         if output_contract.get("status") != "PASS":
             raise RunFailure("multi-state output validator did not pass")
-        expected_tasks = len(DEFAULT_CANDIDATES) * len(DEFAULT_STATES)
+        expected_tasks = len(candidate_ids) * len(state_ids)
         if (
             output_contract.get("logical_task_count") != expected_tasks
             or output_contract.get("samples_per_task") != SAMPLES_PER_TASK
@@ -732,8 +755,9 @@ def main() -> int:  # noqa: PLR0915
             "panel_id": args.panel_id,
             "attempt_id": run_root.name,
             "run_root": str(run_root),
-            "candidate_ids": list(DEFAULT_CANDIDATES),
-            "state_ids": list(DEFAULT_STATES),
+            "candidate_ids": list(candidate_ids),
+            "state_ids": list(state_ids),
+            "baseline_state_id": args.baseline_state,
             "logical_task_count": expected_tasks,
             "samples_per_task": SAMPLES_PER_TASK,
             "sample_row_count": expected_tasks * SAMPLES_PER_TASK,
@@ -788,8 +812,8 @@ def main() -> int:  # noqa: PLR0915
             "outcome": "SUCCESS",
             "summary": f"{expected_tasks} logical tasks and {expected_tasks * SAMPLES_PER_TASK} fold rows validated; no OOM",
             "run_root": str(run_root),
-            "candidate_ids": list(DEFAULT_CANDIDATES),
-            "state_ids": list(DEFAULT_STATES),
+            "candidate_ids": list(candidate_ids),
+            "state_ids": list(state_ids),
             "output_contract_sha256": sha256_file(logs / "multistate_contract.json"),
             "scientific_claim_boundary": "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE",
         }
