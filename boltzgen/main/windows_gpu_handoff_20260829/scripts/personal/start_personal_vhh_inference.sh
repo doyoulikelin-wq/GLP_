@@ -21,7 +21,7 @@ test "$#" -eq 0 || {
   exit 64
 }
 
-for command_name in bash python3 sha256sum realpath tee flock; do
+for command_name in bash python3 sha256sum realpath tee flock id; do
   command -v "$command_name" >/dev/null || {
     printf 'missing command: %s\n' "$command_name" >&2
     exit 69
@@ -110,6 +110,11 @@ printf '%q ' "$0" > "$log_root/command.txt"
 printf '\n' >> "$log_root/command.txt"
 
 current_stage="SINGLE_INSTANCE_LOCK"
+exec 8<"/run/user/$(id -u)"
+flock -n 8 || {
+  printf '已有一个共享 GPU 推理任务正在运行；本次没有并发启动。\n' >&2
+  exit 73
+}
 exec 9> "$personal_root/personal_inference.lock"
 flock -n 9 || {
   printf '已有一个个人 VHH 推理任务正在运行；本次没有并发启动。\n' >&2
