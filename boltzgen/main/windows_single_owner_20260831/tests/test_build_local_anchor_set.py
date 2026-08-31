@@ -143,6 +143,17 @@ def make_source(tmp_path: Path) -> Path:
     (logs / "runtime_assets_used.SHA256SUMS").write_text("fixture\n", encoding="utf-8")
     (logs / "source_commit.txt").write_text("a" * 40 + "\n", encoding="utf-8")
     (logs / "source_tree.txt").write_text("b" * 40 + "\n", encoding="utf-8")
+    config = source / "config"
+    config.mkdir()
+    for name in ("design.yaml", "inverse_folding.yaml", "folding.yaml", "analysis.yaml", "filtering.yaml"):
+        (config / name).write_text(f"fixture: {name}\n", encoding="utf-8")
+    (logs / "resolved_config.SHA256SUMS").write_text(
+        "".join(
+            f"{digest(config / name)}  config/{name}\n"
+            for name in sorted(path.name for path in config.iterdir())
+        ),
+        encoding="utf-8",
+    )
     (metrics_dir / "final_designs_metrics_3.csv").write_text(
         (metrics_dir / "all_designs_metrics.csv").read_text(encoding="utf-8"),
         encoding="utf-8",
@@ -180,6 +191,11 @@ def test_builds_ranked_self_contained_anchor_set(tmp_path: Path) -> None:
         "design_b",
         "design_a",
     ]
+    assert payload["anchors"][0]["metrics"]["filter_gate_map"] == {
+        "pass_bindsite_under_8rmsd_filter": False,
+        "pass_filter_rmsd_design_filter": True,
+        "pass_filter_rmsd_filter": False,
+    }
     assert (output / "inputs/spec_bundle/target.cif").is_file()
     assert (output / "anchors/rank01_design_b/refold_samples.npz").is_file()
     assert (output / "anchors/rank01_design_b/raw_design.cif").is_file()
@@ -208,3 +224,22 @@ def test_rejects_tampered_source_before_publishing_ready(tmp_path: Path) -> None
         "LOCAL_ANCHOR_SET_FAILED"
     )
     assert not (failures[0] / "ANCHOR_SET.json").exists()
+
+
+def test_rejects_non_boolean_filter_gate_even_when_source_manifest_matches(
+    tmp_path: Path,
+) -> None:
+    source = make_source(tmp_path)
+    metrics = source / "final_ranked_designs/all_designs_metrics.csv"
+    text = metrics.read_text(encoding="utf-8").replace(",False,False,True,False,", ",False,unknown,True,False,", 1)
+    metrics.write_text(text, encoding="utf-8")
+    write_source_manifest(source)
+    output = tmp_path / "anchors"
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--source-run", str(source), "--output", str(output)],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "strict boolean required" in result.stderr
+    assert not output.exists()

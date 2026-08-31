@@ -155,7 +155,11 @@ def copy_verified(source: Path, destination: Path, expected: str) -> str:
 
 
 def as_bool(value: object) -> bool:
-    return str(value).strip().lower() == "true"
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str) and value.strip().lower() in {"true", "false"}:
+        return value.strip().lower() == "true"
+    raise ValueError(f"strict boolean required, got {value!r}")
 
 
 def builder_code_identity() -> dict[str, object]:
@@ -215,10 +219,16 @@ def selected_metric(row: dict[str, str]) -> dict:
             payload[key] = int(float(value))
         else:
             payload[key] = value
-    payload["unmet_filters"] = sorted(
-        key for key, value in row.items()
-        if key.startswith("pass_") and key.endswith("_filter") and not as_bool(value)
-    )
+    gate_map = {
+        key: as_bool(value)
+        for key, value in row.items()
+        if key.startswith("pass_") and key.endswith("_filter")
+    }
+    if not gate_map or as_bool(row.get("pass_filters")) != all(gate_map.values()):
+        raise ValueError(f"aggregate pass_filters disagrees with named gates: {row.get('id')}")
+    payload["filter_gate_map"] = dict(sorted(gate_map.items()))
+    payload["passed_filters"] = sorted(key for key, value in gate_map.items() if value)
+    payload["unmet_filters"] = sorted(key for key, value in gate_map.items() if not value)
     payload["designed_sequence_length"] = len(row.get("designed_sequence", ""))
     payload["designed_chain_sequence_length"] = len(
         row.get("designed_chain_sequence", "")
@@ -353,6 +363,12 @@ def main() -> int:
             "aggregate_metrics_analyze.csv": (
                 "intermediate_designs_inverse_folded/aggregate_metrics_analyze.csv"
             ),
+            "resolved_configs/design.yaml": "config/design.yaml",
+            "resolved_configs/inverse_folding.yaml": "config/inverse_folding.yaml",
+            "resolved_configs/folding.yaml": "config/folding.yaml",
+            "resolved_configs/analysis.yaml": "config/analysis.yaml",
+            "resolved_configs/filtering.yaml": "config/filtering.yaml",
+            "resolved_config.SHA256SUMS": "operator_logs/resolved_config.SHA256SUMS",
         }
         for destination_name, relative in evidence_files.items():
             expected = source_rows.get(relative)
