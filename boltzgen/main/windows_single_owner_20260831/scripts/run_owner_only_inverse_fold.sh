@@ -284,10 +284,10 @@ PY
 }
 
 verify_code_bindings_and_launcher() {
-  python3 -I -S - "$operator_logs/code_bindings.SHA256SUMS" "$operator_logs/canonical_launcher_binding.json" "$private_runner" "$private_validator" "$private_builder" "$boltzgen_launcher" "$environment_launcher" <<'PY'
+  python3 -I -S - "$operator_logs/code_bindings.SHA256SUMS" "$operator_logs/canonical_launcher_binding.json" "$private_runner" "$private_validator" "$private_builder" "$private_multistate_builder" "$boltzgen_launcher" "$environment_launcher" <<'PY'
 import hashlib,json,os,re,stat,sys
 from pathlib import Path
-manifest,binding_path=map(Path,sys.argv[1:3]); private_paths=list(map(Path,sys.argv[3:7])); canonical_launcher=Path(sys.argv[7]); token_evidence_path=binding_path.parent/"resume_token_consumed.json"
+manifest,binding_path=map(Path,sys.argv[1:3]); private_paths=list(map(Path,sys.argv[3:8])); canonical_launcher=Path(sys.argv[8]); token_evidence_path=binding_path.parent/"resume_token_consumed.json"
 identity=lambda x:(x.st_dev,x.st_ino,x.st_mode,x.st_uid,x.st_nlink,x.st_size,x.st_mtime_ns,x.st_ctime_ns)
 def stable_bytes(path):
  if not path.is_absolute() or path.is_symlink() or path.resolve(strict=True)!=path: raise SystemExit(f"unsafe code/launcher binding path: {path}")
@@ -309,7 +309,7 @@ for line in manifest_bytes.decode().splitlines():
  if not match or match.group(2) in rows: raise SystemExit("code bindings manifest format/duplicate drift")
  rows[match.group(2)]=match.group(1)
 expected_names={str(path) for path in private_paths}
-if set(rows)!=expected_names or len(rows)!=4: raise SystemExit("code bindings manifest must contain exactly runner/validator/builder/launcher")
+if set(rows)!=expected_names or len(rows)!=5: raise SystemExit("code bindings manifest must contain exactly runner/validator/pose-builder/multistate-builder/launcher")
 for path in private_paths:
  content,_=stable_bytes(path)
  if hashlib.sha256(content).hexdigest()!=rows[str(path)]: raise SystemExit(f"private code binding digest mismatch: {path}")
@@ -653,19 +653,21 @@ repo_head_before="$(git -C "$repo_root" rev-parse HEAD)"; repo_tree_before="$(gi
 private_code="$private_root/code"; mkdir "$private_code"; runner_path="$(realpath -e -- "$0")"; test ! -L "$0"
 validator_source="$repo_root/boltzgen/main/windows_single_owner_20260831/scripts/validate_owner_only_inverse_fold.py"
 builder_source="$repo_root/boltzgen/main/windows_single_owner_20260831/scripts/build_owner_pose_anchored_spec.py"
-for source_path in "$runner_path" "$validator_source" "$builder_source"; do
+multistate_builder_source="$repo_root/boltzgen/main/windows_single_owner_20260831/scripts/build_owner_multistate_inputs.py"
+for source_path in "$runner_path" "$validator_source" "$builder_source" "$multistate_builder_source"; do
   relative="${source_path#"$repo_root/"}"; test "$relative" != "$source_path"
   expected_sha="$(git -C "$repo_root" show "$repo_head_before:$relative" | sha256sum | awk '{print $1}')"; expected_size="$(git -C "$repo_root" cat-file -s "$repo_head_before:$relative")"
   copy_bound "$source_path" "$private_code/$(basename "$source_path")" "$expected_sha" "$expected_size" >> "$operator_logs/private_copy_receipts.jsonl"
 done
-private_runner="$private_code/$(basename "$runner_path")"; private_validator="$private_code/validate_owner_only_inverse_fold.py"; private_builder="$private_code/build_owner_pose_anchored_spec.py"
-chmod 500 "$private_runner" "$private_validator" "$private_builder"
+private_runner="$private_code/$(basename "$runner_path")"; private_validator="$private_code/validate_owner_only_inverse_fold.py"; private_builder="$private_code/build_owner_pose_anchored_spec.py"; private_multistate_builder="$private_code/build_owner_multistate_inputs.py"
+chmod 500 "$private_runner" "$private_validator" "$private_builder" "$private_multistate_builder"
 environment_launcher="$(dirname "$python_bin")/boltzgen-wsl-sm120"
 launcher_binding_json="$(copy_bound "$environment_launcher" "$private_code/boltzgen-wsl-sm120" - -)"
 printf '%s\n' "$launcher_binding_json" >> "$operator_logs/private_copy_receipts.jsonl"
 printf '%s\n' "$launcher_binding_json" > "$operator_logs/canonical_launcher_binding.json"
 chmod 500 "$private_code/boltzgen-wsl-sm120"; boltzgen_launcher="$private_code/boltzgen-wsl-sm120"
-sha256sum "$private_runner" "$private_validator" "$private_builder" "$boltzgen_launcher" > "$operator_logs/code_bindings.SHA256SUMS"
+sha256sum "$private_runner" "$private_validator" "$private_builder" "$private_multistate_builder" "$boltzgen_launcher" > "$operator_logs/code_bindings.SHA256SUMS"
+"$python_bin" -I "$private_validator" --help > "$operator_logs/private_code_import_smoke.stdout.txt" 2> "$operator_logs/private_code_import_smoke.stderr.txt"
 resume_token_sha256="$(python3 -I -S - "$operator_logs/canonical_launcher_binding.json" "$private_root/resume.token" <<'PY'
 import hashlib,os,secrets,stat,sys
 from pathlib import Path
@@ -732,6 +734,7 @@ private_code="$private_root/code"
 private_runner="$private_code/run_owner_only_inverse_fold.sh"
 private_validator="$private_code/validate_owner_only_inverse_fold.py"
 private_builder="$private_code/build_owner_pose_anchored_spec.py"
+private_multistate_builder="$private_code/build_owner_multistate_inputs.py"
 boltzgen_launcher="$private_code/boltzgen-wsl-sm120"
 environment_launcher="$(dirname "$python_bin")/boltzgen-wsl-sm120"
 test "$(realpath -e -- "$0")" = "$private_runner"
@@ -743,7 +746,8 @@ test "$(git -C "$repo_root" rev-parse HEAD^{tree})" = "$repo_tree_before"
 for code_pair in \
   "run_owner_only_inverse_fold.sh:boltzgen/main/windows_single_owner_20260831/scripts/run_owner_only_inverse_fold.sh" \
   "validate_owner_only_inverse_fold.py:boltzgen/main/windows_single_owner_20260831/scripts/validate_owner_only_inverse_fold.py" \
-  "build_owner_pose_anchored_spec.py:boltzgen/main/windows_single_owner_20260831/scripts/build_owner_pose_anchored_spec.py"; do
+  "build_owner_pose_anchored_spec.py:boltzgen/main/windows_single_owner_20260831/scripts/build_owner_pose_anchored_spec.py" \
+  "build_owner_multistate_inputs.py:boltzgen/main/windows_single_owner_20260831/scripts/build_owner_multistate_inputs.py"; do
   private_name=${code_pair%%:*}; repo_relative=${code_pair#*:}
   expected_sha="$(git -C "$repo_root" show "$repo_head_before:$repo_relative" | sha256sum | awk '{print $1}')"
   expected_size="$(git -C "$repo_root" cat-file -s "$repo_head_before:$repo_relative")"

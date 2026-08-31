@@ -178,8 +178,40 @@ def test_runner_syntax_help_and_only_inverse_topology() -> None:
     assert "info.st_nlink != 1" in text
     assert "semantic payload changed after validation" in text
     assert "code_bindings.SHA256SUMS" in text
+    assert "build_owner_multistate_inputs.py" in text
+    assert "private_code_import_smoke.stdout.txt" in text
+    assert "len(rows)!=5" in text
     assert text.rindex("code_bindings.SHA256SUMS") < text.index(
         'value["status"]="ONLY_INVERSE_FOLD_COMPLETE"'
+    )
+
+
+@pytest.mark.skipif(not RUNTIME_PYTHON.is_file(), reason="owner runtime absent")
+def test_private_validator_import_smoke_includes_multistate_dependency(tmp_path: Path) -> None:
+    private_code = tmp_path / "private-code"
+    private_code.mkdir()
+    for name in (
+        "validate_owner_only_inverse_fold.py",
+        "build_owner_pose_anchored_spec.py",
+    ):
+        shutil.copy2(ROOT / "scripts" / name, private_code / name)
+    missing = subprocess.run(
+        [str(RUNTIME_PYTHON), "-I", str(private_code / "validate_owner_only_inverse_fold.py"), "--help"],
+        capture_output=True,
+        text=True,
+    )
+    assert missing.returncode != 0
+    assert "build_owner_multistate_inputs" in missing.stderr
+
+    shutil.copy2(
+        ROOT / "scripts/build_owner_multistate_inputs.py",
+        private_code / "build_owner_multistate_inputs.py",
+    )
+    subprocess.run(
+        [str(RUNTIME_PYTHON), "-I", str(private_code / "validate_owner_only_inverse_fold.py"), "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
     )
 
 
