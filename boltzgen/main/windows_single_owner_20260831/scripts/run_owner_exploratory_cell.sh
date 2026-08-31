@@ -471,7 +471,9 @@ checks = {
     "design.checkpoint": (design.get("checkpoint"), design_checkpoint),
     "design.sampling_steps": (design.get("sampling_steps"), 500),
     "design.recycling_steps": (design.get("recycling_steps"), 3),
-    "design.diffusion_samples": (design.get("diffusion_samples"), expected_designs),
+    # BoltzGen stores the per-batch diffusion sample count here.  The total
+    # candidate count is represented by the number of batch iterations.
+    "design.diffusion_samples": (design.get("diffusion_samples"), 1),
     "design.batch_size": (design["data"].get("batch_size"), 1),
     "design.devices": (design["trainer"].get("devices"), 1),
     "design.multiplicity": (design["data"]["cfg"].get("multiplicity"), 1),
