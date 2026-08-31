@@ -22,6 +22,10 @@ SEALED_POSE = Path(
     "7xl0_design_3_high_contact/attempt_20260831T183556Z"
 )
 SPEC_PATH = SEALED_POSE / "spec_bundle/design.yaml"
+FAILED_INVERSE_RUN = Path(
+    "/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/"
+    "7xl0_highcontact_ifold_n6_f5_v2/attempt_20260831T200547Z"
+)
 
 
 def _load_validator():
@@ -85,12 +89,15 @@ def _write_yaml(path: Path, value: object) -> None:
 
 
 def _make_resolved_only_inverse_config(
-    tmp_path: Path, count: int = 6
+    tmp_path: Path, count: int = 6, pose_source: Path | None = None
 ) -> tuple[Path, Path, Path]:
     private_root = tmp_path / ".only_ifold_private.attempt_test.abcdef"
     spec = private_root / "pose/spec_bundle/design.yaml"
-    spec.parent.mkdir(parents=True)
-    spec.write_text("entities: []\n", encoding="utf-8")
+    if pose_source is None:
+        spec.parent.mkdir(parents=True)
+        spec.write_text("entities: []\n", encoding="utf-8")
+    else:
+        shutil.copytree(pose_source, private_root / "pose")
     runtime = private_root / "runtime"
     runtime.mkdir()
     for name in (
@@ -393,6 +400,61 @@ def test_candidate_backbone_gate_detects_coordinate_drift() -> None:
     changed["vhh_backbone"][(1, "CA")] = changed["vhh_backbone"][(1, "CA")] + 0.01
     with pytest.raises(ValueError, match="backbone coordinates changed"):
         module._candidate_structure(candidate, changed, require_backbone=True)
+
+
+@pytest.mark.skipif(not SPEC_PATH.is_file(), reason="sealed pose absent")
+def test_candidate_role_resolution_is_chain_id_independent_and_rejects_extra_chain() -> None:
+    module = _load_validator()
+    _, source = module._source_contract(SPEC_PATH)
+    candidate = module.secure_bound(SEALED_POSE / "boltzgen_check/output/design.cif")
+    structure = module.load_structure_from_bound(candidate)
+    for chain, synthetic_id in zip(structure[0], ("X", "Y"), strict=True):
+        chain.name = synthetic_id
+        for residue in chain:
+            residue.subchain = synthetic_id
+    target_chain, target_residues, vhh_chain, vhh_residues = module._resolve_candidate_roles(
+        structure, source["target_sequence"], "synthetic candidate"
+    )
+    assert {target_chain.name, vhh_chain.name} == {"X", "Y"}
+    assert len(target_residues) == 30
+    assert len(vhh_residues) == 121
+
+    extra = target_chain.clone()
+    extra.name = "Z"
+    for residue in extra:
+        residue.subchain = "Z"
+    structure[0].add_chain(extra)
+    with pytest.raises(ValueError, match="exactly two protein chains"):
+        module._resolve_candidate_roles(
+            structure, source["target_sequence"], "synthetic candidate"
+        )
+
+
+@pytest.mark.skipif(
+    not SPEC_PATH.is_file()
+    or not (FAILED_INVERSE_RUN / "intermediate_designs/design_5.cif").is_file(),
+    reason="failed native only-inverse regression artifacts absent",
+)
+def test_failed_run_native_ab_candidates_pass_inverse_gate_read_only(
+    tmp_path: Path,
+) -> None:
+    module = _load_validator()
+    root, spec, _ = _make_resolved_only_inverse_config(
+        tmp_path, count=6, pose_source=SEALED_POSE
+    )
+    candidate_dir = root / "intermediate_designs"
+    candidate_dir.mkdir()
+    source_dir = FAILED_INVERSE_RUN / "intermediate_designs"
+    for index in range(6):
+        for suffix in (".cif", ".npz"):
+            shutil.copy2(
+                source_dir / f"design_{index}{suffix}",
+                candidate_dir / f"design_{index}{suffix}",
+            )
+    payload = module.validate_inverse_stage(str(root), str(spec), 6)
+    assert payload["status"] == "INVERSE_FOLD_PASS"
+    assert payload["candidate_count"] == 6
+    assert payload["unique_cdr_sequence_count"] >= 4
 
 
 def test_sequence_count_contract_is_six_through_ten() -> None:

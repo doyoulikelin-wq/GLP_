@@ -39,6 +39,7 @@ DESIGN_INDICES = _BUILDER.DESIGN_INDICES
 _require_bound_bytes = _BUILDER._require_bound_bytes
 chain_sequence = _BUILDER.chain_sequence
 load_structure_from_bound = _BUILDER.load_structure_from_bound
+protein_residues = _BUILDER.protein_residues
 read_bound_file = _BUILDER.read_bound_file
 resolve_spec_chain = _BUILDER.resolve_spec_chain
 validate_chain_inventory = _BUILDER.validate_chain_inventory
@@ -347,12 +348,39 @@ def _load_npz(bound) -> dict[str, np.ndarray]:
         return {name: np.asarray(archive[name]) for name in archive.files}
 
 
+def _resolve_candidate_roles(
+    structure: gemmi.Structure, target_sequence: str, role: str
+) -> tuple[gemmi.Chain, list[gemmi.Residue], gemmi.Chain, list[gemmi.Residue]]:
+    """Resolve native/check candidate roles by protein semantics, never chain IDs."""
+    chains = list(structure[0])
+    if len(chains) != 2:
+        raise ValueError(f"{role} must contain exactly two protein chains")
+    observed: list[tuple[gemmi.Chain, list[gemmi.Residue], str]] = []
+    for chain in chains:
+        residues = protein_residues(chain)
+        observed.append((chain, residues, chain_sequence(residues)))
+    target_matches = [
+        row for row in observed if len(row[1]) == 30 and row[2] == target_sequence
+    ]
+    if len(target_matches) != 1:
+        summary = [(row[0].name, len(row[1]), row[2] == target_sequence) for row in observed]
+        raise ValueError(
+            f"{role} target must resolve uniquely by exact 30-residue sequence; "
+            f"observed={summary}"
+        )
+    target_chain, target_residues, _ = target_matches[0]
+    vhh_matches = [row for row in observed if row is not target_matches[0]]
+    if len(vhh_matches) != 1 or len(vhh_matches[0][1]) != 121:
+        raise ValueError(f"{role} non-target chain must be the unique 121-residue VHH")
+    vhh_chain, vhh_residues, _ = vhh_matches[0]
+    return target_chain, target_residues, vhh_chain, vhh_residues
+
+
 def _candidate_structure(bound, source: dict[str, Any], *, require_backbone: bool) -> tuple[str, str]:
     structure = load_structure_from_bound(bound)
-    if len(structure[0]) != 2:
-        raise ValueError(f"candidate must have exactly target+VHH chains: {bound.path}")
-    target_chain, target_residues, _ = resolve_spec_chain(structure, "E", "candidate target")
-    vhh_chain, vhh_residues, _ = resolve_spec_chain(structure, "A", "candidate VHH")
+    target_chain, target_residues, vhh_chain, vhh_residues = _resolve_candidate_roles(
+        structure, source["target_sequence"], f"candidate {bound.path}"
+    )
     validate_chain_inventory(target_residues, 30, "candidate target")
     validate_chain_inventory(vhh_residues, 121, "candidate VHH")
     target_sequence = chain_sequence(target_residues)
