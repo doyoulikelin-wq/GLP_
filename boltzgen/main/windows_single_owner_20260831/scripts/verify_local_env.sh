@@ -115,6 +115,12 @@ import json
 import platform
 import sys
 
+from wsl_blackwell_nvml_compat import activate, get_state
+
+activation_state = activate()
+assert activation_state["active"] is True
+assert activation_state["activation_scope"] == "CURRENT_PROCESS_ONLY"
+
 import torch
 from boltzgen.model.layers.triangular import TriangleMultiplicationOutgoing
 
@@ -140,6 +146,8 @@ assert y.shape == x.shape and torch.isfinite(y).all()
 y.float().square().mean().backward()
 assert x.grad is not None and torch.isfinite(x.grad).all()
 torch.cuda.synchronize()
+compatibility_state = get_state()
+assert compatibility_state["active"] is True
 
 payload = {
     "status": "LOCAL_GPU_NATIVE_KERNEL_PASS",
@@ -150,6 +158,10 @@ payload = {
     "compute_capability": list(torch.cuda.get_device_capability(0)),
     "bf16_supported": torch.cuda.is_bf16_supported(),
     "packages": versions,
+    "wsl_blackwell_nvml_compat": importlib.metadata.version(
+        "wsl-blackwell-nvml-compat"
+    ),
+    "compatibility_state": compatibility_state,
 }
 open(sys.argv[1], "w", encoding="utf-8").write(
     json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
