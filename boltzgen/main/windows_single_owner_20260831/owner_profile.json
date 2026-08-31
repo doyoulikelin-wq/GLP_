@@ -1,0 +1,16 @@
+{
+  "schema_version": "WINDOWS_SINGLE_OWNER_PROFILE_V1",
+  "authority": "WINDOWS_CODEX",
+  "requires_mac_review": false,
+  "requires_environment_contract_signature": false,
+  "direct_git_commit_allowed": true,
+  "direct_git_push_allowed": true,
+  "experience_event_state": "LOCAL_FINAL",
+  "training_allowed": false,
+  "model_weights_mutable": false,
+  "run_directory_policy": "NEW_DIRECTORY_PER_RUN",
+  "reuse_old_outputs_allowed": false,
+  "environment_snapshot": "AUTOMATIC_PER_ITERATION",
+  "lockbox_policy": "AVAILABLE_LOCALLY_EVALUATION_ONLY_UNLESS_RECLASSIFIED",
+  "scientific_claim_boundary": "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE"
+}

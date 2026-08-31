@@ -1,5 +1,10 @@
 # Windows Codex 固定任务顺序
 
+> **所有者模式更新（2026-08-31）**：如果工作区父目录存在状态为 `ACTIVE` 的
+> `WINDOWS_OWNER_MODE.json`，本文件从 T7 起只作为历史审计兼容方案；请改读
+> `boltzgen/main/windows_single_owner_20260831/WINDOWS_OWNER_TASKS_ZH.md`。所有者模式不再
+> 要求 Mac 签发环境合同、复核补丁或接受经验事件。
+
 本文件是 Windows 端的任务合同。任务必须按顺序执行；前一项没有形成闭合收据时，
 后一项不得启动。所有失败都要保留，重试必须新建 `attempt_NNN`，不能覆盖旧目录。
 

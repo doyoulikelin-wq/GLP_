@@ -1,5 +1,10 @@
 # 给 Windows Codex 的起始指令
 
+> **所有者模式更新（2026-08-31）**：若工作区父目录的 `WINDOWS_OWNER_MODE.json` 状态为
+> `ACTIVE`，本文件中的 Mac 权威、禁止 GitHub、补丁回传和 `PENDING_MAC_REVIEW` 要求均已
+> 被项目根目录 `AGENTS.md` 与
+> `boltzgen/main/windows_single_owner_20260831/WINDOWS_OWNER_DIRECTIVE_ZH.md` 取代。
+
 请先完整阅读本交接包的 `README_FIRST_ZH.md`、`TASKS_FOR_WINDOWS_CODEX.md`、
 `GLOSSARY_ZH.md`、`HANDOFF_STATUS.json` 和所有 SHA-256 清单，再采取行动。
 

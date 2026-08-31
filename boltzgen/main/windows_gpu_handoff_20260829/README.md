@@ -1,5 +1,9 @@
 # Windows Codex GPU 交接包
 
+> **后续模式**：本目录保留原始脱敏/审计交接方式。项目所有者若将 Windows 升格为独立
+> 主工作区，请使用 `../windows_single_owner_20260831/` 的迁移包；该模式从 T7 起取消 Mac
+> 签发、补丁回传和冻结环境合同门，不重复复制已有权重。
+
 本目录定义 `WINDOWS_CODEX_GPU_HANDOFF_20260829_V1` 的构建、校验和接手边界。
 成品用于把 Mac 上已经冻结的项目代码、公开开发数据、BoltzGen `v0.3.2`
 源码和 GPU 运行资产交给 Windows 5070 Ti 笔记本中的 WSL2 Codex。
