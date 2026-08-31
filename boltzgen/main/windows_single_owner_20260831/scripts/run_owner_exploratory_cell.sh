@@ -106,6 +106,23 @@ test -x "$boltzgen_launcher" && test ! -L "$boltzgen_launcher"
 
 spec_path="$(readlink -f -- "$spec_input")"
 test -f "$spec_path" && test ! -L "$spec_path"
+spec_root="$(dirname "$spec_path")"
+python3 -I -S - "$spec_root" "$spec_path" <<'PY'
+import sys
+from pathlib import Path
+
+root = Path(sys.argv[1])
+spec = Path(sys.argv[2])
+if root.is_symlink() or not root.is_dir() or spec.parent != root:
+    raise SystemExit("unsafe spec bundle root")
+expected = {"design.yaml", "scaffold.cif", "scaffold.yaml", "target.cif"}
+observed = {path.name for path in root.iterdir() if path.is_file() and not path.is_symlink()}
+if observed != expected or any((root / name).is_symlink() for name in expected):
+    raise SystemExit(
+        f"spec bundle closure mismatch: missing={sorted(expected - observed)} "
+        f"unexpected={sorted(observed - expected)}"
+    )
+PY
 runtime_root="$workspace_root/boltzgen/data/boltzgen_v0_3_2_runtime_and_mvp_inputs_20260819/runtime_cache"
 test -d "$runtime_root" && test ! -L "$runtime_root"
 design_checkpoint="$runtime_root/boltzgen1_${checkpoint_name}.ckpt"
@@ -186,6 +203,12 @@ test ! -s "$operator_logs/source_status.txt" || {
 cp "$acceptance_receipt" "$operator_logs/LOCAL_ENV_ACCEPTANCE.json"
 sha256sum "$owner_marker" "$acceptance_receipt" "$spec_path" "$validator" \
   > "$operator_logs/input_bindings.sha256"
+(
+  cd "$spec_root"
+  find . -maxdepth 1 -type f -print0 | sort -z | xargs -0 sha256sum \
+    > "$operator_logs/spec_bundle_before.SHA256SUMS"
+)
+spec_prechecked=1
 df -B1 "$workspace_root" > "$operator_logs/disk_before.txt"
 nvidia-smi --query-gpu=name,driver_version,memory.total,memory.free,utilization.gpu,temperature.gpu \
   --format=csv > "$operator_logs/gpu_before.csv"
@@ -259,6 +282,16 @@ finalize() {
     printf '%s\n' "$runtime_after_code" > "$operator_logs/runtime_assets_after.exit_code.txt"
     if [ "$runtime_after_code" -ne 0 ]; then
       exit_code=$runtime_after_code
+    fi
+  fi
+  if [ "${spec_prechecked:-0}" -eq 1 ]; then
+    ( cd "$spec_root" && sha256sum --strict -c \
+      "$operator_logs/spec_bundle_before.SHA256SUMS" ) \
+      > "$operator_logs/spec_bundle_after.txt" 2> "$operator_logs/spec_bundle_after.stderr.txt"
+    spec_after_code=$?
+    printf '%s\n' "$spec_after_code" > "$operator_logs/spec_bundle_after.exit_code.txt"
+    if [ "$spec_after_code" -ne 0 ]; then
+      exit_code=$spec_after_code
     fi
   fi
   date -u +'%Y-%m-%dT%H:%M:%SZ' > "$operator_logs/ended_at_utc.txt"
@@ -337,6 +370,7 @@ if monitor.is_file():
                 total_memory = total
 
 paths = [Path(spec_text), Path(design_text), Path(inverse_text), Path(folding_text), Path(mols_text)]
+spec_manifest = root / "operator_logs/spec_bundle_before.SHA256SUMS"
 payload = {
     "schema_version": "WINDOWS_OWNER_EXPLORATORY_INFERENCE_V1",
     "status": status,
@@ -370,6 +404,7 @@ payload = {
     "local_env_acceptance_path": acceptance_text,
     "local_env_acceptance_sha256": digest(Path(acceptance_text)),
     "input_sha256": {str(path): digest(path) for path in paths},
+    "spec_bundle_manifest_sha256": digest(spec_manifest) if spec_manifest.is_file() else None,
     "resolved_config_contract": resolved,
     "output_validation": validation,
     "scientific_claim_boundary": "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE",

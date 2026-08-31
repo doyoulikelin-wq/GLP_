@@ -35,6 +35,8 @@ def test_script_keeps_owner_mode_execution_safety_contract() -> None:
     assert text.index("flock -n 9") < text.index("gpu_compute_processes_before.csv")
     assert "runtime_assets_before.txt" in text
     assert "runtime_assets_after.txt" in text
+    assert "spec_bundle_before.SHA256SUMS" in text
+    assert "spec_bundle_after.txt" in text
     assert "validate_cell_output.py" in text
     assert "EXPECTED_FOLD_SAMPLES=5" in text
     assert "resolved_config_contract.json" in text
