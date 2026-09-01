@@ -4,6 +4,7 @@
 
 - [`boltzgen/`](boltzgen/)：以可变重链抗体结构域（VHH）骨架为约束的工程主线。
 - [`bindcraft/`](bindcraft/)：全新骨架小型结合蛋白的探索线。
+- [`knowledge/`](knowledge/)：统一“知识”模块，集中导航全部自包含 HTML、来源链和证据边界。
 - [`shared/`](shared/)：共同知识、会话总览、资源索引和仓库治理。
 
 ## 当前结论
@@ -17,6 +18,8 @@
 
 ## 先看这些文件
 
+- [知识模块入口](knowledge/README.md)
+- [知识 HTML 门户](knowledge/reports/html/glp1_knowledge_portal_20260901.html)
 - [项目会话总览](shared/sessions/project_session_overview_20260826.md)
 - [项目总览 HTML](shared/reports/html/glp1_project_session_resource_overview_20260826.html)
 - [全部资源索引](shared/resources/manifests/all_resources_20260826.csv)
@@ -31,6 +34,10 @@
 ## 目录语义
 
 ```text
+knowledge/
+  README.md             GitHub 可读的统一知识入口
+  reports/html/         全部项目 HTML 的轻量导航门户
+  resources/manifests/  HTML 目录、SHA-256 与来源链
 boltzgen/
   main/                 可复用的路线代码；按尝试和日期分包
   plans/                正式实施合同

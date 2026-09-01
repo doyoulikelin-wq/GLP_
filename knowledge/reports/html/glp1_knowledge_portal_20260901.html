@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GLP-1 活性型态选择性捕获蛋白项目的统一知识门户。">
+  <title>GLP-1 选择性捕获蛋白｜知识门户</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #15324b;
+      --muted: #5b6f80;
+      --paper: #f7f8f4;
+      --card: #ffffff;
+      --line: #d8e0df;
+      --teal: #0d766e;
+      --teal-soft: #dff2ee;
+      --navy: #123a63;
+      --amber: #9a5b0a;
+      --amber-soft: #fff1d8;
+      --shadow: 0 14px 38px rgba(19, 48, 68, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 85% 0%, rgba(13, 118, 110, 0.12), transparent 30rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 64px 0 34px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--teal);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-size: clamp(2.2rem, 5.7vw, 4.9rem);
+      line-height: 1.04;
+      letter-spacing: -0.045em;
+    }
+
+    .lede {
+      max-width: 780px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.23rem);
+    }
+
+    .boundary {
+      margin-top: 24px;
+      padding: 15px 18px;
+      border: 1px solid #efcf98;
+      border-radius: 14px;
+      background: var(--amber-soft);
+      color: #66400b;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 32px 0;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 8px 24px rgba(19, 48, 68, 0.04);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.7rem;
+      line-height: 1.1;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: 13px 0;
+      border-top: 1px solid rgba(216, 224, 223, 0.85);
+      border-bottom: 1px solid rgba(216, 224, 223, 0.85);
+      background: rgba(247, 248, 244, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .toolbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search {
+      min-width: 260px;
+      flex: 1 1 320px;
+      padding: 11px 14px;
+      border: 1px solid #b9c7c6;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .search:focus {
+      outline: 3px solid rgba(13, 118, 110, 0.18);
+      border-color: var(--teal);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    button {
+      padding: 9px 12px;
+      border: 1px solid #b9c7c6;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button[aria-pressed="true"] {
+      border-color: var(--teal);
+      background: var(--teal);
+      color: #fff;
+    }
+
+    main { padding: 34px 0 70px; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin: 0 0 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 3vw, 2.15rem);
+      letter-spacing: -0.025em;
+    }
+
+    #result-count {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      display: flex;
+      min-height: 250px;
+      flex-direction: column;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .card[hidden] { display: none; }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      margin-bottom: 13px;
+    }
+
+    .tag {
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: #095c56;
+      font-size: 0.76rem;
+      font-weight: 800;
+    }
+
+    .date {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      line-height: 1.28;
+    }
+
+    .card p {
+      margin: 12px 0 18px;
+      color: var(--muted);
+    }
+
+    .result {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid #e8edec;
+      color: var(--navy);
+      font-size: 0.9rem;
+      font-weight: 650;
+    }
+
+    .open-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 17px;
+      color: var(--teal);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .open-link:hover,
+    .open-link:focus { text-decoration: underline; }
+
+    .empty {
+      display: none;
+      padding: 40px;
+      border: 1px dashed #a9b9b7;
+      border-radius: 18px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty.visible { display: block; }
+
+    .provenance {
+      margin-top: 34px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: #eef4f2;
+    }
+
+    .provenance h2 { font-size: 1.35rem; }
+
+    .provenance p { margin-bottom: 0; color: var(--muted); }
+
+    footer {
+      padding: 25px 0 42px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    @media (max-width: 760px) {
+      header { padding-top: 42px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid { grid-template-columns: 1fr; }
+      .card { min-height: 0; }
+      .section-head { align-items: start; flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 这是轻量导航页；报告正文仍由各路线的规范 HTML 文件保存。 -->
+  <header class="wrap">
+    <p class="eyebrow">Knowledge module · 2026-09-01</p>
+    <h1>GLP-1 选择性捕获蛋白知识门户</h1>
+    <p class="lede">统一浏览共同知识、BoltzGen/VHH 数据与运行复盘，以及 BindCraft 输入审计。所有链接指向仓库中的规范报告，不复制正文。</p>
+    <div class="boundary"><strong>证据边界：</strong>页面中的结构和界面指标是计算代理；只有配对的 SPR/BLI、表达质量控制与捕获 LC-MS 实验才能证明结合和选择性。</div>
+    <div class="stats" aria-label="知识目录统计">
+      <div class="stat"><strong>10</strong><span>项目 HTML 报告</span></div>
+      <div class="stat"><strong>8.06 MiB</strong><span>规范报告总大小</span></div>
+      <div class="stat"><strong>3</strong><span>知识与路线分组</span></div>
+      <div class="stat"><strong>0</strong><span>遗漏的唯一外部报告</span></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="wrap toolbar-inner">
+      <label for="report-search" hidden>搜索报告</label>
+      <input class="search" id="report-search" type="search" aria-label="搜索报告" placeholder="搜索标题、内容、路线或结论…" autocomplete="off">
+      <div class="filters" aria-label="筛选报告">
+        <button type="button" data-filter="all" aria-pressed="true">全部</button>
+        <button type="button" data-filter="foundation" aria-pressed="false">基础知识</button>
+        <button type="button" data-filter="data" aria-pressed="false">数据与输入</button>
+        <button type="button" data-filter="run" aria-pressed="false">运行复盘</button>
+        <button type="button" data-filter="boltzgen" aria-pressed="false">BoltzGen</button>
+        <button type="button" data-filter="bindcraft" aria-pressed="false">BindCraft</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="section-head">
+      <h2>全部报告</h2>
+      <span id="result-count" aria-live="polite">显示 10 / 10</span>
+    </div>
+
+    <section class="grid" id="report-grid" aria-label="知识报告列表">
+      <article class="card" data-groups="foundation shared" data-search="实施架构 数据 模型 推理 训练 评价 输入 输出">
+        <div class="meta"><span class="tag">共同知识</span><span class="date">2026-08-18</span></div>
+        <h3>AI 创制实施架构</h3>
+        <p>从数据来源、输入输出、模型路线、训练边界到实验评价的总体实施蓝图。</p>
+        <div class="result">概念说明，不是运行或实验结果。</div>
+        <a class="open-link" href="../../../shared/reports/html/glp1_ai_implementation_blueprint_20260818.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="foundation shared" data-search="知识图谱 术语 GLP-1 BoltzGen BindCraft 实验闭环">
+        <div class="meta"><span class="tag">共同知识</span><span class="date">2026-08-19</span></div>
+        <h3>AI 设计知识图谱</h3>
+        <p>连接项目术语、两条设计路线、数据准备、结构评价与湿实验闭环。</p>
+        <div class="result">知识快照；当前状态以最新合同和回执为准。</div>
+        <a class="open-link" href="../../../shared/reports/html/glp1_ai_design_knowledge_graph_20260819.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="foundation shared" data-search="项目 会话 资源 总览 状态 索引">
+        <div class="meta"><span class="tag">项目索引</span><span class="date">2026-08-26</span></div>
+        <h3>会话、进展与资源总览</h3>
+        <p>汇总生成日之前的会话、路线结果、报告、数据与资源恢复入口。</p>
+        <div class="result">历史状态快照；不包含后续 AIV0/AIV1 与 Windows 交接进展。</div>
+        <a class="open-link" href="../../../shared/reports/html/glp1_project_session_resource_overview_20260826.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="data boltzgen" data-search="MVP 数据资产 格式 输入 输出 样例 清理 审计">
+        <div class="meta"><span class="tag">BoltzGen · 数据</span><span class="date">2026-08-18</span></div>
+        <h3>MVP 数据资产、样例与清理审计</h3>
+        <p>逐项解释 MVP 所需资产、来源、格式、字段含义、输入输出角色和清理范围。</p>
+        <div class="result">数据与质量控制报告，不提供结合标签。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/boltzgen_mvp_data_assets_20260818.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="foundation boltzgen" data-search="BoltzGen VHH GLP-1 数据流 算法 生成 逆折叠 复折叠 过滤">
+        <div class="meta"><span class="tag">BoltzGen · 原理</span><span class="date">2026-08-19</span></div>
+        <h3>VHH × GLP-1 数据流与算法原理</h3>
+        <p>解释骨架和靶标如何进入生成、逆折叠、复折叠、分析、过滤与排序步骤。</p>
+        <div class="result">结构分数不能解释为亲和力或选择性真值。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/boltzgen_vhh_glp1_algorithm_20260819.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="data boltzgen" data-search="SAbDab2 VHH SD-H 骨架 筛选 数据库 QC 旧12">
+        <div class="meta"><span class="tag">BoltzGen · 骨架</span><span class="date">2026-08-19</span></div>
+        <h3>SAbDab2 VHH 骨架筛选</h3>
+        <p>呈现 SD-H 到 VHH 骨架的筛选漏斗、结构质量控制、去重和旧 12 骨架登记。</p>
+        <div class="result">筛选通过只说明输入适格，不证明其结合 GLP-1。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/sabdab2_vhh_scaffold_screening_20260819.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="run boltzgen" data-search="Mac MPS 冒烟 真实运行 0/2 nanobody">
+        <div class="meta"><span class="tag">BoltzGen · 运行</span><span class="date">2026-08-19</span></div>
+        <h3>Mac MPS 冒烟运行</h3>
+        <p>记录实验性 Apple MPS 路线的输入、命令、日志、中间结果、输出与评价。</p>
+        <div class="result">工程链路跑通；严格过滤 0/2，不是官方 CUDA 等价复现。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/boltzgen_nanobody_mps_smoke_20260819.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="run boltzgen" data-search="旧12 第一轮 24 候选 0/24 GLP-1">
+        <div class="meta"><span class="tag">BoltzGen · 运行</span><span class="date">2026-08-19</span></div>
+        <h3>旧 12 骨架第一轮</h3>
+        <p>旧 12 条 VHH 骨架对单一 GLP-1 正靶几何的第一轮候选生成、过滤和失败复盘。</p>
+        <div class="result">24 条完成、0/24 严格通过；单状态不能评价选择性。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/boltzgen_old12_glp1_round1_20260819.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="run boltzgen" data-search="旧12 Mac 增强 diverse adherence 48 0/48 深度探针 0/4">
+        <div class="meta"><span class="tag">BoltzGen · 运行</span><span class="date">2026-08-20</span></div>
+        <h3>旧 12 骨架 Mac 增强轮</h3>
+        <p>比较 diverse 与 adherence 检查点，记录主流程、复折叠、过滤和独立深度探针。</p>
+        <div class="result">主候选 0/48；独立深度探针 0/4，均为计算过滤结果。</div>
+        <a class="open-link" href="../../../boltzgen/reports/html/boltzgen_old12_glp1_mac_enhanced_20260820.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="card" data-groups="data bindcraft" data-search="BindCraft de novo 输入 审计 Notebook PDB 选择性 未执行">
+        <div class="meta"><span class="tag">BindCraft · 审计</span><span class="date">2026-08-26</span></div>
+        <h3>GLP-1 选择性输入与原型审计</h3>
+        <p>检查 8 个 PDB 输入、正负靶状态、Notebook 可重复性和选择性评价合同。</p>
+        <div class="result">Notebook 未执行；输入仍需修订，没有候选或结果。</div>
+        <a class="open-link" href="../../../bindcraft/reports/html/bindcraft_glp1_selectivity_input_audit_20260826.html">打开报告 <span aria-hidden="true">→</span></a>
+      </article>
+    </section>
+
+    <div class="empty" id="empty-state">没有符合当前搜索和筛选条件的报告。</div>
+
+    <section class="provenance">
+      <h2>为什么不复制 HTML？</h2>
+      <p>现有 10 份报告已全部进入 Git。知识模块只保存导航、目录和来源映射，报告正文继续以各路线的规范路径为唯一事实源。这样既能集中浏览，也不会增加重复文件或破坏已有链接与 SHA-256 证据。</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">目录快照：2026-09-01 · 详细哈希和来源见 <code>knowledge/resources/manifests/</code></div>
+  </footer>
+
+  <script>
+    // 搜索和筛选只改变卡片可见性；页面不使用弹窗，也不会修改任何项目数据。
+    (() => {
+      const search = document.querySelector('#report-search');
+      const buttons = [...document.querySelectorAll('[data-filter]')];
+      const cards = [...document.querySelectorAll('.card')];
+      const count = document.querySelector('#result-count');
+      const empty = document.querySelector('#empty-state');
+      let activeFilter = 'all';
+
+      const normalize = (value) => value.toLocaleLowerCase('zh-CN').trim();
+
+      const update = () => {
+        const query = normalize(search.value);
+        let visible = 0;
+
+        cards.forEach((card) => {
+          const groups = card.dataset.groups.split(/\s+/);
+          const haystack = normalize(`${card.textContent} ${card.dataset.search}`);
+          const matchesFilter = activeFilter === 'all' || groups.includes(activeFilter);
+          const matchesSearch = !query || haystack.includes(query);
+          card.hidden = !(matchesFilter && matchesSearch);
+          if (!card.hidden) visible += 1;
+        });
+
+        count.textContent = `显示 ${visible} / ${cards.length}`;
+        empty.classList.toggle('visible', visible === 0);
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = button.dataset.filter;
+          buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+          update();
+        });
+      });
+
+      search.addEventListener('input', update);
+      update();
+    })();
+  </script>
+</body>
+</html>

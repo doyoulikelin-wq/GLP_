@@ -36,8 +36,8 @@ codex --sandbox danger-full-access --ask-for-approval never
 
 ```bash
 bash boltzgen/main/windows_single_owner_20260831/scripts/build_windows_owner_handoff.sh \
-  /Users/linlin/Desktop/creator \
-  /Users/linlin/Desktop/creator/transfer
+  /path/to/creator \
+  /path/to/creator/transfer
 ```
 
 成品目录名为 `WINDOWS_SINGLE_OWNER_HANDOFF_20260831_V1`。它应与 Windows 已有的

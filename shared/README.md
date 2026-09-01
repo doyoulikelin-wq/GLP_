@@ -2,6 +2,9 @@
 
 此目录保存两条路线共同使用的项目定义、会话索引、知识 HTML、资源索引和仓库治理。它不包含 BoltzGen 或 BindCraft 的模型运行实现。
 
+全部 Shared、BoltzGen 与 BindCraft HTML 的统一导航位于根级
+[`knowledge/`](../knowledge/) 模块；本目录仍保留共同知识页面的规范原文件，不创建重复副本。
+
 - [`sessions/`](sessions/)：跨路线会话总结。
 - [`reports/html/`](reports/html/)：共同知识与项目总览自包含 HTML。
 - [`reports/manifests/`](reports/manifests/)：项目总览 HTML 的规范 artifact。

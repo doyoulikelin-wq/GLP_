@@ -1,3 +1,5 @@
+"""验证 Windows 单机所有者经验事件的追加与去重行为。"""
+
 from __future__ import annotations
 
 import json
