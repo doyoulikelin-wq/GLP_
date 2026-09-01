@@ -1,0 +1,1068 @@
+{
+  "ok": true,
+  "widget_type": "artifact",
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "T12 理论设计：Windows/WSL2 运行、逻辑与审计交接手册",
+    "description": "面向研究生接收的单文件离线手册：Windows/WSL2 运行入口、T8-T12 逻辑、155 样本 CPU 审计、已实现的 split-template CPU adapter、停止规则与签核页。",
+    "generatedAt": "2026-09-02T00:16:27+08:00",
+    "cards": [
+      {
+        "id": "gate_summary",
+        "description": "CPU-AUDIT-01 与当前只读验收快照。",
+        "dataset": "summary",
+        "sourceId": "cpu_audit",
+        "metrics": [
+          {
+            "label": "历史折叠样本",
+            "field": "history_samples",
+            "format": "number"
+          },
+          {
+            "label": "Framework <=4 A",
+            "field": "framework_le4_rate",
+            "format": "percent"
+          },
+          {
+            "label": "Target-aligned <=8 A",
+            "field": "target_le8_rate",
+            "format": "percent"
+          },
+          {
+            "label": "T11 门结果",
+            "field": "t11_le4_rate",
+            "format": "percent"
+          },
+          {
+            "label": "门槛",
+            "field": "gate_threshold",
+            "format": "percent"
+          },
+          {
+            "label": "Owner tests",
+            "field": "tests_passed",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "arm_geometry_chart",
+        "title": "四臂的 VHH 内部 CDR 几何保持",
+        "subtitle": "Framework-aligned CDR RMSD <=4 A；该图不表示相对 target 位姿或结合。",
+        "type": "bar",
+        "dataset": "arm_metrics",
+        "sourceId": "cpu_audit",
+        "valueFormat": "percent",
+        "encodings": {
+          "x": {
+            "field": "arm",
+            "type": "nominal",
+            "label": "Arm"
+          },
+          "y": {
+            "field": "le4_rate",
+            "type": "quantitative",
+            "label": "<=4 A rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "samples",
+              "type": "quantitative",
+              "label": "Samples",
+              "format": "number"
+            },
+            {
+              "field": "le4_count",
+              "type": "quantitative",
+              "label": "<=4 A count",
+              "format": "number"
+            },
+            {
+              "field": "median_fw_cdr",
+              "type": "quantitative",
+              "label": "Median A",
+              "format": "number"
+            }
+          ]
+        }
+      },
+      {
+        "id": "t11_candidate_chart",
+        "title": "T11 六个候选的内部保持率",
+        "subtitle": "每个候选 5 个折叠样本；总计 7/30，未达 10/30 门槛。",
+        "type": "bar",
+        "dataset": "t11_candidates",
+        "sourceId": "cpu_audit",
+        "valueFormat": "percent",
+        "encodings": {
+          "x": {
+            "field": "candidate",
+            "type": "nominal",
+            "label": "Candidate"
+          },
+          "y": {
+            "field": "le4_rate",
+            "type": "quantitative",
+            "label": "<=4 A rate",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "le4_count",
+              "type": "quantitative",
+              "label": "<=4 A count",
+              "format": "number"
+            },
+            {
+              "field": "folds",
+              "type": "quantitative",
+              "label": "Folds",
+              "format": "number"
+            }
+          ]
+        }
+      },
+      {
+        "id": "runtime_chart",
+        "title": "T11 已记录的 214 秒运行时间分解",
+        "subtitle": "仅代表封存 T11 模型运行，不代表此前完整任务会话墙钟时间。",
+        "type": "bar",
+        "dataset": "runtime_stages",
+        "sourceId": "t11_decision",
+        "valueFormat": "percent",
+        "encodings": {
+          "x": {
+            "field": "stage",
+            "type": "nominal",
+            "label": "Stage"
+          },
+          "y": {
+            "field": "share",
+            "type": "quantitative",
+            "label": "Share",
+            "format": "percent"
+          },
+          "tooltip": [
+            {
+              "field": "seconds",
+              "type": "quantitative",
+              "label": "Seconds",
+              "format": "number"
+            }
+          ]
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "arm_metrics_table",
+        "title": "155 样本审计汇总",
+        "subtitle": "Framework-aligned 与 target-aligned 指标分开报告。",
+        "dataset": "arm_metrics",
+        "sourceId": "cpu_audit",
+        "columns": [
+          {
+            "field": "arm",
+            "label": "Arm",
+            "type": "text"
+          },
+          {
+            "field": "samples",
+            "label": "样本",
+            "format": "number"
+          },
+          {
+            "field": "le4_count",
+            "label": "<=4 A",
+            "format": "number"
+          },
+          {
+            "field": "le4_rate",
+            "label": "<=4 A率",
+            "format": "percent"
+          },
+          {
+            "field": "le8_count",
+            "label": "<=8 A",
+            "format": "number"
+          },
+          {
+            "field": "median_fw_cdr",
+            "label": "FW对齐中位A",
+            "format": "number"
+          },
+          {
+            "field": "target_aligned_min",
+            "label": "Target对齐最小A",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "t11_candidates_table",
+        "title": "T11 候选级门数据",
+        "subtitle": "每个候选 5 folds；不得只挑 design_5 绕过总门。",
+        "dataset": "t11_candidates",
+        "sourceId": "cpu_audit",
+        "columns": [
+          {
+            "field": "candidate",
+            "label": "Candidate",
+            "type": "text"
+          },
+          {
+            "field": "folds",
+            "label": "Folds",
+            "format": "number"
+          },
+          {
+            "field": "le4_count",
+            "label": "<=4 A",
+            "format": "number"
+          },
+          {
+            "field": "le4_rate",
+            "label": "占比",
+            "format": "percent"
+          },
+          {
+            "field": "gate_note",
+            "label": "解释",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "script_catalog_table",
+        "title": "运行与验证脚本目录",
+        "subtitle": "“计划”项不存在，不能调用；其余均为 repo-owned 脚本。",
+        "dataset": "script_catalog",
+        "sourceId": "owner_scripts",
+        "columns": [
+          {
+            "field": "stage",
+            "label": "阶段",
+            "type": "text"
+          },
+          {
+            "field": "script",
+            "label": "脚本",
+            "type": "text"
+          },
+          {
+            "field": "role",
+            "label": "职责",
+            "type": "text"
+          },
+          {
+            "field": "status",
+            "label": "状态",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "audit_table",
+        "title": "实验员/审计员验收矩阵",
+        "subtitle": "失败动作是强制停止规则。",
+        "dataset": "audit_checks",
+        "sourceId": "audit_protocol",
+        "columns": [
+          {
+            "field": "id",
+            "label": "编号",
+            "type": "text"
+          },
+          {
+            "field": "phase",
+            "label": "阶段",
+            "type": "text"
+          },
+          {
+            "field": "check",
+            "label": "检查",
+            "type": "text"
+          },
+          {
+            "field": "pass",
+            "label": "通过条件",
+            "type": "text"
+          },
+          {
+            "field": "failure",
+            "label": "失败动作",
+            "type": "text"
+          },
+          {
+            "field": "current",
+            "label": "当前",
+            "type": "text"
+          }
+        ]
+      },
+      {
+        "id": "runtime_table",
+        "title": "T11 运行时间明细",
+        "subtitle": "总计 214 秒；未归因 17 秒为各已列阶段之外的运行开销。",
+        "dataset": "runtime_stages",
+        "sourceId": "t11_decision",
+        "columns": [
+          {
+            "field": "stage",
+            "label": "阶段",
+            "type": "text"
+          },
+          {
+            "field": "seconds",
+            "label": "秒",
+            "format": "number"
+          },
+          {
+            "field": "share",
+            "label": "占比",
+            "format": "percent"
+          }
+        ]
+      },
+      {
+        "id": "glossary_table",
+        "title": "术语表",
+        "subtitle": "先统一术语，再讨论结果。",
+        "dataset": "glossary",
+        "sourceId": "handoff_docs",
+        "columns": [
+          {
+            "field": "term",
+            "label": "术语",
+            "type": "text"
+          },
+          {
+            "field": "meaning",
+            "label": "本项目中的具体含义",
+            "type": "text"
+          },
+          {
+            "field": "not_meaning",
+            "label": "不代表什么",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "repo_state",
+        "label": "Windows owner Git 状态",
+        "path": "GLP_/.git + WINDOWS_OWNER_MODE.json"
+      },
+      {
+        "id": "owner_scripts",
+        "label": "Windows owner scripts/tests",
+        "path": "GLP_/boltzgen/main/windows_single_owner_20260831/"
+      },
+      {
+        "id": "local_env",
+        "label": "本地环境验收收据",
+        "path": "gpu_work/owner_mode/local_env_acceptance/20260831T131712Z/"
+      },
+      {
+        "id": "t10_decision",
+        "label": "T10 pose rescue 决策事件",
+        "path": "gpu_work/owner_mode/t10_pose_rescue/iterations/.../decision_event.json"
+      },
+      {
+        "id": "t11_decision",
+        "label": "T11 fixed-ifold 决策事件",
+        "path": "gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/iterations/.../decision_event.json"
+      },
+      {
+        "id": "cpu_audit",
+        "label": "CPU-AUDIT-01（本报告嵌入）",
+        "path": "embedded/CPU-AUDIT-01"
+      },
+      {
+        "id": "audit_protocol",
+        "label": "本轮预注册停止规则",
+        "path": "embedded/T12-audit-protocol"
+      },
+      {
+        "id": "handoff_docs",
+        "label": "Windows single-owner handoff 文档",
+        "path": "WINDOWS_SINGLE_OWNER_HANDOFF_20260831_V1/docs/"
+      },
+      {
+        "id": "published_assets",
+        "label": "T12 GitHub 小型审计资产",
+        "path": "reports/t12_theoretical_design_20260902/"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# T12 理论设计：Windows/WSL2 运行、逻辑与审计交接手册\n\n> **当前终态（必须原样理解）**：C2=FAIL（7/30 < 10/30）；G0=BLOCKED；T12_GPU=NOT_STARTED；BINDCRAFT=NOT_STARTED。\n\n本文件是给研究生执行接收与独立复核的单文件离线手册。它汇总现有运行脚本、T8→T12 决策逻辑、155 个历史折叠样本的 CPU 审计口径，以及实验员/审计员的逐项验收方法。\n\n**它不是实验成功证明。** 所有结果均为开发阶段的 AI 计算输出，不构成结合、亲和力、选择性或任何湿实验结论。T12 原 90 分钟硬截止为 **2026-09-01 17:58:46（北京时间）**；生成本报告时已超过截止，因此没有继续新计算。"
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "gate_summary"
+        ]
+      },
+      {
+        "id": "findings",
+        "type": "markdown",
+        "body": "## 一页结论\n\n- Windows 已完全接管：owner marker 为 ACTIVE，Mac 复核不再要求；训练被禁止，模型权重只读。\n- 仓库位于 **/home/lin/creator/GLP_**，分支 **codex/windows-primary-20260831-131352**，HEAD **d989db24066bda4652d48f4e14dd80e6409890aa**，生成报告前工作树洁净且与上游 0/0 分叉。\n- 本地环境验收收据 **20260831T131712Z** 状态为 LOCAL_ENV_READY；收据目录的 SHA256 清单已重放，全部 OK。\n- owner 测试套件在新增审计器和 adapter 后以无缓存方式运行：**70 passed，1 个 pynvml 弃用警告，28.84 秒**。该警告不改变测试退出码。\n- repo-owned split-template adapter 已实现并通过 CPU 专项测试；真实 sealed design_0 smoke 为模板形状 (2,151)、slot token 数 [30,91]、CDR 可见数 0。它没有启动模型推理。\n- 155 个历史折叠样本中，framework-aligned CDR RMSD ≤4 Å 为 **111/155**；但这只说明 VHH 内部几何，不说明相对靶标位姿。\n- 真正的相对靶标问题仍未解决：四臂 target-aligned CDR 最小值均大于 22 Å，历史 **0/155 ≤8 Å**。\n- T12 预注册 CPU 门只看 T11 fixed-ifold 臂的 framework-aligned CDR RMSD ≤4 Å；结果 **7/30**，门槛 **≥10/30**，所以必须停止，不能用 30/30≤8 Å、总计 111/155≤4 Å、追加 seed 或“接近阈值”绕过。\n- GPU 快照显示 0 个 compute process；**没有创建 T12 GPU attempt，也没有启动 BindCraft**。\n\n### 接收人应先做什么\n\n先阅读“逻辑与停止规则”，再执行 P0、P2、C0–C2。CPU-AUDIT-01 预期以 **退出码 42** 结束；42 表示科学门失败，不表示脚本崩溃。看到 42 后直接进行 CPU-stop 封存，不得继续 GPU。"
+      },
+      {
+        "id": "logic",
+        "type": "markdown",
+        "body": "## 逻辑可视化与停止规则\n\n~~~text\nWindows PowerShell\n    |\n    +-- wsl.exe -d Ubuntu-24.04 --> /home/lin/creator/GLP_\n                                      |\n                                      v\n                         P0: owner marker + clean HEAD\n                                      |\n                                      v\n                         P1/P2: 历史输入闭合 + 封存重放\n                                      |\n                                      v\n                         C0/C1: 155 样本身份、掩码、Kabsch 复现\n                                      |\n                                      v\n              C2: T11 framework-aligned CDR RMSD <=4 A 是否 >=10/30?\n                         /                            \\\n                       PASS                           FAIL\n                       /                               \\\n       仅可提交负责人另行授权                  本次实际 7/30\n       考虑后续模型级 pilot                      |\n                       |                                v\n             单测 + 不泄漏测试                  G0=BLOCKED，CPU-stop 封存\n                       |                                |\n             良性 native control                       +--> 不启动 GPU\n                       |                                +--> 不转 BindCraft\n             再决定是否做 GLP pilot                    +--> 不追加 seed\n                                                        +--> 允许代码/CPU单测固化\n~~~\n\n### 三类几何量必须分开\n\n1. **Framework-aligned CDR RMSD**：用 VHH framework 骨架做 Kabsch 对齐，再测 CDR 骨架；回答“CDR 是否相对自身框架保持”。\n2. **Target-aligned CDR RMSD**：用 target 骨架对齐，再测 CDR；回答“VHH/CDR 是否保持相对 target 位姿”。\n3. **iPTM/设计置信度**：模型置信度指标；不能替代相对位姿几何，更不能替代实验结合证据。\n\n本次机制诊断说明：前三臂的 CDR 相对自身 framework 保持较好，但整个 VHH 相对 target 漂移；T11 fixed-ifold 臂又出现更弱的 CDR 内部保持。"
+      },
+      {
+        "id": "arm_chart",
+        "type": "chart",
+        "chartId": "arm_geometry_chart"
+      },
+      {
+        "id": "arm_table",
+        "type": "table",
+        "tableId": "arm_metrics_table"
+      },
+      {
+        "id": "t11_chart",
+        "type": "chart",
+        "chartId": "t11_candidate_chart"
+      },
+      {
+        "id": "t11_table",
+        "type": "table",
+        "tableId": "t11_candidates_table"
+      },
+      {
+        "id": "windows_start",
+        "type": "markdown",
+        "body": "## Windows 上如何进入项目\n\n### PowerShell：只读确认\n\n~~~powershell\nwsl.exe -d Ubuntu-24.04 -- bash -lc 'cd \"$HOME/creator/GLP_\" && pwd -P && git branch --show-current && git rev-parse HEAD && git status --short'\n~~~\n\n通过条件：路径为 /home/lin/creator/GLP_；分支为 codex/windows-primary-20260831-131352；HEAD 为 d989db24066bda4652d48f4e14dd80e6409890aa；最后一项无输出。\n\n### WSL2 Bash：建立只读路径变量\n\n~~~bash\nPROJECT_HOME=\"$HOME/creator\"\nPROJECT_ROOT=\"$PROJECT_HOME/GLP_\"\nOWNER_SCRIPTS=\"$PROJECT_ROOT/boltzgen/main/windows_single_owner_20260831/scripts\"\nOWNER_RUN_ROOT=\"$PROJECT_HOME/gpu_work/owner_mode\"\nT12_PY=\"$PROJECT_HOME/gpu_work/environments/cu128_blackwell_candidate/attempt_004/env/bin/python\"\ncd \"$PROJECT_ROOT\"\n~~~\n\n不要把 Windows 下载目录当作运行仓库；下载目录只保存交接材料。真实 Git 仓库和运行数据均在 WSL2 的 /home/lin/creator 下。"
+      },
+      {
+        "id": "script_catalog",
+        "type": "table",
+        "tableId": "script_catalog_table"
+      },
+      {
+        "id": "command_templates",
+        "type": "markdown",
+        "body": "## 现有脚本的安全调用模板\n\n以下模板用于理解接口或在负责人明确授权的新任务中调用。尖括号内容必须替换成已封存的实际路径/ID；**本报告不授权重新运行 T8–T11，也不授权启动 T12**。\n\n### 1. 环境验收：只在环境或 runtime 变化后重跑\n\n~~~bash\nbash \"$OWNER_SCRIPTS/verify_local_env.sh\" \"$PROJECT_HOME\" \"$T12_PY\"\n~~~\n\n该脚本会新建 local_env_acceptance 时间戳目录、做 GPU kernel smoke、pip check 和 runtime SHA256。日常审计只重放已有收据，不必反复重哈希约 4.2 GB runtime：\n\n~~~bash\ncd \"$OWNER_RUN_ROOT/local_env_acceptance/20260831T131712Z\"\nsha256sum --strict -c SHA256SUMS\n~~~\n\n### 2. T8 探索性生成/反折叠\n\n~~~bash\nbash \"$OWNER_SCRIPTS/run_owner_exploratory_cell.sh\" \\\n  \"$PROJECT_HOME\" <CELL_ID> <SEALED_SPEC/design.yaml> <adherence-or-diverse> <NUM_DESIGNS_1_TO_10>\n~~~\n\n### 3. T9 本地 anchor 集\n\n~~~bash\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/build_local_anchor_set.py\" \\\n  --source-run <SEALED_T8_ATTEMPT> --output <NEW_OUTPUT_DIR> --anchor-count 3\n~~~\n\n### 4. T10 多状态输入、预检、运行、汇总\n\n~~~bash\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/build_owner_multistate_inputs.py\" --help\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/preflight_owner_multistate.py\" --help\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/run_owner_multistate.py\" --help\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/summarize_owner_multistate.py\" --help\n~~~\n\n### 5. T10 pose-anchored spec 构建\n\n~~~bash\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/build_owner_pose_anchored_spec.py\" \\\n  --spec-bundle <SEALED_SPEC_BUNDLE> --anchor-set <SEALED_ANCHOR_SET> \\\n  --candidate-id <CANDIDATE_ID> --output <NEW_OUTPUT_DIR> \\\n  --boltzgen-launcher <SEALED_LAUNCHER> --moldir <SEALED_MOLDIR> \\\n  --pose-search-mode <none-or-external-or-internal>\n~~~\n\n### 6. T11 固定位姿 inverse-fold\n\n~~~bash\nbash \"$OWNER_SCRIPTS/run_owner_only_inverse_fold.sh\" \\\n  \"$PROJECT_HOME\" <NEW_RUN_ID> <SEALED_SPEC/design.yaml> <NUM_SEQUENCES_6_TO_10>\n\"$T12_PY\" -I \"$OWNER_SCRIPTS/validate_owner_only_inverse_fold.py\" --help\n~~~\n\n### 7. 测试基线（只读、无 pytest 缓存）\n\n~~~bash\ncd \"$PROJECT_ROOT\"\nPYTHONDONTWRITEBYTECODE=1 \"$T12_PY\" -m pytest -q -p no:cacheprovider \\\n  boltzgen/main/windows_single_owner_20260831/tests\n~~~\n\n当前预期：70 passed；pynvml 弃用警告可以记录，但非零退出码、失败或 error 必须阻断后续操作。"
+      },
+      {
+        "id": "t12_design",
+        "type": "markdown",
+        "body": "## T12 split-template 工程设计（CPU 已实现，GPU 未运行）\n\n### 目标\n\n将现有单模板耦合改为两个模板槽，避免把 target 与 VHH framework 的相对位姿作为模板硬编码给模型，同时仍给出各自内部几何：\n\n- slot 0：仅 target；\n- slot 1：仅 VHH framework；\n- CDR：两个 slot 都不可见。\n\n掩码定义：target = NOT chain_design_mask；CDR = design_mask；framework = chain_design_mask AND NOT design_mask。T11 封存输入的预期 token 计数为 target 30、CDR 30、framework 91，总计 151。\n\n### 最小代码接入点\n\n- 已新增 scripts/owner_split_template_data.py；\n- 通过 Dataset proxy 在基础 dataset 产出后重算 template features，不修改 BoltzGen 安装包和权重；\n- 对 target 与 framework 分别调用上游 template_from_tokens(..., tdim=1)，再沿模板维拼接；\n- Hydra data._target_ 指向 repo-owned SplitTemplateFromGeneratedDataModule；\n- 运行时只能以封存代码路径加入 PYTHONPATH，并用 --no_subprocess --steps folding；不能使用 python -I，因为它会忽略 PYTHONPATH。\n\n### 必须先通过的单元测试\n\n1. 模板张量 T=2，形状完整，所有浮点数有限；\n2. token 掩码严格 30/30/91，互斥且并集为 151；\n3. slot0 可见 30 个 target，slot1 可见 91 个 framework，CDR 双槽全零；\n4. target×framework 的**姿态相关几何通道**为零；\n5. 对 VHH 单独施加刚体变换后，split 方案的 trunk pair preprojection features 保持不变；\n6. coupled 对照必须发生变化，以证明测试有判别力；\n7. 不能声称“完整 cross-pair feature 全零”，因为 trunk 后续仍拼接 residue type；正确声明是几何通道为零、完整 preprojection features 对刚体变换不变。\n\n### 当前阻断\n\nowner_split_template_data.py 与 tests/test_owner_split_template_data.py 已实现；专项 CPU 测试为 5 passed，真实 sealed design_0 CPU smoke 也满足 30/30/91 与 CDR 双槽不可见合同。良性的 hen egg-white lysozyme VHH native control 尚未下载或运行；前置 C2 仍失败。因此这些代码只形成可审阅的工程资产，不能据此启动或猜测一个 GPU 命令。"
+      },
+      {
+        "id": "audit_intro",
+        "type": "markdown",
+        "body": "## 实验员与审计员的验收方式\n\n### 角色分离\n\n- **执行者**：一次只执行批准的命令；保存完整 stdout、stderr、退出码和 UTC 时间；不挑选“最好看的”样本。\n- **审计员**：从封存 NPZ 独立重算；身份必须绑定为（arm, design_i, zero-based sample_index）；不把 aggregate CSV 的标量贴到另一个 sample 的 CIF。\n- **负责人**：只有负责人能修改预注册门或授权新的 GPU 窗口；任何变更必须成为新的、事前记录的方案，不能追溯性改写本轮门槛。\n\n### 当前验收表的解释\n\nP=接管/输入；C=CPU 机制审计；G=GPU 前置；S=封存。每项都包含通过条件和失败动作。失败动作不是建议，而是停止规则。"
+      },
+      {
+        "id": "audit_matrix",
+        "type": "table",
+        "tableId": "audit_table"
+      },
+      {
+        "id": "audit_commands",
+        "type": "markdown",
+        "body": "## 审计命令附录\n\n### P0：仓库身份与 owner marker\n\n~~~bash\ncd /home/lin/creator/GLP_\npwd -P\ngit branch --show-current\ngit rev-parse HEAD\ngit status --short\npython3 -I -S -m json.tool /home/lin/creator/WINDOWS_OWNER_MODE.json\n~~~\n\n### P2：重放已有环境收据（快速，不重哈希整个 runtime）\n\n~~~bash\ncd /home/lin/creator/gpu_work/owner_mode/local_env_acceptance/20260831T131712Z\nsha256sum --strict -c SHA256SUMS\n~~~\n\n### 路径变量\n\n~~~bash\nT12_T10_EVENT=/home/lin/creator/gpu_work/owner_mode/t10_pose_rescue/iterations/iteration_20260831T172231Z_20260831T190122Z/decision_event.json\nT12_T11_EVENT=/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/iterations/iteration_20260831T201438Z_20260831T201813Z/decision_event.json\nT12_T11_RUN=/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/7xl0_highcontact_ifold_n6_f5_v3/attempt_20260831T201438Z\nT12_INTERNAL=/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_pose_adherence_b1_n10_f5/attempt_20260831T182438Z/intermediate_designs_inverse_folded\nT12_HIGHCONTACT=/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_adherence_b1_n10_f5/attempt_20260831T183938Z/intermediate_designs_inverse_folded\nT12_DIVERSE=/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_diverse_b1_n5_f5/attempt_20260831T185650Z/intermediate_designs_inverse_folded\nT12_FIXED=/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/7xl0_highcontact_ifold_n6_f5_v3/attempt_20260831T201438Z/intermediate_designs\nT12_PY=/home/lin/creator/gpu_work/environments/cu128_blackwell_candidate/attempt_004/env/bin/python\n~~~\n\n### CPU-AUDIT-01：完整读取 155 个样本\n\n预期以退出码 42 结束。42=CPU_GATE_FAIL，不是程序故障。\n\n~~~bash\n\"$T12_PY\" -I - <<'PY'\nfrom pathlib import Path\nimport numpy as np\narms = {\n    \"internal\": (Path(\"/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_pose_adherence_b1_n10_f5/attempt_20260831T182438Z/intermediate_designs_inverse_folded\"), 10),\n    \"high_contact\": (Path(\"/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_adherence_b1_n10_f5/attempt_20260831T183938Z/intermediate_designs_inverse_folded\"), 10),\n    \"diverse\": (Path(\"/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_diverse_b1_n5_f5/attempt_20260831T185650Z/intermediate_designs_inverse_folded\"), 5),\n    \"fixed_ifold\": (Path(\"/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/7xl0_highcontact_ifold_n6_f5_v3/attempt_20260831T201438Z/intermediate_designs\"), 6),\n}\nexpected_cdr = np.r_[55:63, 80:87, 125:140]\nexpected_target_min = {\"internal\":23.264, \"high_contact\":22.052, \"diverse\":25.327, \"fixed_ifold\":29.899}\n\ndef align_reference(reference, prediction, mask):\n    p = reference[mask].astype(np.float64)\n    q = prediction[mask].astype(np.float64)\n    pc, qc = p.mean(0), q.mean(0)\n    u, _, vt = np.linalg.svd((p-pc).T @ (q-qc))\n    rotation = u @ vt\n    if np.linalg.det(rotation) < 0:\n        u[:, -1] *= -1\n        rotation = u @ vt\n    return (reference.astype(np.float64)-pc) @ rotation + qc\n\ndef rmsd_after(reference, prediction, align_mask, score_mask):\n    aligned = align_reference(reference, prediction, align_mask)\n    delta = prediction[score_mask] - aligned[score_mask]\n    return float(np.sqrt(np.mean(np.sum(delta*delta, axis=1))))\n\nresults = {}\nfor label, (root, expected_files) in arms.items():\n    files = sorted((root/\"fold_out_npz\").glob(\"design_*.npz\"), key=lambda p:int(p.stem.split(\"_\")[-1]))\n    assert len(files) == expected_files, (label, \"fold_npz_count\", len(files), expected_files)\n    fw_cdr, target_cdr = [], []\n    for fold_path in files:\n        with np.load(root/fold_path.name, allow_pickle=False) as design, np.load(fold_path, allow_pickle=False) as fold:\n            coords = np.asarray(fold[\"coords\"])\n            reference = np.asarray(fold[\"input_coords\"])[0,0]\n            assert coords.ndim == 3 and coords.shape[0] == 5 and coords.shape[2] == 3\n            for metric in (\"design_to_target_iptm\", \"design_ptm\", \"iptm\", \"ptm\"):\n                assert np.asarray(fold[metric]).shape == (5,), (label, fold_path.name, metric)\n            assert np.isfinite(coords).all() and np.isfinite(reference).all()\n            design_mask = np.asarray(design[\"design_mask\"]) > 0\n            assert np.array_equal(np.flatnonzero(design_mask), expected_cdr)\n            atom_to_token = np.asarray(fold[\"atom_to_token\"])[0]\n            assert np.all(atom_to_token.sum(axis=1) == 1)\n            token = atom_to_token.argmax(axis=1)\n            resolved = np.asarray(fold[\"atom_resolved_mask\"])[0].astype(bool)\n            backbone = np.asarray(fold[\"backbone_mask\"])[0] > 0\n            target = token < 30\n            cdr = design_mask[token]\n            framework = (token >= 30) & ~cdr\n            assert (resolved & backbone & target).sum() == 120\n            assert (resolved & backbone & framework).sum() == 364\n            assert (resolved & backbone & cdr).sum() == 120\n            for sample_index in range(5):\n                prediction = coords[sample_index]\n                fw_cdr.append(rmsd_after(reference, prediction, resolved&backbone&framework, resolved&backbone&cdr))\n                target_cdr.append(rmsd_after(reference, prediction, resolved&backbone&target, resolved&backbone&cdr))\n    values = np.asarray(fw_cdr)\n    target_values = np.asarray(target_cdr)\n    results[label] = values\n    assert abs(target_values.min()-expected_target_min[label]) <= 0.0015, (label, target_values.min())\n    print(f\"{label}: n={len(values)} le4={(values<=4).sum()} le8={(values<=8).sum()} median={np.median(values):.3f} target_aligned_min={target_values.min():.3f}\")\nassert sum(map(len, results.values())) == 155\nfixed_pass = int((results[\"fixed_ifold\"] <= 4).sum())\nprint(f\"T12_CPU_GATE: {'PASS' if fixed_pass >= 10 else 'FAIL'} ({fixed_pass}/30; required >=10/30)\")\nif fixed_pass < 10:\n    raise SystemExit(42)\nPY\n~~~\n\n预期标准输出：\n\n~~~text\ninternal: n=50 le4=50 le8=50 median=1.466 target_aligned_min=23.264\nhigh_contact: n=50 le4=34 le8=50 median=2.898 target_aligned_min=22.052\ndiverse: n=25 le4=20 le8=25 median=1.295 target_aligned_min=25.327\nfixed_ifold: n=30 le4=7 le8=30 median=5.980 target_aligned_min=29.899\nT12_CPU_GATE: FAIL (7/30; required >=10/30)\n~~~\n\n### 运行后只读终态\n\n~~~bash\ncd /home/lin/creator/GLP_\ngit status --short\nnvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader,nounits\n~~~\n\n两项均应无输出。若发现新 T12 GPU attempt 或计算进程，立即隔离并标记越门运行，结果不得进入结论。"
+      },
+      {
+        "id": "github_assets",
+        "type": "markdown",
+        "body": "## GitHub 固化资产\n\n本报告对应的公开、小型、可复核资产位于 reports/t12_theoretical_design_20260902：\n\n- T12_FRAMEWORK_ALIGNED_CDR_AUDIT_20260902.json：四臂与候选级聚合、门状态和输入路径；\n- T12_FRAMEWORK_ALIGNED_CDR_SAMPLES_20260902.tsv：155 个 (arm, design_i, sample_index) 样本行；\n- T12_HANDOFF_ARTIFACT_20260902.json：本 HTML 的规范化来源；\n- T12_WINDOWS_RUN_LOGIC_AUDIT_HANDOFF_20260901.html：单文件离线交接页。\n\n生成这些结果的 repo-owned 代码是 scripts/audit_t12_framework_aligned_cdr.py、scripts/owner_split_template_data.py 及对应 tests。机器可读终态仍为 FAIL / exit_code 42 / DO_NOT_START_T12_GPU。"
+      },
+      {
+        "id": "timing_intro",
+        "type": "markdown",
+        "body": "## 时间与“为什么慢”\n\nT11 封存收据记录的真实模型运行是 **214 秒**；其中 folding 129 秒（60.3%），analysis 35 秒（16.4%）。这说明单次模型运行的主要计算成本是折叠，不是 SHA256。\n\n环境验收脚本在首次接受环境时会检查 runtime 哈希；日常审计只重放小型收据清单。本次收据 SHA256 重放约 0.5 秒，60 个 owner 单测约 23.43 秒。此前 2h02m36s 与 7h06m34s 是整个任务会话墙钟时间，包含代码审查、失败修复、样本语义核对、审计和交接，不能与 214 秒运行收据混为同一口径；缺少逐步骤时间戳的部分不应伪造百分比。"
+      },
+      {
+        "id": "runtime_chart_block",
+        "type": "chart",
+        "chartId": "runtime_chart"
+      },
+      {
+        "id": "runtime_table_block",
+        "type": "table",
+        "tableId": "runtime_table"
+      },
+      {
+        "id": "glossary",
+        "type": "table",
+        "tableId": "glossary_table"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## 限制、不确定性与下一步\n\n### 已知限制\n\n- framework-aligned 指标不能证明 target 相对位姿，更不能证明实验结合。\n- target-aligned CDR 在四臂均远超 8 Å；当前协议的关键科学目标失败。\n- T11 的 aggregate CSV 与 writer-selected CIF 在 design_1、design_2、design_5 上 sample index 不同，必须按 NPZ 的 zero-based sample_index 绑定，不能混用标量。\n- CPU-AUDIT-01 已固化为 repo-owned 审计脚本，并发布机器可读 JSON 与 155 行样本 TSV；原始 NPZ 仍只保留在本机工作盘。\n- T12 split-template adapter 与对应 CPU 测试已经存在；良性 native positive control 和任何 T12 GPU 结果仍不存在。\n- 统计来自模型随机样本；没有新 seed、外部复现或实验验证。\n\n### 建议的负责人决策\n\n本轮应以 **CPU_GATE_FAIL / GPU_NOT_STARTED** 封存。若未来仍要研究 split-template，应新开一份事前方案并明确：是更换候选集合、重新定义机制门，还是保留 10/30 门但先修正输入/模型协议。任何选择都不能回写成“本轮已通过”。\n\n如果负责人重新授权，顺序应为：实现 adapter → 单测与不泄漏测试 → 良性 native VHH control → 独立审计 → 极小 GLP pilot。BindCraft 只有在另行书面授权时才可讨论，不能自动切换。"
+      },
+      {
+        "id": "acceptance",
+        "type": "markdown",
+        "body": "## 研究生接收签核页\n\n请把以下内容复制到实验记录，或打印后手写：\n\n~~~text\n接收人：____________________    日期/时间（含时区）：____________________\n审计人：____________________    Windows 主机：__________________________\nWSL distro：Ubuntu-24.04\n仓库 HEAD：d989db24066bda4652d48f4e14dd80e6409890aa\nP0 仓库洁净：PASS / FAIL\nP2 收据 SHA256：PASS / FAIL\nOwner tests：________ passed；exit code ________\nCPU-AUDIT-01：exit code ________；fixed_ifold ________/30 <=4 A\nC2：PASS / FAIL（门槛 >=10/30）\nGPU process count：________\n新 T12 GPU attempt：YES / NO\nBindCraft started：YES / NO\n最终判定：C2=FAIL；G0=BLOCKED；T12_GPU=NOT_STARTED；BINDCRAFT=NOT_STARTED\nHTML SHA256（PowerShell Get-FileHash 计算）：________________________________\n异常与处置：______________________________________________________________\n~~~\n\n任何一项与预期不一致时，不要“继续看看”；先保存输出、停止后续步骤并交回负责人。"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-09-02T00:16:27+08:00",
+    "status": "partial",
+    "datasets": {
+      "summary": [
+        {
+          "history_samples": 155,
+          "framework_le4_rate": 0.7161290323,
+          "target_le8_rate": 0,
+          "t11_le4_rate": 0.2333333333,
+          "gate_threshold": 0.3333333333,
+          "tests_passed": 70
+        }
+      ],
+      "arm_metrics": [
+        {
+          "arm": "internal",
+          "samples": 50,
+          "le4_count": 50,
+          "le4_rate": 1,
+          "le8_count": 50,
+          "median_fw_cdr": 1.466,
+          "target_aligned_min": 23.264
+        },
+        {
+          "arm": "high_contact",
+          "samples": 50,
+          "le4_count": 34,
+          "le4_rate": 0.68,
+          "le8_count": 50,
+          "median_fw_cdr": 2.898,
+          "target_aligned_min": 22.052
+        },
+        {
+          "arm": "diverse",
+          "samples": 25,
+          "le4_count": 20,
+          "le4_rate": 0.8,
+          "le8_count": 25,
+          "median_fw_cdr": 1.295,
+          "target_aligned_min": 25.327
+        },
+        {
+          "arm": "fixed_ifold",
+          "samples": 30,
+          "le4_count": 7,
+          "le4_rate": 0.2333333333,
+          "le8_count": 30,
+          "median_fw_cdr": 5.98,
+          "target_aligned_min": 29.899
+        }
+      ],
+      "t11_candidates": [
+        {
+          "candidate": "design_0",
+          "folds": 5,
+          "le4_count": 1,
+          "le4_rate": 0.2,
+          "gate_note": "候选级结果；不能单独代表总门"
+        },
+        {
+          "candidate": "design_1",
+          "folds": 5,
+          "le4_count": 2,
+          "le4_rate": 0.4,
+          "gate_note": "候选级结果；CSV/CIF sample 选择不同"
+        },
+        {
+          "candidate": "design_2",
+          "folds": 5,
+          "le4_count": 1,
+          "le4_rate": 0.2,
+          "gate_note": "候选级结果；CSV/CIF sample 选择不同"
+        },
+        {
+          "candidate": "design_3",
+          "folds": 5,
+          "le4_count": 0,
+          "le4_rate": 0,
+          "gate_note": "候选级结果"
+        },
+        {
+          "candidate": "design_4",
+          "folds": 5,
+          "le4_count": 0,
+          "le4_rate": 0,
+          "gate_note": "候选级结果"
+        },
+        {
+          "candidate": "design_5",
+          "folds": 5,
+          "le4_count": 3,
+          "le4_rate": 0.6,
+          "gate_note": "最佳单候选；仍不能绕过总计 7/30"
+        }
+      ],
+      "runtime_stages": [
+        {
+          "stage": "configure",
+          "seconds": 5,
+          "share": 0.023364486
+        },
+        {
+          "stage": "inverse_folding",
+          "seconds": 12,
+          "share": 0.056074766
+        },
+        {
+          "stage": "inverse_gate",
+          "seconds": 1,
+          "share": 0.004672897
+        },
+        {
+          "stage": "folding",
+          "seconds": 129,
+          "share": 0.602803738
+        },
+        {
+          "stage": "analysis",
+          "seconds": 35,
+          "share": 0.163551402
+        },
+        {
+          "stage": "filtering",
+          "seconds": 14,
+          "share": 0.065420561
+        },
+        {
+          "stage": "validation",
+          "seconds": 1,
+          "share": 0.004672897
+        },
+        {
+          "stage": "unattributed",
+          "seconds": 17,
+          "share": 0.079439252
+        }
+      ],
+      "script_catalog": [
+        {
+          "stage": "接管",
+          "script": "adopt_windows_owner_mode.sh",
+          "role": "激活 Windows 单一 owner 模式",
+          "status": "已存在；本机已完成，不要日常重复"
+        },
+        {
+          "stage": "环境",
+          "script": "verify_local_env.sh",
+          "role": "GPU/kernel/pip/runtime 一次性验收并封存",
+          "status": "已存在；环境变化后才重跑"
+        },
+        {
+          "stage": "T8",
+          "script": "run_owner_exploratory_cell.sh",
+          "role": "小批量 adherence/diverse 生成与折叠",
+          "status": "已存在；本报告不授权重跑"
+        },
+        {
+          "stage": "T9",
+          "script": "build_local_anchor_set.py",
+          "role": "从封存运行构建本地 anchor 集",
+          "status": "已存在"
+        },
+        {
+          "stage": "T10",
+          "script": "build_owner_multistate_inputs.py",
+          "role": "构建多状态输入",
+          "status": "已存在"
+        },
+        {
+          "stage": "T10",
+          "script": "preflight_owner_multistate.py",
+          "role": "多状态输入与坐标契约预检",
+          "status": "已存在"
+        },
+        {
+          "stage": "T10",
+          "script": "run_owner_multistate.py",
+          "role": "运行受限多状态 panel",
+          "status": "已存在；本报告不授权重跑"
+        },
+        {
+          "stage": "T10",
+          "script": "summarize_owner_multistate.py",
+          "role": "汇总候选与样本级指标",
+          "status": "已存在"
+        },
+        {
+          "stage": "T10",
+          "script": "build_owner_pose_anchored_spec.py",
+          "role": "构建并封存 pose-anchored spec",
+          "status": "已存在"
+        },
+        {
+          "stage": "T11",
+          "script": "run_owner_only_inverse_fold.sh",
+          "role": "固定位姿 inverse-fold 后每序列 5 folds",
+          "status": "已存在；当前协议已 STOP"
+        },
+        {
+          "stage": "T11",
+          "script": "validate_owner_only_inverse_fold.py",
+          "role": "spec/run/inverse 三类 validator",
+          "status": "已存在"
+        },
+        {
+          "stage": "记录",
+          "script": "append_owner_experience.py",
+          "role": "追加工程经验/决策事件",
+          "status": "已存在"
+        },
+        {
+          "stage": "交接",
+          "script": "build_windows_owner_handoff.sh",
+          "role": "构建 Windows owner 交接材料",
+          "status": "已存在"
+        },
+        {
+          "stage": "T12 CPU",
+          "script": "owner_split_template_data.py",
+          "role": "双模板槽 dataset adapter",
+          "status": "已实现并通过CPU测试；未运行GPU"
+        },
+        {
+          "stage": "T12 CPU",
+          "script": "test_owner_split_template_data.py",
+          "role": "mask/形状/不泄漏/不变性测试",
+          "status": "已实现；专项5 passed"
+        },
+        {
+          "stage": "T12 CPU",
+          "script": "audit_t12_framework_aligned_cdr.py",
+          "role": "四臂155样本身份/Kabsch/门审计，写JSON与TSV",
+          "status": "已实现；真实回放7/30，结果先落盘后返回42"
+        },
+        {
+          "stage": "T12 CPU",
+          "script": "test_audit_t12_framework_aligned_cdr.py",
+          "role": "合成NPZ验证成功、结构失败、拒绝覆盖和门失败落盘",
+          "status": "已实现；专项5 passed"
+        }
+      ],
+      "audit_checks": [
+        {
+          "id": "P0",
+          "phase": "接管前",
+          "check": "仓库身份、分支、HEAD、洁净性",
+          "pass": "固定 WSL 路径；接管分支；status 无输出",
+          "failure": "立即停止，不改代码、不运行分析",
+          "current": "PASS"
+        },
+        {
+          "id": "P1",
+          "phase": "接管前",
+          "check": "历史决策与四臂 NPZ 闭合",
+          "pass": "fold NPZ 数 10/10/5/6；每个 5 samples；总计155",
+          "failure": "INPUT_CLOSURE_FAIL；不得用 CSV/CIF 补样本",
+          "current": "PASS"
+        },
+        {
+          "id": "P2",
+          "phase": "接管前",
+          "check": "已有环境收据 SHA256 重放",
+          "pass": "sha256sum -c 退出0，全部OK",
+          "failure": "SEALED_INPUT_DRIFT；隔离并禁止GPU",
+          "current": "PASS"
+        },
+        {
+          "id": "C0",
+          "phase": "CPU审计",
+          "check": "样本身份绑定",
+          "pass": "(arm, design_i, sample_index 0..4)；coords与指标同索引",
+          "failure": "SAMPLE_BINDING_FAIL；丢弃统计",
+          "current": "PASS"
+        },
+        {
+          "id": "C1",
+          "phase": "CPU审计",
+          "check": "掩码、原子数、Kabsch 独立复现",
+          "pass": "target/CDR/framework=30/30/91；120/120/364 backbone atoms；四臂最小值复现",
+          "failure": "AUDIT_IMPLEMENTATION_FAIL；不解释结果",
+          "current": "PASS"
+        },
+        {
+          "id": "C2",
+          "phase": "CPU审计",
+          "check": "预注册 T11 门",
+          "pass": "framework-aligned CDR RMSD <=4 A 达到 >=10/30",
+          "failure": "CPU_GATE_FAIL；禁止T12 GPU、追加seed与改门",
+          "current": "FAIL: 7/30"
+        },
+        {
+          "id": "G0",
+          "phase": "GPU前",
+          "check": "CPU 启动授权",
+          "pass": "C2原门PASS且审计完整",
+          "failure": "BLOCKED_NOT_RUN；不得启动launcher或BindCraft",
+          "current": "BLOCKED"
+        },
+        {
+          "id": "G1",
+          "phase": "GPU前",
+          "check": "工作树、GPU进程、锁、RUN_CARD",
+          "pass": "洁净；0 compute process；锁可得；新唯一目录",
+          "failure": "PRE_GPU_BLOCKED；不得复用旧attempt",
+          "current": "未进入"
+        },
+        {
+          "id": "S0",
+          "phase": "封存",
+          "check": "CPU-stop 实际终态",
+          "pass": "仓库洁净；0本轮GPU进程；无新T12 attempt",
+          "failure": "隔离越门运行，结果不得使用",
+          "current": "PASS"
+        },
+        {
+          "id": "S1",
+          "phase": "封存",
+          "check": "证据完整性",
+          "pass": "路径/HEAD/UTC/155样本/四臂/退出码完整",
+          "failure": "SEAL_FAIL；修封存而非重跑",
+          "current": "本HTML汇总"
+        },
+        {
+          "id": "S2",
+          "phase": "封存",
+          "check": "声明边界",
+          "pass": "THEORETICAL；NO_EXPERIMENTAL_CLAIM；GPU_NOT_STARTED",
+          "failure": "修正文案，不发布候选成功",
+          "current": "PASS"
+        }
+      ],
+      "glossary": [
+        {
+          "term": "attempt_004",
+          "meaning": "cu128_blackwell_candidate 环境的第4次构建/修复目录；其 Python 被 LOCAL_ENV_READY 收据接受",
+          "not_meaning": "不是第4个候选、不是第4次科学成功、不是模型权重版本"
+        },
+        {
+          "term": "validator",
+          "meaning": "独立检查输入/输出形状、路径闭合、样本绑定、有限值、门槛与封存契约的程序",
+          "not_meaning": "不是模型本身，也不自动证明科学结论正确"
+        },
+        {
+          "term": "SHA256/hash",
+          "meaning": "文件内容指纹；重放清单可检测封存后是否改变",
+          "not_meaning": "不评价结构优劣；也不必每位审计员反复重哈希整个runtime"
+        },
+        {
+          "term": "manifest",
+          "meaning": "列出封存目录中应存在的文件及其hash/目录闭合的清单",
+          "not_meaning": "不是运行日志摘要，也不是候选排名"
+        },
+        {
+          "term": "sealed attempt",
+          "meaning": "新建、不可复用、记录命令/HEAD/时间/输出清单的完整运行目录",
+          "not_meaning": "不是只保留最佳样本的文件夹"
+        },
+        {
+          "term": "sample_index",
+          "meaning": "一个 design NPZ 内5个fold样本的零基索引0..4；坐标和同样本指标必须同索引",
+          "not_meaning": "不能用CSV选择索引替代CIF writer索引"
+        },
+        {
+          "term": "Kabsch/RMSD",
+          "meaning": "先用指定原子集合求最优刚体对齐，再对评分原子计算均方根偏差",
+          "not_meaning": "RMSD低不等于结合强，也不等于实验有效"
+        },
+        {
+          "term": "iPTM",
+          "meaning": "模型给出的界面置信度类指标",
+          "not_meaning": "不是亲和力、KD、结合实验证据或通过门槛的充分条件"
+        },
+        {
+          "term": "CDR/framework",
+          "meaning": "VHH的设计环区/其余框架区；本项目CDR 30 tokens、framework 91 tokens",
+          "not_meaning": "二者的内部保持不代表VHH相对target位姿保持"
+        },
+        {
+          "term": "P0/C2/G0",
+          "meaning": "接管检查/CPU预注册科学门/GPU启动授权",
+          "not_meaning": "编号不是模型版本或候选编号"
+        },
+        {
+          "term": "theoretical design",
+          "meaning": "可审阅的算法与测试方案，尚未形成已运行的T12实现",
+          "not_meaning": "不是可直接执行的脚本，也不是实验结果"
+        }
+      ]
+    },
+    "accessIssues": [
+      {
+        "id": "t12_gpu_blocked",
+        "scope": "T12 split-template pilot",
+        "sourceId": "cpu_audit",
+        "message": "预注册 CPU 门为 7/30 < 10/30，且90分钟窗口已结束；T12 GPU与BindCraft均未启动。"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "repo_state",
+      "query": {
+        "engine": "git+filesystem",
+        "query": "pwd; branch; HEAD; status; owner marker",
+        "description": "只读确认 Windows 单一 owner 与洁净工作树。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "Windows owner Git 状态",
+      "path": "GLP_/.git + WINDOWS_OWNER_MODE.json"
+    },
+    {
+      "id": "owner_scripts",
+      "query": {
+        "engine": "portable-snapshot",
+        "sql": "SELECT stage, script, role, status FROM snapshot.script_catalog",
+        "query": "enumerate repo-owned scripts and tests",
+        "description": "SQL 投影读取嵌入式脚本目录；原始来源是 windows_single_owner_20260831 文件枚举。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "Windows owner scripts/tests",
+      "path": "GLP_/boltzgen/main/windows_single_owner_20260831/"
+    },
+    {
+      "id": "local_env",
+      "query": {
+        "engine": "sha256sum",
+        "query": "replay local environment acceptance receipt manifest",
+        "description": "重放 20260831T131712Z 收据目录 SHA256SUMS；全部OK。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "本地环境验收收据",
+      "path": "gpu_work/owner_mode/local_env_acceptance/20260831T131712Z/"
+    },
+    {
+      "id": "t10_decision",
+      "query": {
+        "engine": "json",
+        "query": "read sealed T10 decision_event.json",
+        "description": "读取历史 pose-retention 聚合与来源哈希。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "T10 pose rescue 决策事件",
+      "path": "gpu_work/owner_mode/t10_pose_rescue/iterations/.../decision_event.json"
+    },
+    {
+      "id": "t11_decision",
+      "query": {
+        "engine": "portable-snapshot",
+        "sql": "SELECT stage, seconds, share FROM snapshot.runtime_stages",
+        "query": "read sealed T11 decision_event.json",
+        "description": "SQL 投影读取嵌入式运行时间；原始来源是封存 T11 decision_event.json。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "T11 fixed-ifold 决策事件",
+      "path": "gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/iterations/.../decision_event.json"
+    },
+    {
+      "id": "cpu_audit",
+      "query": {
+        "engine": "portable-snapshot",
+        "sql": "SELECT * FROM snapshot.summary; SELECT * FROM snapshot.arm_metrics; SELECT * FROM snapshot.t11_candidates",
+        "query": "CPU-AUDIT-01 over 31 NPZ files / 155 samples",
+        "description": "SQL 投影读取嵌入式审计快照；原始方法为同索引 NPZ 绑定、framework/target Kabsch 与历史 minima 复现。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "CPU-AUDIT-01（本报告嵌入）",
+      "path": "embedded/CPU-AUDIT-01"
+    },
+    {
+      "id": "audit_protocol",
+      "query": {
+        "engine": "portable-snapshot",
+        "sql": "SELECT id, phase, check, pass, failure, current FROM snapshot.audit_checks",
+        "query": "fixed_ifold framework-aligned CDR RMSD <=4 A count must be >=10/30",
+        "description": "SQL 投影读取预注册停止规则；结果7/30，触发专用退出码42和GPU停止。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "本轮预注册停止规则",
+      "path": "embedded/T12-audit-protocol"
+    },
+    {
+      "id": "handoff_docs",
+      "query": {
+        "engine": "portable-snapshot",
+        "sql": "SELECT term, meaning, not_meaning FROM snapshot.glossary",
+        "query": "read Windows owner directive/tasks/glossary",
+        "description": "SQL 投影读取嵌入式术语表；原始来源是 owner handoff 文档。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      },
+      "label": "Windows single-owner handoff 文档",
+      "path": "WINDOWS_SINGLE_OWNER_HANDOFF_20260831_V1/docs/"
+    },
+    {
+      "id": "published_assets",
+      "query": {
+        "engine": "git-repository",
+        "query": "read committed T12 audit JSON, 155-row TSV, canonical artifact JSON and offline HTML",
+        "description": "公开仓库只包含小型分析资产；NPZ、权重和完整运行目录未提交。",
+        "executed_at": "2026-09-02T00:16:27+08:00"
+      }
+    }
+  ],
+  "package_info": {
+    "artifactRuntime": "portable-artifact-reader.html",
+    "deliveryMode": "portable_html",
+    "hostedReadOnly": true,
+    "mode": "portable_html",
+    "portableHtml": true,
+    "readOnly": true,
+    "controls": {
+      "copyAsImage": false,
+      "delete": false,
+      "drag": false,
+      "edit": false,
+      "export": false,
+      "exportHostedLink": false,
+      "fullscreen": false,
+      "hostedLink": false,
+      "persistence": false,
+      "refresh": false,
+      "reorder": false,
+      "share": false
+    },
+    "originUrl": "artifact://t12-windows-run-audit-handoff-20260902"
+  },
+  "packageInfo": {
+    "artifactRuntime": "portable-artifact-reader.html",
+    "deliveryMode": "portable_html",
+    "hostedReadOnly": true,
+    "mode": "portable_html",
+    "portableHtml": true,
+    "readOnly": true,
+    "controls": {
+      "copyAsImage": false,
+      "delete": false,
+      "drag": false,
+      "edit": false,
+      "export": false,
+      "exportHostedLink": false,
+      "fullscreen": false,
+      "hostedLink": false,
+      "persistence": false,
+      "refresh": false,
+      "reorder": false,
+      "share": false
+    }
+  }
+}

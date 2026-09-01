@@ -1,0 +1,660 @@
+{
+  "arm_summaries": {
+    "diverse": {
+      "design_count": 5,
+      "framework_aligned_cdr_rmsd_angstrom": {
+        "max": 5.084354124850799,
+        "mean": 2.0256027283035873,
+        "median": 1.2950233913412135,
+        "min": 0.8113677295598867
+      },
+      "framework_le_8_angstrom_count": 25,
+      "framework_le_threshold_count": 20,
+      "sample_count": 25,
+      "target_aligned_cdr_rmsd_angstrom": {
+        "max": 63.93182662845755,
+        "mean": 47.13130592941619,
+        "median": 47.94419486459819,
+        "min": 25.32743473661334
+      }
+    },
+    "fixed_ifold": {
+      "design_count": 6,
+      "framework_aligned_cdr_rmsd_angstrom": {
+        "max": 7.198668199283909,
+        "mean": 5.319948552012928,
+        "median": 5.979968207073585,
+        "min": 1.3250166803737284
+      },
+      "framework_le_8_angstrom_count": 30,
+      "framework_le_threshold_count": 7,
+      "sample_count": 30,
+      "target_aligned_cdr_rmsd_angstrom": {
+        "max": 49.38508212020503,
+        "mean": 37.39053459023219,
+        "median": 35.43323567331876,
+        "min": 29.899286486342948
+      }
+    },
+    "high_contact": {
+      "design_count": 10,
+      "framework_aligned_cdr_rmsd_angstrom": {
+        "max": 6.243599054129715,
+        "mean": 2.989817242813854,
+        "median": 2.8983978165224356,
+        "min": 1.001253143418493
+      },
+      "framework_le_8_angstrom_count": 50,
+      "framework_le_threshold_count": 34,
+      "sample_count": 50,
+      "target_aligned_cdr_rmsd_angstrom": {
+        "max": 64.2941077525033,
+        "mean": 43.7495666610502,
+        "median": 42.967980439000996,
+        "min": 22.051766107318084
+      }
+    },
+    "internal": {
+      "design_count": 10,
+      "framework_aligned_cdr_rmsd_angstrom": {
+        "max": 3.8240075792478794,
+        "mean": 1.5663645355183033,
+        "median": 1.4656961978930885,
+        "min": 0.7798542348653051
+      },
+      "framework_le_8_angstrom_count": 50,
+      "framework_le_threshold_count": 50,
+      "sample_count": 50,
+      "target_aligned_cdr_rmsd_angstrom": {
+        "max": 74.23596679869354,
+        "mean": 53.435461073749494,
+        "median": 55.82306562151885,
+        "min": 23.264423040464532
+      }
+    }
+  },
+  "candidate_summaries": {
+    "diverse": {
+      "design_0": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 4.969349181954809,
+          "mean": 1.9458512693161008,
+          "median": 1.1545953610709485,
+          "min": 1.1397861171613215
+        },
+        "framework_le_threshold_count": 4,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 60.56980525882662,
+          "mean": 48.48918008202614,
+          "median": 50.232133082400644,
+          "min": 31.314745243586128
+        }
+      },
+      "design_1": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.3789130068665623,
+          "mean": 1.040614525010699,
+          "median": 0.9908950115867862,
+          "min": 0.8113677295598867
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 63.93182662845755,
+          "mean": 49.001028739855954,
+          "median": 47.94419486459819,
+          "min": 25.32743473661334
+        }
+      },
+      "design_2": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 5.084354124850799,
+          "mean": 4.298691761254512,
+          "median": 4.385339749272443,
+          "min": 3.2974053899182736
+        },
+        "framework_le_threshold_count": 1,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 45.61749906685176,
+          "mean": 38.94735788347341,
+          "median": 41.28642821238197,
+          "min": 28.657410558288937
+        }
+      },
+      "design_3": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.8756409691633762,
+          "mean": 1.350200211215957,
+          "median": 1.365956456394327,
+          "min": 0.8490789334848657
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 61.27922975746782,
+          "mean": 52.99487788823988,
+          "median": 53.41114093179398,
+          "min": 43.370914192922854
+        }
+      },
+      "design_4": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 3.2258752512507316,
+          "mean": 1.4926558747206684,
+          "median": 1.0186356245647954,
+          "min": 0.9187417386454788
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 53.64194179256297,
+          "mean": 46.22408505348558,
+          "median": 49.76125822743837,
+          "min": 34.46070194436312
+        }
+      }
+    },
+    "fixed_ifold": {
+      "design_0": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 6.6539799000811755,
+          "mean": 5.088709674131094,
+          "median": 5.6595610804070935,
+          "min": 2.02735012036293
+        },
+        "framework_le_threshold_count": 1,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 36.10671256360968,
+          "mean": 33.79767136056031,
+          "median": 34.67255097669693,
+          "min": 29.899286486342948
+        }
+      },
+      "design_1": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 6.171535642603101,
+          "mean": 4.421376748155371,
+          "median": 5.643986900113112,
+          "min": 1.3250166803737284
+        },
+        "framework_le_threshold_count": 2,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 43.47158561553241,
+          "mean": 35.804001710858564,
+          "median": 33.38211229752678,
+          "min": 30.334706489363718
+        }
+      },
+      "design_2": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 6.555232294720232,
+          "mean": 5.33777157611761,
+          "median": 5.542795378208692,
+          "min": 3.753123728204308
+        },
+        "framework_le_threshold_count": 1,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 44.38453103595749,
+          "mean": 43.74166105610476,
+          "median": 43.73129482622154,
+          "min": 42.95138737603925
+        }
+      },
+      "design_3": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 7.073493783131781,
+          "mean": 6.607918644313202,
+          "median": 6.711285240403062,
+          "min": 6.102484758370267
+        },
+        "framework_le_threshold_count": 0,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 42.46408735644674,
+          "mean": 37.36517508996468,
+          "median": 36.14105441913816,
+          "min": 33.46196013740928
+        }
+      },
+      "design_4": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 7.198668199283909,
+          "mean": 6.498092999142952,
+          "median": 6.595761136069781,
+          "min": 5.614907291670955
+        },
+        "framework_le_threshold_count": 0,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 38.24662959556392,
+          "mean": 35.31695510881117,
+          "median": 34.79880188226495,
+          "min": 33.73943787563486
+        }
+      },
+      "design_5": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 6.372874047866515,
+          "mean": 3.965821670217344,
+          "median": 3.428415332051868,
+          "min": 1.4930470716960615
+        },
+        "framework_le_threshold_count": 3,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 49.38508212020503,
+          "mean": 38.3177432150937,
+          "median": 35.167406391832046,
+          "min": 31.974372324506
+        }
+      }
+    },
+    "high_contact": {
+      "design_0": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 4.229746519446301,
+          "mean": 3.9802522571814456,
+          "median": 4.209124710248288,
+          "min": 3.552943589963668
+        },
+        "framework_le_threshold_count": 2,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 42.8134111412521,
+          "mean": 38.23227738996139,
+          "median": 38.78839604733517,
+          "min": 32.907776799225935
+        }
+      },
+      "design_1": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 6.243599054129715,
+          "mean": 6.006375490846343,
+          "median": 5.976130525707818,
+          "min": 5.819521754795003
+        },
+        "framework_le_threshold_count": 0,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 45.55283240414944,
+          "mean": 41.441554872897655,
+          "median": 44.197419291292235,
+          "min": 36.14868622867169
+        }
+      },
+      "design_2": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 3.0074576005912665,
+          "mean": 1.5764301316947196,
+          "median": 1.3310727597252876,
+          "min": 1.0270829552632508
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 64.2941077525033,
+          "mean": 54.162884201722605,
+          "median": 57.366026596774496,
+          "min": 39.19458402032517
+        }
+      },
+      "design_3": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.6106253543289017,
+          "mean": 1.365928057741595,
+          "median": 1.356809417717668,
+          "min": 1.1351437192369527
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 63.05908318890007,
+          "mean": 46.72785924695381,
+          "median": 53.20958396360444,
+          "min": 22.051766107318084
+        }
+      },
+      "design_4": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 2.0203275293660696,
+          "mean": 1.8032662495558096,
+          "median": 1.7366924967875028,
+          "min": 1.7121554220853352
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 50.374180055597684,
+          "mean": 38.89880802763151,
+          "median": 38.35864189515297,
+          "min": 30.910699883302186
+        }
+      },
+      "design_5": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.5850769657106765,
+          "mean": 1.4333176462479702,
+          "median": 1.461621631152319,
+          "min": 1.1165694664725463
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 61.09550079247684,
+          "mean": 50.089947765667226,
+          "median": 50.357553547814184,
+          "min": 40.765766265454566
+        }
+      },
+      "design_6": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 3.3732095637329063,
+          "mean": 3.104108180535883,
+          "median": 3.079390333930471,
+          "min": 2.8787123313455587
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 45.714330367244784,
+          "mean": 44.35777316801178,
+          "median": 44.86717200463054,
+          "min": 42.264900789581745
+        }
+      },
+      "design_7": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 5.964547659276363,
+          "mean": 5.34447617246167,
+          "median": 5.172655822961241,
+          "min": 4.930133801532817
+        },
+        "framework_le_threshold_count": 0,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 43.38732711339668,
+          "mean": 42.46271930055077,
+          "median": 42.39823717751098,
+          "min": 41.675981665841185
+        }
+      },
+      "design_8": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 4.482768523455608,
+          "mean": 4.09041437070619,
+          "median": 4.113142194916857,
+          "min": 3.8421426175511377
+        },
+        "framework_le_threshold_count": 2,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 48.02637794718167,
+          "mean": 44.05995403903166,
+          "median": 45.978716008453986,
+          "min": 38.9986797811516
+        }
+      },
+      "design_9": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.3902990052135997,
+          "mean": 1.1936038711669164,
+          "median": 1.186136097898391,
+          "min": 1.001253143418493
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 49.90224953504244,
+          "mean": 37.06188859807363,
+          "median": 35.40290741998108,
+          "min": 30.20653477332774
+        }
+      }
+    },
+    "internal": {
+      "design_0": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.79858701334977,
+          "mean": 1.5054907680181537,
+          "median": 1.5087641623843595,
+          "min": 1.1708132630124715
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 74.23596679869354,
+          "mean": 59.14590426843874,
+          "median": 55.19389424088909,
+          "min": 44.54018873001916
+        }
+      },
+      "design_1": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 3.8240075792478794,
+          "mean": 2.1210639356705143,
+          "median": 1.7250257567287068,
+          "min": 1.4238286731631458
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 67.48267457134867,
+          "mean": 53.579142529105795,
+          "median": 64.9449262065952,
+          "min": 27.64632324908971
+        }
+      },
+      "design_2": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.6661676281420117,
+          "mean": 1.5346171566722897,
+          "median": 1.5609636821525568,
+          "min": 1.3725078132497912
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 62.34474482630768,
+          "mean": 48.17471609508438,
+          "median": 58.102776879558604,
+          "min": 30.057618798575856
+        }
+      },
+      "design_3": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.551144721414628,
+          "mean": 1.3397537346498598,
+          "median": 1.3205850419821004,
+          "min": 1.1317374106883393
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 64.74362654702296,
+          "mean": 56.82027301682856,
+          "median": 57.63493915868017,
+          "min": 45.31471638284514
+        }
+      },
+      "design_4": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.5811089338855178,
+          "mean": 1.2065319237404375,
+          "median": 1.1503254198562387,
+          "min": 1.0243160700557565
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 73.26543000833935,
+          "mean": 58.62338916152735,
+          "median": 54.56312313573111,
+          "min": 39.21075921085578
+        }
+      },
+      "design_5": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 2.1746781893947302,
+          "mean": 1.6054884850904976,
+          "median": 1.6149223852799195,
+          "min": 1.189535517507045
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 64.01310393703947,
+          "mean": 45.672479537713926,
+          "median": 54.763444254677545,
+          "min": 23.264423040464532
+        }
+      },
+      "design_6": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.4132693104742708,
+          "mean": 1.1067539815370304,
+          "median": 1.1251225285345,
+          "min": 0.7798542348653051
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 73.70721251391187,
+          "mean": 56.19736614120227,
+          "median": 63.4808320131562,
+          "min": 27.46289052328242
+        }
+      },
+      "design_7": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 2.406393852933276,
+          "mean": 1.8033340821719086,
+          "median": 1.8311725572908006,
+          "min": 1.3096740016446875
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 68.35560486328087,
+          "mean": 53.48393531704431,
+          "median": 61.03011522113867,
+          "min": 37.050055666852394
+        }
+      },
+      "design_8": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 1.4660383801268075,
+          "mean": 1.3367177112355635,
+          "median": 1.4430479839244585,
+          "min": 0.9960118630338184
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 65.80565693054946,
+          "mean": 56.0147889021344,
+          "median": 54.67001667550169,
+          "min": 45.364039183757654
+        }
+      },
+      "design_9": {
+        "framework_aligned_cdr_rmsd_angstrom": {
+          "max": 3.505341862651576,
+          "mean": 2.103893576396778,
+          "median": 1.9445697812137437,
+          "min": 1.4592236606313096
+        },
+        "framework_le_threshold_count": 5,
+        "sample_count": 5,
+        "target_aligned_cdr_rmsd_angstrom": {
+          "max": 60.653676644361056,
+          "mean": 46.64261576841525,
+          "median": 46.17934695907478,
+          "min": 28.36809451296264
+        }
+      }
+    }
+  },
+  "design_counts": {
+    "diverse": 5,
+    "fixed_ifold": 6,
+    "high_contact": 10,
+    "internal": 10
+  },
+  "exit_code": 42,
+  "gate": {
+    "arm": "fixed_ifold",
+    "denominator": 30,
+    "failure_action": "DO_NOT_START_T12_GPU",
+    "metric": "framework_aligned_cdr_rmsd_angstrom",
+    "minimum_pass_count": 10,
+    "observed_pass_count": 7,
+    "operator": "<=",
+    "passed": false,
+    "threshold_angstrom": 4.0
+  },
+  "gpu_performed": false,
+  "inputs": {
+    "diverse": "/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_diverse_b1_n5_f5/attempt_20260831T185650Z/intermediate_designs_inverse_folded",
+    "fixed_ifold": "/home/lin/creator/gpu_work/owner_mode/t11_only_inverse_fold_from_pose_spec/7xl0_highcontact_ifold_n6_f5_v3/attempt_20260831T201438Z/intermediate_designs",
+    "high_contact": "/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_highcontact_adherence_b1_n10_f5/attempt_20260831T183938Z/intermediate_designs_inverse_folded",
+    "internal": "/home/lin/creator/gpu_work/owner_mode/t8_exploratory_inference/7xl0_design3_pose_adherence_b1_n10_f5/attempt_20260831T182438Z/intermediate_designs_inverse_folded"
+  },
+  "method": {
+    "alignment": "No-reflection Kabsch fit of input_coords to coords[sample_index].",
+    "cdr_backbone_atom_count": 120,
+    "cdr_token_indices_zero_based": [
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139
+    ],
+    "framework_backbone_atom_count": 364,
+    "framework_residue_count": 91,
+    "samples_per_design": 5,
+    "target_token_indices_zero_based": [
+      0,
+      29
+    ],
+    "total_tokens": 151,
+    "vhh_token_indices_zero_based": [
+      30,
+      150
+    ]
+  },
+  "sample_binding": "Each row is bound to one (arm, design_i, zero-based sample_index); coords and all metric arrays use that same index.",
+  "schema_version": "WINDOWS_OWNER_T12_FRAMEWORK_ALIGNED_CDR_AUDIT_V1",
+  "scientific_claim_boundary": "THEORETICAL_COMPUTATIONAL_AUDIT_ONLY",
+  "status": "FAIL",
+  "total_sample_count": 155
+}

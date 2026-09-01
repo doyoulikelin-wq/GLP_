@@ -84,3 +84,18 @@ GitHub 首次推送仍需要 Windows 用自己的 GitHub 账户登录一次。�
 正式 G1/G2/AIV 的旧标签属于原审计兼容方案。单机所有者模式默认使用
 `LOCAL_ENV_READY`、`EXPLORATORY_INFERENCE_COMPLETE` 和 `AI_EVALUATION_COMPLETE`，避免把
 计算探索误称为预注册验证或实验结论。
+
+## T12 理论设计与 CPU 审计（2026-09-02）
+
+T12 的预注册 CPU 门结果为 `7/30 < 10/30`，因此终态是
+`C2=FAIL`、`G0=BLOCKED`、`T12_GPU=NOT_STARTED`、`BINDCRAFT=NOT_STARTED`。
+本轮只固化了可复现审计、split-template CPU 输入机制、测试、结果摘要和离线交接报告，
+没有运行新的模型推理。
+
+- 完整中文说明：[`T12_THEORETICAL_DESIGN_AND_AUDIT_ZH.md`](T12_THEORETICAL_DESIGN_AND_AUDIT_ZH.md)
+- 可复现 155 样本审计：[`scripts/audit_t12_framework_aligned_cdr.py`](scripts/audit_t12_framework_aligned_cdr.py)
+- split-template adapter：[`scripts/owner_split_template_data.py`](scripts/owner_split_template_data.py)
+- 小型结果、规范化 artifact JSON 和单文件 HTML：[`reports/t12_theoretical_design_20260902/`](reports/t12_theoretical_design_20260902/)
+
+公开仓库不包含历史 NPZ/CIF、模型权重或完整运行目录。所有几何和置信指标均为计算结果，
+不得表述为实验结合、亲和力或选择性证据。
