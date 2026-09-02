@@ -1,0 +1,76 @@
+{
+  "analysis_classification": "EXPLORATORY_DESCRIPTIVE",
+  "comparison_outcome": "INCONCLUSIVE",
+  "decision_rule_predeclared": false,
+  "interpretation_zh": {
+    "decision": "当前结果不足以支持继续追加计算；若继续，应先修改约束或方法并预先登记评价规则。",
+    "primary": "目标相对位姿未显示明确改善，候选层面的方向相互抵消。",
+    "secondary": "分子内部的 CDR 保持指标出现描述性改善，但不能替代目标相对位姿结果。"
+  },
+  "limitations": [
+    "只有六个候选；每个候选的五次折叠不是五个独立候选。",
+    "两轮没有可验证的共同随机种子，因此样本序号不能跨方法配对。",
+    "判定规则未在读取本轮结果前预先登记，整体结论只能是探索性且不确定。",
+    "所有指标均为计算代理，未进行湿实验。"
+  ],
+  "primary_metric": {
+    "candidate_level_direction_counts": {
+      "improved": 3,
+      "unchanged": 0,
+      "worsened": 3
+    },
+    "descriptive_threshold_angstrom": 8.0,
+    "direction": "lower_is_better",
+    "name": "target_aligned_cdr_rmsd_angstrom",
+    "t11": {
+      "at_or_below_threshold_count": 0,
+      "median_angstrom": 35.43323567331876,
+      "sample_count": 30,
+      "threshold_denominator": 30
+    },
+    "t12": {
+      "at_or_below_threshold_count": 0,
+      "median_angstrom": 35.34552864034754,
+      "sample_count": 30,
+      "threshold_denominator": 30
+    },
+    "t12_minus_t11_median_angstrom": -0.08770703297122395,
+    "threshold_is_a_new_success_gate": false,
+    "unit": "angstrom"
+  },
+  "schema_version": "WINDOWS_OWNER_POST_T12_PUBLIC_SUMMARY_V1",
+  "scientific_claim_boundary": "COMPUTATIONAL_PROXY_COMPARISON_ONLY_NOT_EXPERIMENTAL_EVIDENCE",
+  "scope": {
+    "cross_method_fold_pairing": false,
+    "folds_per_candidate_per_method": 5,
+    "independent_comparison_unit": "candidate",
+    "same_candidate_count": 6,
+    "sample_count_per_method": 30
+  },
+  "secondary_metric": {
+    "candidate_level_direction_counts": {
+      "improved": 4,
+      "unchanged": 0,
+      "worsened": 2
+    },
+    "descriptive_threshold_angstrom": 4.0,
+    "direction": "lower_is_better",
+    "name": "framework_aligned_cdr_rmsd_angstrom",
+    "t11": {
+      "at_or_below_threshold_count": 7,
+      "median_angstrom": 5.979968207073585,
+      "sample_count": 30,
+      "threshold_denominator": 30
+    },
+    "t12": {
+      "at_or_below_threshold_count": 10,
+      "median_angstrom": 5.207177455345893,
+      "sample_count": 30,
+      "threshold_denominator": 30
+    },
+    "t12_minus_t11_median_angstrom": -0.7727907517276922,
+    "threshold_is_a_new_success_gate": false,
+    "unit": "angstrom"
+  },
+  "status": "COMPLETE"
+}

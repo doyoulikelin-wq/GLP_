@@ -1,0 +1,24 @@
+{
+  "aggregation_order": "先在每个候选内汇总五次折叠，再按六个候选比较方向；不进行逐样本跨方法配对。",
+  "alignment": {
+    "primary": "以目标区域对齐后评估 CDR 骨架偏差",
+    "secondary": "以框架区域对齐后评估 CDR 骨架偏差"
+  },
+  "analysis_classification": "EXPLORATORY_DESCRIPTIVE",
+  "decision_rule_predeclared": false,
+  "descriptive_thresholds_angstrom": {
+    "primary": 8.0,
+    "secondary": 4.0
+  },
+  "exclusion_rule": "排除未完成的首次 T12 运行，仅使用封存且验证通过的完整运行。",
+  "inference_test_performed": false,
+  "method_id": "POST_T12_READONLY_COMPARISON",
+  "method_version": 1,
+  "missing_or_nonfinite_values_allowed": false,
+  "population": "同一组六个候选在两种模板组织方式下的既有折叠结果",
+  "schema_version": "WINDOWS_OWNER_POST_T12_PUBLIC_METHOD_V1",
+  "scientific_claim_boundary": "COMPUTATIONAL_PROXY_COMPARISON_ONLY_NOT_EXPERIMENTAL_EVIDENCE",
+  "source_commit": "84ca3392131e786e43964304307ef04efef52cf9",
+  "source_tree": "03dfe5d365fe698315759f74c0281097c12f57c1",
+  "thresholds_are_new_success_gates": false
+}
