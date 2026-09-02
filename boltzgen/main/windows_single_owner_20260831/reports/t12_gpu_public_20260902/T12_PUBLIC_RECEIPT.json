@@ -1,0 +1,51 @@
+{
+  "exploratory_override": {
+    "changes_historical_gate_status": false,
+    "effect": "ALLOWED_THIS_BOUNDED_EXPLORATORY_T12_GPU_RUN_ONLY",
+    "explicitly_authorized": true
+  },
+  "historical_cpu_gate": {
+    "denominator": 30,
+    "observed_pass_count": 7,
+    "reclassified_as_pass": false,
+    "required_pass_count": 10,
+    "status": "FAIL"
+  },
+  "process": {
+    "bindcraft_started": false,
+    "candidate_count": 6,
+    "classification": "EXPLORATORY_T12_GPU_OVERRIDE",
+    "duration_seconds": 142.697647,
+    "ended_at_utc": "2026-09-02T02:05:20.560197Z",
+    "fold_sample_count": 30,
+    "fold_samples_per_candidate": 5,
+    "hard_timeout_seconds": 5400,
+    "oom_detected": false,
+    "retry_count": 0,
+    "runtime_assets_unchanged": true,
+    "source_inputs_unchanged": true,
+    "stages_executed": [
+      "folding"
+    ],
+    "started_at_utc": "2026-09-02T02:02:57.862550Z"
+  },
+  "publication_kind": "SANITIZED_PUBLIC_SUMMARY",
+  "result": {
+    "engineering_status": "COMPLETE",
+    "experimental_validation": "NOT_PERFORMED",
+    "finite_coordinates": true,
+    "observed_fold_sample_count": 30,
+    "validation_status": "PASS"
+  },
+  "schema_version": "WINDOWS_OWNER_T12_GPU_PUBLIC_RECEIPT_V1",
+  "scientific_claim_boundary": "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE",
+  "source": {
+    "commit": "3fd14d5552f3e6dc41a3b608e47e6782e2f1fbce",
+    "private_attempt_receipt_sha256": "31ebea8ab6815a1e9250682c9b574f99cf82e0e87783e1177fe0c5092a823b4e",
+    "private_output_manifest_sha256": "0cdf473a6e204db1189c5d405ff2a387210f19e30a446743a5758f74b88a0b06",
+    "private_validation_sha256": "0a9eaf4eb4fdaa22de9f4b212fae8c43470930b142345286086ead009a7fc984",
+    "source_t11_receipt_sha256": "85ce4ccc217bb5497ec0964600b51b5aff65338a052b293badd769d892a4c4b9",
+    "tree": "6ef9c5c656821db142bcfccba7ab30a4a87ad01b"
+  },
+  "status": "COMPLETE"
+}

@@ -85,9 +85,9 @@ GitHub 首次推送仍需要 Windows 用自己的 GitHub 账户登录一次。�
 `LOCAL_ENV_READY`、`EXPLORATORY_INFERENCE_COMPLETE` 和 `AI_EVALUATION_COMPLETE`，避免把
 计算探索误称为预注册验证或实验结论。
 
-## T12 理论设计与 CPU 审计（2026-09-02）
+## T12 理论设计与 CPU 审计（2026-09-02，历史前置状态）
 
-T12 的预注册 CPU 门结果为 `7/30 < 10/30`，因此终态是
+T12 的预注册 CPU 门结果为 `7/30 < 10/30`，因此当时终态是
 `C2=FAIL`、`G0=BLOCKED`、`T12_GPU=NOT_STARTED`、`BINDCRAFT=NOT_STARTED`。
 本轮只固化了可复现审计、split-template CPU 输入机制、测试、结果摘要和离线交接报告，
 没有运行新的模型推理。
@@ -99,3 +99,19 @@ T12 的预注册 CPU 门结果为 `7/30 < 10/30`，因此终态是
 
 公开仓库不包含历史 NPZ/CIF、模型权重或完整运行目录。所有几何和置信指标均为计算结果，
 不得表述为实验结合、亲和力或选择性证据。
+
+## T12 GPU 探索性 override 执行（2026-09-02）
+
+负责人随后明确授权一次有界 T12 GPU 运行。该授权不把历史 CPU 门改写为 PASS；正式执行
+只包含 split-template folding：6 个候选、每个 5 个样本，共 30 个。成功 attempt 的终态为
+`T12_SPLIT_TEMPLATE_COMPLETE`，独立 validator 为 `PASS`，无 OOM、无超时、输入与运行资产
+前后哈希一致，BindCraft 未启动。
+
+- 执行记录：[`T12_GPU_EXECUTION_RECORD_ZH_20260902.md`](T12_GPU_EXECUTION_RECORD_ZH_20260902.md)
+- 脱敏公开结果：[`reports/t12_gpu_public_20260902/`](reports/t12_gpu_public_20260902/)
+- GPU runner：[`scripts/run_owner_t12_split_template.py`](scripts/run_owner_t12_split_template.py)
+- 独立 validator：[`scripts/validate_t12_split_template_gpu.py`](scripts/validate_t12_split_template_gpu.py)
+- 公开包生成器：[`scripts/build_t12_gpu_public_bundle.py`](scripts/build_t12_gpu_public_bundle.py)
+
+完整 CIF/NPZ、GPU 监控和原始日志继续只在本地 `workspace://gpu_work/owner_mode/` 封存，
+不进入公开 GitHub。

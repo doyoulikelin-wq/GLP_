@@ -1,0 +1,27 @@
+{
+  "candidate_count": 6,
+  "finite_coordinates": true,
+  "fold_samples_per_candidate": 5,
+  "historical_cpu_gate_status": "FAIL_7_OF_30_BELOW_10_OF_30",
+  "integrity_checks": {
+    "oom_absent": true,
+    "private_output_manifest_file_count": 50,
+    "private_output_manifest_replayed": true,
+    "runtime_assets_unchanged": true,
+    "source_commit_tree_bound": true,
+    "source_inputs_unchanged": true
+  },
+  "observed_fold_sample_count": 30,
+  "run_classification": "EXPLICIT_EXPLORATORY_OVERRIDE",
+  "schema_version": "WINDOWS_OWNER_T12_GPU_PUBLIC_VALIDATION_SUMMARY_V1",
+  "scientific_claim_boundary": "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE",
+  "status": "PASS",
+  "token_contract": {
+    "cdr_tokens": 30,
+    "cdr_visible_slots": 0,
+    "framework_tokens": 91,
+    "target_tokens": 30,
+    "template_slots": 2,
+    "total_tokens": 151
+  }
+}

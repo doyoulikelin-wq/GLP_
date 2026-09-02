@@ -191,7 +191,7 @@ class PublicBundleFixture:
             "status": MODULE.RUN_COMPLETE,
             "exit_code": 0,
             "authority": "WINDOWS_CODEX",
-            "scope": "EXPLORATORY_T12_GPU_OVERRIDE",
+            "scope": "EXPLORATORY_OVERRIDE_AFTER_CPU_GATE_FAIL",
             "cpu_gate_preserved": {"status": "FAIL", "pass_count": 7, "denominator": 30},
             "user_authorization": "EXPLICIT_T12_GPU_OVERRIDE_IN_CURRENT_TASK",
             "run_id": "t12_split_template_gpu",

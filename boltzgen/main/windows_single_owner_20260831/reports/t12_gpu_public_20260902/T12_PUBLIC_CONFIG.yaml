@@ -1,0 +1,31 @@
+schema_version: "WINDOWS_OWNER_T12_GPU_PUBLIC_CONFIG_V1"
+execution:
+  classification: "EXPLORATORY_T12_GPU_OVERRIDE"
+  stages:
+    - "folding"
+  candidate_count: 6
+  fold_samples_per_candidate: 5
+  fold_sample_count: 30
+  hard_timeout_seconds: 5400
+  auto_retry: false
+  bindcraft_fallback: false
+split_template:
+  hydra_target: "owner_split_template_data.SplitTemplateFromGeneratedDataModule"
+  target_templates: true
+  design_mask_templates: false
+  template_slots: 2
+  target_tokens: 30
+  cdr_tokens: 30
+  framework_tokens: 91
+  cdr_visible_slots: 0
+folding:
+  diffusion_samples: 5
+  sampling_steps: 200
+  recycling_steps: 3
+  skip_existing: false
+publication_exclusions:
+  candidate_sequences: true
+  structures_and_arrays: true
+  original_logs_and_full_manifest: true
+  weights_and_environment: true
+scientific_claim_boundary: "AI_RESULTS_ARE_NOT_EXPERIMENTAL_BINDING_EVIDENCE"

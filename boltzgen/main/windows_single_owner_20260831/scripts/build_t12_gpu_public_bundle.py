@@ -456,11 +456,7 @@ def validate_source(
     if receipt.get("authority") != "WINDOWS_CODEX":
         raise PublicationError("receipt authority is not WINDOWS_CODEX")
     scope = receipt.get("scope")
-    if (
-        not isinstance(scope, str)
-        or "T12" not in scope.upper()
-        or "EXPLORATORY" not in scope.upper()
-    ):
+    if scope != "EXPLORATORY_OVERRIDE_AFTER_CPU_GATE_FAIL":
         raise PublicationError("receipt scope does not record the explicit exploratory T12 override")
     if receipt.get("stages_executed") != ["folding"]:
         raise PublicationError("receipt must record folding as the only executed stage")
