@@ -43,7 +43,8 @@ EXPECTED_TOKENS = {"target": 30, "cdr": 30, "framework": 91, "total": 151}
 MAX_TIMEOUT_SECONDS = 5400
 FATAL_LOG_RE = re.compile(
     r"CUDA[^\n]{0,100}out of memory|OutOfMemoryError|CUBLAS_STATUS_ALLOC_FAILED|"
-    r"failed structure predictions|Traceback \(most recent call last\)",
+    r"(?:Number of )?failed structure predictions:\s*[1-9][0-9]*|"
+    r"Traceback \(most recent call last\)",
     re.IGNORECASE,
 )
 OOM_RE = re.compile(
@@ -604,7 +605,7 @@ def run_folding(
 
 
 def scan_fatal_logs(logs: Path) -> list[str]:
-    """Return names of bounded logs containing fatal signatures."""
+    """Return bounded logs with actual fatal signatures, not zero-failure summaries."""
     matches: list[str] = []
     for path in (logs / "folding.stdout.txt", logs / "folding.stderr.txt"):
         if path.is_file() and path.stat().st_size <= 100 * 1024 * 1024:

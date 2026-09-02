@@ -97,3 +97,16 @@ def test_validate_fold_outputs_rejects_nonfinite_metric(tmp_path: Path) -> None:
     np.savez(path, **payload)
     with pytest.raises(MODULE.RunFailure, match="metric contract mismatch"):
         MODULE.validate_fold_outputs(root)
+
+
+def test_fatal_log_scan_distinguishes_zero_from_nonzero_failures(tmp_path: Path) -> None:
+    """BoltzGen's normal zero-failure summary must not fail a completed run."""
+    logs = tmp_path / "operator_logs"
+    logs.mkdir()
+    stdout = logs / "folding.stdout.txt"
+    stderr = logs / "folding.stderr.txt"
+    stdout.write_text("Number of failed structure predictions: 0\n", encoding="utf-8")
+    stderr.write_text("", encoding="utf-8")
+    assert MODULE.scan_fatal_logs(logs) == []
+    stdout.write_text("Number of failed structure predictions: 1\n", encoding="utf-8")
+    assert MODULE.scan_fatal_logs(logs) == ["folding.stdout.txt"]
