@@ -1,6 +1,7 @@
 """CPU-only tests for the bounded two-scaffold pilot wrapper."""
 import importlib.util
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -56,3 +57,30 @@ def test_gate_allows_only_ready_pilot(monkeypatch):
     gate = {"status": "READY", "next_stage": "diversified_pilot"}
     monkeypatch.setattr(MODULE, "evaluate", lambda *args: gate)
     assert MODULE.require_ready({}, {}, []) == gate
+
+
+@pytest.mark.parametrize("status", [" M tracked.py\n", "?? new_script.py\n"])
+def test_dirty_repository_rejected_before_any_output(monkeypatch, tmp_path, status):
+    monkeypatch.setattr(MODULE.subprocess, "run", lambda *args, **kwargs:
+                        SimpleNamespace(returncode=0, stdout=status, stderr=""))
+    output = tmp_path / "must_not_be_created"
+    args = SimpleNamespace(workspace=tmp_path, repo_root=tmp_path, output=output)
+    with pytest.raises(ValueError, match="repository must be clean"):
+        MODULE.run(args)
+    assert not output.exists()
+
+
+def test_git_status_failure_rejected(monkeypatch, tmp_path):
+    monkeypatch.setattr(MODULE.subprocess, "run", lambda *args, **kwargs:
+                        SimpleNamespace(returncode=128, stdout="", stderr="not a repository"))
+    with pytest.raises(ValueError, match="cannot verify"):
+        MODULE.ensure_clean_repository(tmp_path)
+
+
+def test_clean_git_status_accepted(monkeypatch, tmp_path):
+    def mocked_run(command, **kwargs):
+        assert command == ["git", "status", "--porcelain"]
+        assert kwargs["cwd"] == tmp_path
+        return SimpleNamespace(returncode=0, stdout="", stderr="")
+    monkeypatch.setattr(MODULE.subprocess, "run", mocked_run)
+    assert MODULE.ensure_clean_repository(tmp_path) is None

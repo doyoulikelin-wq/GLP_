@@ -1,0 +1,13 @@
+{
+  "schema": "VHH_PILOT_PRELAUNCH_FAILURE_V1",
+  "status": "EXECUTION_FAILED_BEFORE_MODEL_LAUNCH",
+  "wall_seconds": 2.4976745119984116,
+  "cell_exit_code": 74,
+  "gpu_model_started": false,
+  "generated_candidates": 0,
+  "reason": "Legacy runner requires a clean worktree; the paired-runner source was still untracked during parallel development.",
+  "repair": "Finish and commit implementation first; wrapper now checks clean worktree before creating any attempt or cell.",
+  "recovery_policy": "Use a fresh plan and new cell IDs after the prerequisite repair; do not overwrite or reuse failed output.",
+  "thresholds_changed": false,
+  "biological_pass": false
+}

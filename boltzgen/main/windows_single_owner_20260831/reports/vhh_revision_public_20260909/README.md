@@ -20,6 +20,7 @@
 - [原生对照运行前阶段门](PRE_GPU_STAGE_GATE.json)：CPU 重评完成，GPU 对照待执行；不是对照通过。
 - [原生 GPU 对照结果](NATIVE_CONTROL_SUMMARY.json)：2/2 次预测满足运行前固定的粗粒度界面恢复标准，总用时 53.09 秒。
 - [原生对照运行后阶段门](POST_NATIVE_STAGE_GATE.json)：对照完成，允许准备小型多样性试点。阶段门程序本身不启动 GPU，JSON 的 `gpu_started=false` 描述的是阶段门自身，不否认此前的 GPU 对照已运行。
+- [试点前置检查失败记录](PILOT_PRELAUNCH_FAILURE.json)：未提交的开发文件触发干净工作树检查，模型未启动；完成代码并固定版本后使用新计划继续。
 - [修订执行记录](../../VHH_REVISION_EXECUTION_ZH_20260909.md)
 - [修订方案](../../VHH_REVISED_PROTOCOL_ZH_20260909.md)
 

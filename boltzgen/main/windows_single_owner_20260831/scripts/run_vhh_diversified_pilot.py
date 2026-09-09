@@ -86,6 +86,16 @@ def require_ready(contract: dict, bindings: dict, receipts: list[dict]) -> dict:
     return gate
 
 
+def ensure_clean_repository(repo: Path) -> None:
+    """Fail before creating pilot/cell output when tracked or untracked work exists."""
+    result = subprocess.run(["git", "status", "--porcelain"], cwd=repo,
+                            text=True, capture_output=True, check=False)
+    if result.returncode != 0:
+        raise ValueError("cannot verify pilot repository status")
+    if result.stdout.strip():
+        raise ValueError("pilot repository must be clean before creating any output")
+
+
 def bounded_cell(command: list[str], log: Path, cwd: Path, timeout: float) -> tuple[int, bool]:
     """Kill the whole legacy process group within20seconds after a deadline."""
     with log.open("wb") as stream:
@@ -106,6 +116,7 @@ def run(args: argparse.Namespace) -> int:
     """Execute two cells once; leave scientific stage completion to the summarizer."""
     started, started_utc = time.monotonic(), utc_now()
     workspace, repo = args.workspace.resolve(strict=True), args.repo_root.resolve(strict=True)
+    ensure_clean_repository(repo)
     plan, contract, bindings = json_object(args.plan), json_object(args.contract), json_object(args.bindings)
     prerequisite = [json_object(path) for path in args.prerequisite_receipts]
     prior_gate = require_ready(contract, bindings, prerequisite)
