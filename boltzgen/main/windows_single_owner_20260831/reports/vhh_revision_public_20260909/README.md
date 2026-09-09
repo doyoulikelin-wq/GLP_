@@ -18,6 +18,8 @@
 - [T11 聚合指标](T11_EPITOPE_SUMMARY.json)
 - [T12 聚合指标](T12_EPITOPE_SUMMARY.json)
 - [原生对照运行前阶段门](PRE_GPU_STAGE_GATE.json)：CPU 重评完成，GPU 对照待执行；不是对照通过。
+- [原生 GPU 对照结果](NATIVE_CONTROL_SUMMARY.json)：2/2 次预测满足运行前固定的粗粒度界面恢复标准，总用时 53.09 秒。
+- [原生对照运行后阶段门](POST_NATIVE_STAGE_GATE.json)：对照完成，允许准备小型多样性试点。阶段门程序本身不启动 GPU，JSON 的 `gpu_started=false` 描述的是阶段门自身，不否认此前的 GPU 对照已运行。
 - [修订执行记录](../../VHH_REVISION_EXECUTION_ZH_20260909.md)
 - [修订方案](../../VHH_REVISED_PROTOCOL_ZH_20260909.md)
 
@@ -27,3 +29,6 @@
 
 历史结果与来源：[2026-09-03 T11/T12 比较](../post_t12_readonly_comparison_public_20260903/)。
 历史数值与封存文件均未改写，本修订收窄其科学解释。
+
+原生对照来源：[RCSB PDB 6JB8](https://www.rcsb.org/structure/6JB8)。
+这是已知蛋白抗原复合物，可能与模型训练数据重合；对照成功不保证新候选或短肽选择性可预测。

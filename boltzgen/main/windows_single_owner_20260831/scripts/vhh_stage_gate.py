@@ -24,6 +24,24 @@ def digest(value):
                                     ensure_ascii=False, allow_nan=False).encode()).hexdigest()
 
 
+def candidate_set_digest(candidates):
+    """Bind actual sequence identities, independent of arbitrary candidate labels."""
+    if not isinstance(candidates, list) or not candidates:
+        raise ValueError("nonempty actual candidate sequence records required")
+    ids, sequences = [], []
+    for row in candidates:
+        if not isinstance(row, dict) or not isinstance(row.get("candidate_id"), str) or not row["candidate_id"]:
+            raise ValueError("actual candidate_id missing")
+        sequence_hash = row.get("vhh_sequence_sha256")
+        if not isinstance(sequence_hash, str) or not HEX64.fullmatch(sequence_hash):
+            raise ValueError("actual vhh_sequence_sha256 missing or invalid")
+        ids.append(row["candidate_id"])
+        sequences.append(sequence_hash)
+    if len(set(ids)) != len(ids) or len(set(sequences)) != len(sequences):
+        raise ValueError("actual candidate identities and sequences must be unique")
+    return digest(sorted(sequences))
+
+
 def timestamp(value):
     parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     if parsed.tzinfo is None:
@@ -112,6 +130,28 @@ def validate_receipt(contract, stage, binding, receipt, now):
         issues.append("GPU stage requires actual.execution_device=cuda; CPU self-check is not a free refold")
     if receipt.get("biological_pass") is not False:
         issues.append("biological_pass must be explicitly false")
+    if stage["id"] == "diversified_pilot":
+        claimed = receipt.get("actual_candidate_set_sha256")
+        verified = False
+        for artifact in receipt.get("result_artifacts", []) if isinstance(receipt.get("result_artifacts"), list) else []:
+            try:
+                path = Path(artifact["path"])
+                if path.stat().st_size > 8 * 1024 * 1024:
+                    continue
+                evidence = json.loads(path.read_text(encoding="utf-8-sig"))
+                if not isinstance(evidence, dict) or "actual_candidate_set_sha256" not in evidence:
+                    continue
+                observed = candidate_set_digest(evidence.get("candidates"))
+                if observed != claimed or evidence["actual_candidate_set_sha256"] != observed:
+                    issues.append("pilot actual candidate sequence digest mismatch")
+                elif len(evidence["candidates"]) != actual.get("candidates"):
+                    issues.append("pilot actual candidate count differs from sequence evidence")
+                else:
+                    verified = True
+            except (KeyError, TypeError, ValueError, OSError):
+                issues.append("pilot candidate output evidence invalid")
+        if not verified:
+            issues.append("pilot actual_candidate_set_sha256 requires actual sequence-bound result evidence")
     if stage["id"] == "native_free_refold":
         calibration = receipt.get("calibration", {})
         if not isinstance(calibration, dict):
@@ -184,16 +224,16 @@ def evaluate(contract, bindings, receipts, now=None):
                         row["advisories"].append("old receipt accepted only because protocol/input binding still matches; age alone does not trigger rerunning")
                 except (KeyError, TypeError, ValueError, AttributeError):
                     pass
-                if stage_id in ("diversified_pilot", "active_truncated_pairing"):
+                if stage_id == "active_truncated_pairing":
                     current = bindings.get(stage_id, {})
                     candidate_digest = current.get("candidate_set_sha256") if isinstance(current, dict) else None
                     if not isinstance(candidate_digest, str) or not HEX64.fullmatch(candidate_digest):
                         row["issues"].append("stage binding requires candidate_set_sha256")
                 if stage_id == "active_truncated_pairing":
-                    pilot = bindings.get("diversified_pilot", {})
+                    pilot = selected.get("diversified_pilot", {})
                     paired = bindings.get(stage_id, {})
-                    if not isinstance(pilot, dict) or not isinstance(paired, dict) or pilot.get("candidate_set_sha256") != paired.get("candidate_set_sha256"):
-                        row["issues"].append("paired candidates do not match the completed pilot input binding")
+                    if not isinstance(pilot, dict) or not isinstance(paired, dict) or pilot.get("actual_candidate_set_sha256") != paired.get("candidate_set_sha256"):
+                        row["issues"].append("paired candidates do not match the completed pilot actual output sequences")
                 row["state"] = "BLOCKED" if row["issues"] else "COMPLETE"
             if row["state"] != "COMPLETE":
                 report["next_stage"] = stage_id

@@ -62,16 +62,35 @@ def _summary(values: Sequence[float]) -> dict[str, float | None]:
     return {"min": float(array.min()), "median": float(np.median(array)), "max": float(array.max())}
 
 
-def _config(target_tokens: Sequence[int], his_token: int, ala_token: int, token_count: int, threshold: float) -> np.ndarray:
+def _optional_summary(values):
+    if values and all(value is None for value in values):
+        return {"min": None, "median": None, "max": None, "applicability": "not_applicable"}
+    if any(value is None for value in values):
+        raise ValidationError("cannot mix applicable and inapplicable epitope samples")
+    return _summary(values)
+
+
+def _optional_count(values):
+    if values and all(value is None for value in values):
+        return None
+    if any(value is None for value in values):
+        raise ValidationError("cannot mix applicable and inapplicable epitope samples")
+    return sum(bool(value) for value in values)
+
+
+def _config(target_tokens: Sequence[int], his_token: int | None, ala_token: int | None, token_count: int, threshold: float) -> np.ndarray:
     raw = np.asarray(target_tokens)
     if raw.ndim != 1 or raw.size == 0 or not np.issubdtype(raw.dtype, np.integer):
         raise ValidationError("target tokens must be an explicit nonempty integer list")
     if len(set(raw.tolist())) != raw.size or np.any(raw < 0) or np.any(raw >= token_count):
         raise ValidationError("target tokens must be unique and in range")
-    if isinstance(his_token, bool) or isinstance(ala_token, bool) or not isinstance(his_token, (int, np.integer)) or not isinstance(ala_token, (int, np.integer)):
-        raise ValidationError("epitope indices must be integers")
-    if his_token == ala_token or his_token not in raw or ala_token not in raw:
-        raise ValidationError("distinct His/Ala indices must belong to target")
+    if (his_token is None) != (ala_token is None):
+        raise ValidationError("both epitope indices must be None for generic target geometry")
+    if his_token is not None:
+        if isinstance(his_token, bool) or isinstance(ala_token, bool) or not isinstance(his_token, (int, np.integer)) or not isinstance(ala_token, (int, np.integer)):
+            raise ValidationError("epitope indices must be integers")
+        if his_token == ala_token or his_token not in raw or ala_token not in raw:
+            raise ValidationError("distinct His/Ala indices must belong to target")
     if not math.isfinite(threshold) or threshold <= 0:
         raise ValidationError("contact threshold must be finite and positive")
     return np.sort(raw.astype(int))
@@ -79,10 +98,15 @@ def _config(target_tokens: Sequence[int], his_token: int, ala_token: int, token_
 
 def evaluate_arrays(
     design: Mapping[str, np.ndarray], fold: Mapping[str, np.ndarray], *,
-    target_tokens: Sequence[int], his_token: int = 0, ala_token: int = 1,
+    target_tokens: Sequence[int], his_token: int | None = 0, ala_token: int | None = 1,
     threshold: float = 4.5,
 ) -> list[dict[str, Any]]:
-    """Return one private geometry row per fold, without writing or inference."""
+    """Return private fold geometry without writing or inference.
+
+    Both epitope indices explicitly None enables generic geometry (e.g. the
+    truncated target); all His/Ala fields are then None, never false or zero.
+    Default His0/Ala1 identity checks remain strict for the active target.
+    """
     required = {"coords", "atom_to_token", "atom_resolved_mask", "token_index", "res_type", "mol_type"}
     if "design_mask" not in design or required - set(fold):
         raise ValidationError("missing design_mask or required fold arrays")
@@ -116,7 +140,7 @@ def evaluate_arrays(
     residue_ids = residues.argmax(axis=1)
     if np.any(residue_ids < 2) or np.any(residue_ids > 21):
         raise ValidationError("only canonical amino acids are supported")
-    if residue_ids[his_token] != 10 or residue_ids[ala_token] != 2:
+    if his_token is not None and (residue_ids[his_token] != 10 or residue_ids[ala_token] != 2):
         raise ValidationError("configured epitope does not identify HIS and ALA")
     mapping = _binary(fold["atom_to_token"], (1, atom_count, token_count), "atom_to_token")[0]
     assigned_count = mapping.sum(axis=1)
@@ -147,22 +171,23 @@ def evaluate_arrays(
         residue_min = np.full((len(target_tokens), len(cdr_tokens)), np.inf)
         np.minimum.at(residue_min, (target_atom_rows[:, None], cdr_atom_columns[None, :]), distances)
         contacts = residue_min <= threshold
-        his_min = float(residue_min[token_to_target[his_token]].min())
-        ala_min = float(residue_min[token_to_target[ala_token]].min())
+        his_min = float(residue_min[token_to_target[his_token]].min()) if his_token is not None else None
+        ala_min = float(residue_min[token_to_target[ala_token]].min()) if ala_token is not None else None
         vhh_min = float(np.linalg.norm(sample[target_atoms, None, :] - sample[None, vhh_atoms, :], axis=-1).min())
         if not math.isfinite(vhh_min):
             raise ValidationError("target-VHH distances overflowed")
         pairs = [[int(target_tokens[t]), int(cdr_tokens[c])] for t, c in np.argwhere(contacts)]
         rows.append({
             "sample_index": sample_index,
+            "his_ala_epitope_applicability": "applicable" if his_token is not None else "not_applicable",
             "min_target_cdr_distance_angstrom": float(distances.min()),
             "min_target_vhh_distance_angstrom": vhh_min,
             "his_min_cdr_distance_angstrom": his_min,
             "ala_min_cdr_distance_angstrom": ala_min,
             "any_target_cdr_contact": bool(contacts.any()),
-            "his_contact": his_min <= threshold,
-            "ala_contact": ala_min <= threshold,
-            "both_epitope_contacts": his_min <= threshold and ala_min <= threshold,
+            "his_contact": his_min <= threshold if his_min is not None else None,
+            "ala_contact": ala_min <= threshold if ala_min is not None else None,
+            "both_epitope_contacts": his_min <= threshold and ala_min <= threshold if his_min is not None else None,
             "target_cdr_residue_pair_count": len(pairs),
             "participating_target_residue_count": int(contacts.any(axis=1).sum()),
             "participating_cdr_residue_count": int(contacts.any(axis=0).sum()),
@@ -192,8 +217,11 @@ def candidate_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             similarities.append(len(left & right) / len(union))
     return {
         "sample_count": len(rows),
-        "counts": {name: sum(bool(row[name]) for row in rows) for name in BOOLEAN_METRICS},
-        "metrics": {name: _summary([row[name] for row in rows]) for name in NUMERIC_METRICS},
+        "his_ala_epitope_applicability": "not_applicable" if rows[0]["his_contact"] is None else "applicable",
+        "his_ala_epitope_observations": {"applicable_sample_count": sum(row["his_contact"] is not None for row in rows), "not_applicable_sample_count": sum(row["his_contact"] is None for row in rows)},
+        "metric_applicable_sample_counts": {name: sum(row[name] is not None for row in rows) for name in (*NUMERIC_METRICS, *BOOLEAN_METRICS)},
+        "counts": {name: _optional_count([row[name] for row in rows]) for name in BOOLEAN_METRICS},
+        "metrics": {name: _optional_summary([row[name] for row in rows]) for name in NUMERIC_METRICS},
         "within_candidate_contact_map_jaccard": {
             "pair_count": len(rows) * (len(rows) - 1) // 2,
             "defined_pair_count": len(similarities),
@@ -234,7 +262,7 @@ def _load_npz(path: Path) -> tuple[dict[str, np.ndarray], dict[str, Any]]:
     return arrays, {"path": str(path.resolve()), "size_bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
 
 
-def execute(design_root: Path, output_dir: Path, method: str, *, target_tokens: Sequence[int] = tuple(range(30)), his_token: int = 0, ala_token: int = 1, threshold: float = 4.5, expected_candidates: int | None = None, expected_samples: int | None = None) -> dict[str, Any]:
+def execute(design_root: Path, output_dir: Path, method: str, *, target_tokens: Sequence[int] = tuple(range(30)), his_token: int | None = 0, ala_token: int | None = 1, threshold: float = 4.5, expected_candidates: int | None = None, expected_samples: int | None = None) -> dict[str, Any]:
     started = time.perf_counter()
     root = design_root.expanduser().resolve(strict=True)
     output = output_dir.expanduser().absolute()
@@ -265,7 +293,7 @@ def execute(design_root: Path, output_dir: Path, method: str, *, target_tokens: 
         candidates[path.stem] = {"summary": candidate_summary(rows), "developability_descriptors": developability_descriptors(design, fold), "samples": rows}
         all_rows.extend(rows)
         inputs.extend((design_receipt, fold_receipt))
-    counts = {name: sum(bool(row[name]) for row in all_rows) for name in BOOLEAN_METRICS}
+    counts = {name: _optional_count([row[name] for row in all_rows]) for name in BOOLEAN_METRICS}
     elapsed = time.perf_counter() - started
     common = {
         "schema_version": SCHEMA, "status": "COMPUTATIONAL_REEVALUATION_COMPLETE",
@@ -277,6 +305,9 @@ def execute(design_root: Path, output_dir: Path, method: str, *, target_tokens: 
         "severe_close_contact_interpretation": "target-CDR distance<1.5 diagnostic only; not all target-VHH pairs, atom-type-aware vdW clash or a pass/fail gate",
         "target_token_indices_zero_based": [int(x) for x in target_tokens],
         "epitope_token_indices_zero_based": {"HIS": his_token, "ALA": ala_token},
+        "his_ala_epitope_applicability": "applicable" if his_token is not None else "not_applicable",
+        "his_ala_epitope_observations": {"applicable_sample_count": len(all_rows) if his_token is not None else 0, "not_applicable_sample_count": len(all_rows) if his_token is None else 0},
+        "metric_applicable_sample_counts": {name: sum(row[name] is not None for row in all_rows) for name in (*NUMERIC_METRICS, *BOOLEAN_METRICS)},
         "atom_contract": "canonical_protein_heavy_atom_counts; unique_mapping==fold_resolved; unmapped_padding_excluded; design_sidechain_resolution_not_used",
         "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED",
         "candidate_count": len(candidates), "sample_count": len(all_rows),
@@ -289,10 +320,10 @@ def execute(design_root: Path, output_dir: Path, method: str, *, target_tokens: 
     # serialize private candidate dictionaries and then try to redact strings.
     public = {
         **common, "method": method if method in PUBLIC_METHODS else "custom_method",
-        "sample_metric_distributions_descriptive_only": {name: _summary([row[name] for row in all_rows]) for name in NUMERIC_METRICS},
-        "candidate_median_distributions": {name: _summary([candidate["summary"]["metrics"][name]["median"] for candidate in candidates.values()]) for name in NUMERIC_METRICS},
+        "sample_metric_distributions_descriptive_only": {name: _optional_summary([row[name] for row in all_rows]) for name in NUMERIC_METRICS},
+        "candidate_median_distributions": {name: _optional_summary([candidate["summary"]["metrics"][name]["median"] for candidate in candidates.values()]) for name in NUMERIC_METRICS},
         "candidate_developability_distributions": {name: _summary([candidate["developability_descriptors"][name] for candidate in candidates.values()]) for name in DEVELOPABILITY_METRICS},
-        "candidate_all_samples_contact_counts": {name: sum(c["summary"]["counts"][name] == c["summary"]["sample_count"] for c in candidates.values()) for name in BOOLEAN_METRICS},
+        "candidate_all_samples_contact_counts": {name: _optional_count([None if c["summary"]["counts"][name] is None else c["summary"]["counts"][name] == c["summary"]["sample_count"] for c in candidates.values()]) for name in BOOLEAN_METRICS},
         "candidate_jaccard_median_distribution": _summary([c["summary"]["within_candidate_contact_map_jaccard"]["values_summary"]["median"] for c in candidates.values() if c["summary"]["within_candidate_contact_map_jaccard"]["values_summary"]["median"] is not None]),
         "candidate_jaccard_undefined_median_count": sum(c["summary"]["within_candidate_contact_map_jaccard"]["values_summary"]["median"] is None for c in candidates.values()),
         "per_target_contact_sample_counts": [{"token_index": int(token), "contact_sample_count": sum(row["per_target_residue"][i]["contacting_cdr_residue_count"] > 0 for row in all_rows)} for i, token in enumerate(sorted(target_tokens))],

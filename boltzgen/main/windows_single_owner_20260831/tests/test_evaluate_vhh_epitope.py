@@ -18,10 +18,10 @@ M = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(M)
 
 
-def fixture(cdr_x=3.0, samples=2, padding=3):
+def fixture(cdr_x=3.0, samples=2, padding=3, first_residue_id=10):
     # HIS, ALA, GLY target; ALA designed CDR; GLY framework. All canonical
     # heavy slots are present; coincident within-residue atoms simplify tests.
-    ids = np.asarray([10, 2, 9, 2, 9])
+    ids = np.asarray([first_residue_id, 2, 9, 2, 9])
     counts = M.HEAVY_COUNTS[ids - 2]
     token = np.repeat(np.arange(5), counts)
     n = len(token) + padding
@@ -43,6 +43,49 @@ def evaluate(design, fold, **kwargs):
 
 
 class EpitopeTests(unittest.TestCase):
+    def test_generic_target_has_explicit_not_applicable_epitope(self):
+        rows = evaluate(*fixture(), his_token=None, ala_token=None)
+        self.assertTrue(rows[0]["any_target_cdr_contact"])
+        for field in ("his_contact", "ala_contact", "both_epitope_contacts", "his_min_cdr_distance_angstrom", "ala_min_cdr_distance_angstrom"):
+            self.assertIsNone(rows[0][field])
+        summary = M.candidate_summary(rows)
+        self.assertEqual(summary["his_ala_epitope_applicability"], "not_applicable")
+        self.assertIsNone(summary["counts"]["his_contact"])
+        self.assertEqual(summary["his_ala_epitope_observations"]["applicable_sample_count"], 0)
+        self.assertEqual(summary["metric_applicable_sample_counts"]["his_contact"], 0)
+        self.assertEqual(summary["metric_applicable_sample_counts"]["any_target_cdr_contact"], 2)
+        self.assertEqual(summary["metrics"]["his_min_cdr_distance_angstrom"]["applicability"], "not_applicable")
+        json.dumps(summary, allow_nan=False)
+
+    def test_only_one_missing_epitope_index_rejected(self):
+        for kwargs in ({"his_token": None}, {"ala_token": None}):
+            with self.assertRaises(M.ValidationError):
+                evaluate(*fixture(), **kwargs)
+
+    def test_truncated_glu_first_residue_never_mislabeled_his(self):
+        design, fold = fixture(first_residue_id=8)  # BoltzGen GLU id, 9 heavy atoms
+        with self.assertRaises(M.ValidationError):
+            evaluate(design, fold)
+        row = evaluate(design, fold, his_token=None, ala_token=None)[0]
+        self.assertTrue(row["any_target_cdr_contact"])
+        self.assertIsNone(row["both_epitope_contacts"])
+
+    def test_mixed_epitope_applicability_summary_rejected(self):
+        mixed = [evaluate(*fixture())[0], evaluate(*fixture(), his_token=None, ala_token=None)[0]]
+        with self.assertRaises(M.ValidationError):
+            M.candidate_summary(mixed)
+
+    def test_generic_execute_preserves_null_in_public_aggregation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            root = base / "input"
+            self.write_fixture(root)
+            result = M.execute(root, base / "summary", "exploratory", target_tokens=[0, 1, 2], his_token=None, ala_token=None)
+            self.assertIsNone(result["counts"]["his_contact"])
+            self.assertIsNone(result["candidate_all_samples_contact_counts"]["his_contact"])
+            self.assertIsNone(result["candidate_median_distributions"]["his_min_cdr_distance_angstrom"]["median"])
+            self.assertEqual(result["his_ala_epitope_applicability"], "not_applicable")
+
     def test_contacts_and_residue_pair_definition(self):
         rows = evaluate(*fixture())
         self.assertTrue(rows[0]["both_epitope_contacts"])

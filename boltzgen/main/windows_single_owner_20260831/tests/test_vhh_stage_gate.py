@@ -22,13 +22,16 @@ class VHHStageGateTest(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.result = Path(self.tmp.name) / "result.json"
-        self.result.write_text('{"kind":"synthetic_test_fixture_not_scientific_evidence"}', encoding="utf-8")
+        self.candidates = [{"candidate_id": f"test_{i}", "vhh_sequence_sha256": hashlib.sha256(f"synthetic_sequence_identity_{i}".encode()).hexdigest()} for i in range(12)]
+        self.actual_candidate_digest = GATE.candidate_set_digest(self.candidates)
+        self.result.write_text(json.dumps({"kind": "synthetic_test_fixture_not_scientific_evidence",
+                                          "candidates": self.candidates,
+                                          "actual_candidate_set_sha256": self.actual_candidate_digest}), encoding="utf-8")
         self.contract = json.loads((ROOT / "configs/vhh_revision_20260909.json").read_text())
         self.now = datetime(2026, 9, 9, 12, tzinfo=timezone.utc)
         self.bindings = {stage["id"]: {"source_sha256": "a" * 64} for stage in self.contract["stages"]}
         self.bindings["native_free_refold"]["calibration_thresholds"] = self.contract["stages"][1]["calibration_thresholds"]
-        for stage_id in ("diversified_pilot", "active_truncated_pairing"):
-            self.bindings[stage_id]["candidate_set_sha256"] = "b" * 64
+        self.bindings["active_truncated_pairing"]["candidate_set_sha256"] = self.actual_candidate_digest
         self.receipts = []
         for stage in self.contract["stages"]:
             actual = {"execution_device": "cuda"}
@@ -54,6 +57,7 @@ class VHHStageGateTest(unittest.TestCase):
              "native_heavy_residue_contact_recall": 0.7} for i in range(2)]}
         self.receipts[3]["target_states"] = self.contract["pairing"]["primary_states"]
         self.receipts[3]["terminal_chemistry_status"] = "NOT_ATOMICALLY_VERIFIED"
+        self.receipts[2]["actual_candidate_set_sha256"] = self.actual_candidate_digest
 
     def evaluate(self, receipts=None):
         return GATE.evaluate(self.contract, self.bindings, self.receipts if receipts is None else receipts, self.now)
@@ -118,6 +122,25 @@ class VHHStageGateTest(unittest.TestCase):
         self.bindings["active_truncated_pairing"]["candidate_set_sha256"] = "c" * 64
         self.receipts[3]["input_binding_sha256"] = GATE.digest(self.bindings["active_truncated_pairing"])
         self.assert_blocked("active_truncated_pairing")
+
+    def test_pilot_does_not_require_unknown_generated_sequences_in_input(self):
+        self.assertNotIn("candidate_set_sha256", self.bindings["diversified_pilot"])
+        self.assertEqual(self.evaluate()["status"], "COMPLETE")
+
+    def test_pilot_ids_without_sequence_identity_are_not_evidence(self):
+        with self.assertRaisesRegex(ValueError, "sequence_sha256"):
+            GATE.candidate_set_digest([{"candidate_id": "design_0"}])
+
+    def test_pilot_output_digest_must_match_actual_artifact(self):
+        self.receipts[2]["actual_candidate_set_sha256"] = "d" * 64
+        self.assert_blocked("diversified_pilot")
+
+    def test_candidate_digest_is_sequence_based_not_name_based(self):
+        renamed = copy.deepcopy(self.candidates)
+        renamed[0]["candidate_id"] = "arbitrary_new_label"
+        self.assertEqual(GATE.candidate_set_digest(renamed), self.actual_candidate_digest)
+        renamed[0]["vhh_sequence_sha256"] = "c" * 64
+        self.assertNotEqual(GATE.candidate_set_digest(renamed), self.actual_candidate_digest)
 
     def test_changed_input_invalidates_receipt(self):
         self.bindings["existing_fold_reassessment"]["source_sha256"] = "c" * 64

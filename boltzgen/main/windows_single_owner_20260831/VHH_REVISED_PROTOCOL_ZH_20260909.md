@@ -51,13 +51,28 @@ python scripts/vhh_stage_gate.py \
   --receipts /absolute/private/EXISTING_FOLD_REASSESSMENT_RECEIPT.json
 ```
 
-路径从本文件目录解释。私有 `INPUT_BINDINGS.json` 以阶段 ID 为键，每项记录该阶段输入、源码/配置及模型身份的小型清单。摘要使用 `vhh_stage_gate.digest` 的规范 JSON SHA256，不是文件排版字节哈希。新候选生成完成后记录输出候选集 `candidate_set_sha256`，配对阶段必须引用相同候选集；这项输出身份不是事前已知的序列、不能写成预注册候选。候选/状态设置变化必须更新绑定；模型及校准配置变化同样使旧校准不能复用。日期老旧本身只提示，不触发无意义重跑。
+路径从本文件目录解释。私有 `INPUT_BINDINGS.json` 以阶段 ID 为键，每项记录该阶段输入、源码/配置及模型身份的小型清单。摘要使用 `vhh_stage_gate.digest` 的规范 JSON SHA256，不是文件排版字节哈希。生成阶段只绑定事前设计输入，不能预造尚未生成的序列摘要。生成完成后在收据及实际结果 JSON 中记录 `actual_candidate_set_sha256` 和 `candidates`（每项有 `candidate_id`、`vhh_sequence_sha256`）；门通过 `candidate_set_digest` 对排序后的真实序列摘要列表重算，不能仅用候选名称表绑定。配对阶段输入的 `candidate_set_sha256` 必须等于已经完成的生成收据中的这个实际输出摘要。这项输出身份不是预注册候选。候选/状态设置变化必须更新绑定；模型及校准配置变化同样使旧校准不能复用。日期老旧本身只提示，不触发无意义重跑。
 
 每个阶段收据包括 `schema=VHH_STAGE_RECEIPT_V1`、`protocol_id`、`protocol_sha256`、`stage_id`、`input_binding_sha256`、`status=COMPLETED`、协议指定 `evidence_kind`、`registration`、带时区的完成时间、`actual` 和逐项 `checks`。GPU 阶段另有事前登记时间、启动时间和 `actual.execution_device=cuda`。必须明确 `biological_pass=false`。CPU 60 样本重评是事后分析，不能伪装预注册。
 
 收据还必须提供 `result_artifacts: [{"path": "绝对路径.json", "sha256": "原始文件字节SHA256"}]`，阶段门实际核对这些小型结果文件；不接受没有真实结果文件支撑的完成收据。原生校准的 `binding.calibration_thresholds` 及 `receipt.calibration.thresholds` 必须与协议一致，`receipt.calibration.samples` 必须包含样本 0、1 的实测数值，逐个满足：target 对齐后的 VHH Cα RMSD ≤5 Å、原生重原子残基接触对召回率 ≥0.3（两者均通过、2/2）。召回率使用 4.5 Å 接触定义，不是标准 DockQ。它们是这次小型流程校准的工程规则，不是普适生物学阈值。
 
 `READY` 表示仅下一阶段可按其预算准备执行，**不是结果通过**；`BLOCKED` 表示已有收据缺失必需证据、失败或输入/配置不匹配，禁止下游 GPU；`COMPLETE` 也不允许生物学结论。门检查收据的一致性，真正的数值检查仍由阶段评分器完成；哈希防止误复用，不是对伪造收据的安全认证。
+
+## 活性／截短匹配输入构建器
+
+[`build_vhh_matched_pair_inputs.py`](scripts/build_vhh_matched_pair_inputs.py) 只准备输入，不运行 GPU。它从**新候选自己的** `intermediate_designs/design_*.cif` 和同名 NPZ 创建两个状态：原活性 GLP-1、从同一几何精确删除 His7/Ala8 的截短版本。共享原子坐标和 VHH 序列不变；全部 token 元数据按删除索引切片，不把被删除的热点标记重新赋给 Glu9。不同生成批次可用显式前缀防止 `design_0` 重名。
+
+```bash
+python scripts/build_vhh_matched_pair_inputs.py \
+  --candidate-root /absolute/new_cell_7xl0/intermediate_designs \
+  --candidate-root /absolute/new_cell_6apo/intermediate_designs \
+  --candidate-prefix 7xl0 --candidate-prefix 6apo \
+  --runtime-root /absolute/runtime \
+  --output /absolute/private/new_matched_pair_inputs
+```
+
+这版构建器采用更小的上限：最多 6 个真实唯一序列×2 状态×2 folds，共至多 24 folds；4 个候选就是 16 folds。它输出新目录、统一 `folding.yaml` 和 `MATCHED_PAIR_INPUTS.json`，记录源文件摘要、真实序列集合摘要、每个 token 的源索引及生物学残基编号。`Glu9_geometry_only` 和 `NOT_ATOMICALLY_VERIFIED` 明确表示未验证新 N 端及酰胺的原子化学。它不读取盲锁箱，也不混入天然截短来源构象；天然来源压力测试必须另外分层报告。这个比较描述“匹配删除的计算影响”，不是已证实的活性选择性。
 
 ## 来源和历史关系
 

@@ -1,0 +1,57 @@
+{
+  "schema": "VHH_NATIVE_CONTROL_PUBLIC_V1",
+  "status": "CALIBRATION_COMPLETE",
+  "control_pdb": "6JB8",
+  "experimental_modeled_target_residues": 129,
+  "experimental_modeled_vhh_residues": 125,
+  "unresolved_vhh_terminal_residues_omitted": 11,
+  "native_contact_pair_count": 45,
+  "fold_samples": 2,
+  "passed_calibration_samples": 2,
+  "native_gpu_performed": true,
+  "wall_seconds": 53.09264567199898,
+  "timed_out": false,
+  "folding_exit_code": 0,
+  "checks": {
+    "atom_mapping_valid": true,
+    "finite_coordinates": true,
+    "free_evaluation_configuration_verified": true,
+    "native_interface_recovered": true,
+    "no_native_cross_chain_template": true,
+    "no_untrained_conditioning_switch": true,
+    "outputs_complete": true,
+    "source_identity_valid": true,
+    "thresholds_frozen_before_run": true,
+    "weights_unchanged": true
+  },
+  "thresholds": {
+    "native_heavy_residue_contact_recall": {
+      "direction": "min",
+      "value": 0.3
+    },
+    "target_aligned_binder_ca_rmsd_angstrom": {
+      "direction": "max",
+      "value": 5
+    }
+  },
+  "metric_distributions": {
+    "target_aligned_binder_ca_rmsd_angstrom": {
+      "min": 2.372518237973071,
+      "max": 2.5799321118800917,
+      "mean": 2.476225174926581
+    },
+    "native_heavy_residue_contact_recall": {
+      "min": 0.7555555555555555,
+      "max": 0.8444444444444444,
+      "mean": 0.8
+    }
+  },
+  "biological_pass": false,
+  "claim_boundary": "KNOWN_COMPLEX_COARSE_GEOMETRY_CALIBRATION_ONLY_NOT_GLP1_OR_PROSPECTIVE_BINDING_EVIDENCE",
+  "limitations": [
+    "Known complex may overlap model training data.",
+    "This protein-antigen control does not validate short-peptide selectivity.",
+    "Cropped unresolved tails are disclosed; terminal chemistry is not experimentally tested."
+  ],
+  "implementation_commit": "ea8d1d5"
+}
