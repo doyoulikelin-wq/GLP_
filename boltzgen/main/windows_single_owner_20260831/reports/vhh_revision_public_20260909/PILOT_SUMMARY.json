@@ -1,0 +1,221 @@
+{
+  "aggregation_warning": "Epitope summaries pool descriptive folds; independent unit remains candidate. Contact-map consistency is computed within each candidate only.",
+  "analysis_seconds": 0.24182332799864525,
+  "biological_pass": false,
+  "candidate_all_free_folds_contact_counts": {
+    "ala_contact": 0,
+    "any_target_cdr_contact": 4,
+    "both_epitope_contacts": 0,
+    "his_contact": 0,
+    "severe_close_contact_diagnostic": 0
+  },
+  "candidate_contact_map_jaccard_median_distribution": {
+    "max": 0.42689655172413793,
+    "median": 0.140392216479173,
+    "min": 0.09405405405405406
+  },
+  "candidate_count": 4,
+  "candidate_developability_distributions": {
+    "cdr_cysteine_count": {
+      "max": 0,
+      "median": 0,
+      "min": 0
+    },
+    "cdr_hydrophobic_residue_fraction": {
+      "max": 0.43333333333333335,
+      "median": 0.38461538461538464,
+      "min": 0.36666666666666664
+    },
+    "cdr_kr_minus_de_charge_proxy": {
+      "max": -1,
+      "median": -3,
+      "min": -5
+    },
+    "cdr_residue_count": {
+      "max": 30,
+      "median": 28,
+      "min": 26
+    }
+  },
+  "cdr3_length_class_candidate_counts": {
+    "11": 2,
+    "15": 2
+  },
+  "cdr3_length_class_count": 2,
+  "checks": {
+    "atom_mapping_valid": true,
+    "candidate_sequences_unique": true,
+    "cdr3_classes_verified_from_source_yaml_and_actual_mask": true,
+    "developability_risks_reported": true,
+    "diversity_axes_reported": true,
+    "finite_coordinates": true,
+    "generated_target_conformations_comparable": false,
+    "outputs_complete": true,
+    "same_source_target_verified": true,
+    "source_identity_valid": true
+  },
+  "claim_boundary": "EXPLORATORY_DESIGN_DIVERSITY_NOT_BINDING_OR_SELECTIVITY",
+  "diversity_requirements_satisfied": false,
+  "duplicate_sequence_count": 0,
+  "evaluation_rules_match_preregistered_plan": true,
+  "fold_sample_count": 20,
+  "free_fold_epitope_summary": {
+    "counts": {
+      "ala_contact": 2,
+      "any_target_cdr_contact": 20,
+      "both_epitope_contacts": 1,
+      "his_contact": 2,
+      "severe_close_contact_diagnostic": 0
+    },
+    "metrics": {
+      "ala_min_cdr_distance_angstrom": {
+        "max": 27.61843961245121,
+        "median": 18.19176291914754,
+        "min": 2.4707922111488343
+      },
+      "his_min_cdr_distance_angstrom": {
+        "max": 28.5468654375978,
+        "median": 19.7114580025712,
+        "min": 2.542847359819922
+      },
+      "min_target_cdr_distance_angstrom": {
+        "max": 3.3072346315532934,
+        "median": 2.587985067166767,
+        "min": 1.8071564182606816
+      },
+      "min_target_vhh_distance_angstrom": {
+        "max": 2.8432808481245035,
+        "median": 2.3574894057263496,
+        "min": 1.2496172100454381
+      },
+      "participating_cdr_fraction": {
+        "max": 0.5333333333333333,
+        "median": 0.3076923076923077,
+        "min": 0.16666666666666666
+      },
+      "participating_cdr_residue_count": {
+        "max": 16,
+        "median": 8,
+        "min": 5
+      },
+      "participating_target_residue_count": {
+        "max": 13,
+        "median": 7,
+        "min": 3
+      },
+      "target_cdr_residue_pair_count": {
+        "max": 28,
+        "median": 17,
+        "min": 5
+      }
+    },
+    "sample_count": 20
+  },
+  "free_fold_modal_fraction_distribution": null,
+  "free_fold_unassigned_sample_count": null,
+  "generated_candidate_count": 4,
+  "generated_epitope_footprint_counts_descriptive_only": {
+    "C": 4
+  },
+  "generated_epitope_summary": {
+    "counts": {
+      "ala_contact": 0,
+      "any_target_cdr_contact": 4,
+      "both_epitope_contacts": 0,
+      "his_contact": 0,
+      "severe_close_contact_diagnostic": 0
+    },
+    "metrics": {
+      "ala_min_cdr_distance_angstrom": {
+        "max": 37.71822059724825,
+        "median": 26.522715973831666,
+        "min": 25.720558439347833
+      },
+      "his_min_cdr_distance_angstrom": {
+        "max": 40.178526373388394,
+        "median": 27.57888601037002,
+        "min": 27.100951943300288
+      },
+      "min_target_cdr_distance_angstrom": {
+        "max": 3.351574017482638,
+        "median": 3.010233618203058,
+        "min": 2.555367390889355
+      },
+      "min_target_vhh_distance_angstrom": {
+        "max": 3.090848491624904,
+        "median": 2.6509813817111305,
+        "min": 2.511691988697818
+      },
+      "participating_cdr_fraction": {
+        "max": 0.23076923076923078,
+        "median": 0.1794871794871795,
+        "min": 0.03333333333333333
+      },
+      "participating_cdr_residue_count": {
+        "max": 6,
+        "median": 5,
+        "min": 1
+      },
+      "participating_target_residue_count": {
+        "max": 3,
+        "median": 3,
+        "min": 3
+      },
+      "target_cdr_residue_pair_count": {
+        "max": 8,
+        "median": 5,
+        "min": 3
+      }
+    },
+    "sample_count": 4
+  },
+  "generated_pose_class_count": null,
+  "generated_pose_class_sizes": null,
+  "implementation_note": "Resolved-directory compatibility repair may postdate generation; the planned code digest and actual implementation digests are retained, and geometric rules are unchanged.",
+  "implementation_sha256": {
+    "evaluate_vhh_epitope.py": "bca24706b6392881f7f169467d2fb3df5bf8dd69089441af4f4b03d35d1df249",
+    "summarize_vhh_pilot.py": "d44c3040c7fa110dff56cd91dfcca2bb34912f417eb2274d4d103cab04bd7240",
+    "vhh_stage_gate.py": "1ca0d74f1f6eb49b806bce84d1d3f1886d8a293064eb0c5ef8fe83149b251641"
+  },
+  "limitations": [
+    "Generated-pose classes are exploratory relative-geometry bins, not different biological binding modes.",
+    "N/M/C contact footprint does not determine pose diversity; all candidates may appropriately share the N-terminal footprint.",
+    "CDR3 classes are fixed source-label ranges verified against the actual design mask, not inferred from scaffold names.",
+    "Free-fold modal fraction can be dominated by unassigned structures; no stability acceptance threshold is applied.",
+    "Sequence deduplication uses the full modeled VHH canonical residue identity; no public sequence or per-candidate hash is emitted."
+  ],
+  "output_directory_resolution": "RESOLVED_FOLDING_CONFIG_NOT_RAW_GENERATION_DIRECTORY",
+  "planned_summarizer_sha256": "376afefa4c89af444a31098cb417d2b1f65241905246686b5813973f027b7d54",
+  "pose_classification": {
+    "alignment": "target_per_residue_backbone_centroid_kabsch",
+    "classification_role": "exploratory_relative_geometry_not_biological_pass",
+    "clustering": "deterministic_complete_link_greedy",
+    "direction": "framework_backbone_centroid_to_cdr_backbone_centroid",
+    "direction_separation_degrees": 45,
+    "fold_assignment": "nearest_generated_class_representative_within_both_thresholds_else_unassigned",
+    "geometry_source": "fold_npz_input_coords_generated_design",
+    "position_separation_angstrom": 8,
+    "target_reference_rmsd_tolerance_angstrom": 0.001
+  },
+  "scaffold_candidate_counts": {
+    "01_pdb_00007xl0-A": 2,
+    "02_pdb_00006apo-A": 2
+  },
+  "scaffold_count": 2,
+  "schema": "VHH_DIVERSE_PILOT_SUMMARY_V1",
+  "source_file_count": 19,
+  "status": "DIAGNOSTIC_COMPLETE_POSE_COMPARABILITY_BLOCKED",
+  "target_reference_alignment_rmsd_angstrom": {
+    "max": 0.09631400220613488,
+    "median": 0.07315866476198177,
+    "min": 9.957547433986399e-7
+  },
+  "target_reference_comparability": {
+    "exceeding_tolerance_candidate_count": 3,
+    "failure_meaning": "POSE_CLASSES_UNAVAILABLE_NOT_BIOLOGICAL_FAILURE",
+    "passed": false,
+    "reference": "FIRST_CANDIDATE_IN_DETERMINISTIC_CELL_AND_FILE_ORDER",
+    "tolerance_angstrom": 0.001
+  }
+}
+

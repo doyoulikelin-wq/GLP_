@@ -1,0 +1,18 @@
+{
+  "schema": "VHH_REVISION_FINAL_TEST_SUMMARY_V1",
+  "test_scope": "boltzgen/main/windows_single_owner_20260831/tests",
+  "passed": 219,
+  "failed": 0,
+  "warnings": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "wall_seconds": 29.11,
+  "inference_performed_by_this_test_run": false,
+  "pytest_cache_disabled": true,
+  "bytecode_disabled": true,
+  "verification_notes": [
+    "19 pilot summary tests include inverse-folded-directory resolution and target-noncomparability null/blocked regression.",
+    "13 matched-state runner tests include undefined Jaccard counts.",
+    "Native control and pilot GPU runs have separate actual receipts; unit tests do not stand in for GPU results."
+  ]
+}
+

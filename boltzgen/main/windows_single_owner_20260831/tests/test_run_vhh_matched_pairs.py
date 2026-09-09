@@ -87,6 +87,9 @@ class MatchedRunnerTest(unittest.TestCase):
         a,t = candidate["states"]
         self.assertEqual(a["samples"][0]["shared_segment_contact_pairs"],t["samples"][0]["shared_segment_contact_pairs"])
         self.assertEqual(candidate["shared_segment_cross_state_jaccard"]["median"],1.0)
+        self.assertEqual(candidate["shared_segment_cross_state_jaccard"]["pair_count"],4)
+        self.assertEqual(candidate["shared_segment_cross_state_jaccard"]["defined_pair_count"],4)
+        self.assertEqual(candidate["shared_segment_cross_state_jaccard"]["both_empty_undefined_pair_count"],0)
         self.assertEqual(candidate["shared_segment_contact_change_truncated_minus_active"],0)
         self.assertTrue(all(pair[0]>=9 for pair in a["samples"][0]["shared_segment_contact_pairs"]))
 
@@ -96,6 +99,20 @@ class MatchedRunnerTest(unittest.TestCase):
         for secret in ("design_0",str(self.base),self.preparation["candidate_set_sha256"],"ACDEFGHIKLMNPQRSTVWY"):
             self.assertNotIn(secret,text)
         self.assertNotIn("confidence_descriptive_only",text)
+
+    def test_both_empty_contact_maps_are_counted_as_undefined(self):
+        def separate(fold):
+            count = fold["res_type"].shape[1] - len("ACDEFGHIKLMNPQRSTVWY")
+            # Move all fixture VHH atoms away in both repeats.
+            atom_token = fold["atom_to_token"][0].argmax(axis=1)
+            fold["coords"][:, atom_token >= count, 1] += 1000
+        self.mutate_fold(separate, task="design_0_active")
+        self.mutate_fold(separate, task="design_0_truncated")
+        private,_ = M.score_outputs(self.attempt,self.preparation)
+        value = private["candidates"][0]["shared_segment_cross_state_jaccard"]
+        self.assertIsNone(value["median"])
+        self.assertEqual(value["defined_pair_count"],0)
+        self.assertEqual(value["both_empty_undefined_pair_count"],4)
 
     def test_wrong_output_sequence_rejected(self):
         self.preparation["candidates"][0]["vhh_sequence_sha256"] = "a"*64

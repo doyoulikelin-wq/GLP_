@@ -66,6 +66,19 @@ def cdr_annotation(scaffold_yaml):
     return tokens, ranges[2][1] - ranges[2][0] + 1
 
 
+def fold_design_root(attempt):
+    """Read the resolved folding input, never confuse raw and inverse-folded designs."""
+    attempt = Path(attempt).resolve(strict=True)
+    payload, receipt = read_bound(attempt / "config" / "folding.yaml")
+    config = yaml.safe_load(payload)
+    root = Path(config["data"]["design_dir"])
+    if (not root.is_absolute() or root.is_symlink() or not root.is_dir()
+            or root.resolve().parent != attempt
+            or root.name not in {"intermediate_designs", "intermediate_designs_inverse_folded"}):
+        raise ValueError("resolved folding input must be a supported direct child of its attempt")
+    return root, receipt
+
+
 def backbone_geometry(fold, design_mask):
     mapping = np.asarray(fold["atom_to_token"])[0]
     valid = mapping.sum(axis=1) == 1
@@ -153,6 +166,13 @@ def footprint(row):
     return winners[0] if len(winners) == 1 else "mixed_tie"
 
 
+def pooled_epitope_descriptors(rows):
+    """Aggregate geometry without treating different sequences as repeats."""
+    return {"sample_count": len(rows),
+        "counts": {name: E._optional_count([row[name] for row in rows]) for name in E.BOOLEAN_METRICS},
+        "metrics": {name: E._optional_summary([row[name] for row in rows]) for name in E.NUMERIC_METRICS}}
+
+
 def summarize_index(index_path: Path, output_dir: Path):
     started = time.perf_counter()
     output = output_dir.absolute()
@@ -190,7 +210,8 @@ def summarize_index(index_path: Path, output_dir: Path):
         cdr_tokens, cdr3_length = cdr_annotation(yaml.safe_load(bound_sources["scaffold.yaml"]))
         if cell.get("cdr3_length") != cdr3_length:
             raise ValueError("declared CDR3 class differs from source YAML annotation")
-        root = Path(cell["attempt_root"]) / "intermediate_designs"
+        root, folding_config_receipt = fold_design_root(cell["attempt_root"])
+        inputs.append(folding_config_receipt)
         if root.resolve() == output.resolve() or root.resolve() in output.resolve().parents:
             raise ValueError("summary cannot be inside a source design directory")
         designs = sorted(root.glob("design_*.npz"), key=lambda path: path.name)
@@ -219,7 +240,10 @@ def summarize_index(index_path: Path, output_dir: Path):
             original = original[0, 0]
             if reference is None:
                 reference = target_centres(original, geometry[0], geometry[1])
-            generated_pose = describe_pose(original, geometry, reference, require_same_target=True)
+            # Keep valid contact/sequence results even when the preregistered
+            # target-comparability condition prevents cross-candidate clustering.
+            # Computing alignment diagnostics does not waive that condition.
+            generated_pose = describe_pose(original, geometry, reference)
             generated_fold = dict(fold, coords=original[None])
             generated_row = E.evaluate_arrays(design, generated_fold, target_tokens=list(range(TARGET_COUNT)))[0]
             candidates.append({"candidate_id": f"{cell['cell_id']}/{path.stem}", "scaffold_id": scaffold,
@@ -238,7 +262,9 @@ def summarize_index(index_path: Path, output_dir: Path):
         else:
             seen[digest] = candidate["candidate_id"]
             unique.append(candidate)
-    clusters = cluster_poses([row["generated_pose"] for row in unique])
+    target_rmsds = [row["generated_pose"]["target_alignment_rmsd_angstrom"] for row in candidates]
+    comparable = all(value <= POSE_RULE["target_reference_rmsd_tolerance_angstrom"] for value in target_rmsds)
+    clusters = cluster_poses([row["generated_pose"] for row in unique]) if comparable else []
     representatives = [unique[group[0]]["generated_pose"] for group in clusters]
     for class_index, members in enumerate(clusters, 1):
         for member in members:
@@ -250,27 +276,48 @@ def summarize_index(index_path: Path, output_dir: Path):
             candidate["free_fold_pose_class_counts"] = dict(counts)
             candidate["free_fold_modal_pose_classes"] = sorted(key for key, value in counts.items() if value == largest)
             candidate["free_fold_modal_fraction"] = largest / len(assignments)
+    if not comparable:
+        for candidate in unique:
+            candidate.update(generated_pose_class=None, free_fold_pose_class_counts=None,
+                free_fold_modal_pose_classes=None, free_fold_modal_fraction=None,
+                pose_class_status="NOT_ASSESSABLE_TARGET_CONFORMATIONS_DIFFER")
     scaffold_counts = dict(sorted(Counter(row["scaffold_id"] for row in unique).items()))
     cdr3_counts = dict(sorted(Counter(str(row["cdr3_length"]) for row in unique).items()))
     set_digest = candidate_set_digest(unique)
-    public = {"schema": "VHH_DIVERSE_PILOT_SUMMARY_V1", "status": "COMPUTATIONAL_SUMMARY_COMPLETE",
+    public = {"schema": "VHH_DIVERSE_PILOT_SUMMARY_V1", "status": "COMPUTATIONAL_SUMMARY_COMPLETE" if comparable else "DIAGNOSTIC_COMPLETE_POSE_COMPARABILITY_BLOCKED",
         "biological_pass": False, "claim_boundary": "EXPLORATORY_DESIGN_DIVERSITY_NOT_BINDING_OR_SELECTIVITY",
         "candidate_count": len(unique), "generated_candidate_count": len(candidates), "duplicate_sequence_count": len(duplicates),
         "fold_sample_count": len(candidates) * expected_folds, "scaffold_count": len(scaffold_counts),
-        "cdr3_length_class_count": len(cdr3_counts), "generated_pose_class_count": len(clusters),
+        "cdr3_length_class_count": len(cdr3_counts), "generated_pose_class_count": len(clusters) if comparable else None,
         "scaffold_candidate_counts": scaffold_counts, "cdr3_length_class_candidate_counts": cdr3_counts,
-        "generated_pose_class_sizes": [len(group) for group in clusters],
+        "generated_pose_class_sizes": [len(group) for group in clusters] if comparable else None,
+        "target_reference_alignment_rmsd_angstrom": E._summary(target_rmsds),
+        "target_reference_comparability": {"passed": comparable,
+            "tolerance_angstrom": POSE_RULE["target_reference_rmsd_tolerance_angstrom"],
+            "exceeding_tolerance_candidate_count": sum(value > POSE_RULE["target_reference_rmsd_tolerance_angstrom"] for value in target_rmsds),
+            "reference": "FIRST_CANDIDATE_IN_DETERMINISTIC_CELL_AND_FILE_ORDER",
+            "failure_meaning": "POSE_CLASSES_UNAVAILABLE_NOT_BIOLOGICAL_FAILURE"},
         "generated_epitope_footprint_counts_descriptive_only": dict(Counter(row["generated_epitope_footprint"] for row in unique)),
-        "free_fold_modal_fraction_distribution": E._summary([row["free_fold_modal_fraction"] for row in unique]),
-        "free_fold_unassigned_sample_count": sum(row["free_fold_pose_class_counts"].get("unassigned", 0) for row in unique),
+        "free_fold_modal_fraction_distribution": E._summary([row["free_fold_modal_fraction"] for row in unique]) if comparable else None,
+        "free_fold_unassigned_sample_count": sum(row["free_fold_pose_class_counts"].get("unassigned", 0) for row in unique) if comparable else None,
+        "generated_epitope_summary": pooled_epitope_descriptors([row["generated_metrics"] for row in unique]),
+        "free_fold_epitope_summary": pooled_epitope_descriptors([fold_row for row in unique for fold_row in row["free_fold_metrics"]]),
+        "candidate_all_free_folds_contact_counts": {name: sum(all(fold_row[name] is True for fold_row in row["free_fold_metrics"]) for row in unique) for name in E.BOOLEAN_METRICS},
+        "candidate_contact_map_jaccard_median_distribution": E._summary([row["free_fold_summary"]["within_candidate_contact_map_jaccard"]["values_summary"]["median"] for row in unique if row["free_fold_summary"]["within_candidate_contact_map_jaccard"]["values_summary"]["median"] is not None]),
+        "aggregation_warning": "Epitope summaries pool descriptive folds; independent unit remains candidate. Contact-map consistency is computed within each candidate only.",
         "candidate_developability_distributions": {name: E._summary([row["developability_descriptors"][name] for row in unique]) for name in E.DEVELOPABILITY_METRICS},
         "pose_classification": POSE_RULE,
         "source_file_count": len(inputs),
         "implementation_sha256": {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ("summarize_vhh_pilot.py", "evaluate_vhh_epitope.py", "vhh_stage_gate.py")},
+        "planned_summarizer_sha256": index.get("summarizer_sha256"),
+        "evaluation_rules_match_preregistered_plan": index["pose_classification"] == POSE_RULE,
+        "output_directory_resolution": "RESOLVED_FOLDING_CONFIG_NOT_RAW_GENERATION_DIRECTORY",
+        "implementation_note": "Resolved-directory compatibility repair may postdate generation; the planned code digest and actual implementation digests are retained, and geometric rules are unchanged.",
         "checks": {"source_identity_valid": True, "atom_mapping_valid": True, "finite_coordinates": True, "outputs_complete": True,
             "candidate_sequences_unique": not duplicates, "diversity_axes_reported": True, "developability_risks_reported": True,
-            "same_source_target_verified": True, "cdr3_classes_verified_from_source_yaml_and_actual_mask": True},
-        "diversity_requirements_satisfied": len(scaffold_counts) >= 2 and len(cdr3_counts) >= 2 and len(clusters) >= 2 and not duplicates,
+            "same_source_target_verified": True, "generated_target_conformations_comparable": comparable,
+            "cdr3_classes_verified_from_source_yaml_and_actual_mask": True},
+        "diversity_requirements_satisfied": comparable and len(scaffold_counts) >= 2 and len(cdr3_counts) >= 2 and len(clusters) >= 2 and not duplicates,
         "limitations": ["Generated-pose classes are exploratory relative-geometry bins, not different biological binding modes.",
             "N/M/C contact footprint does not determine pose diversity; all candidates may appropriately share the N-terminal footprint.",
             "CDR3 classes are fixed source-label ranges verified against the actual design mask, not inferred from scaffold names.",

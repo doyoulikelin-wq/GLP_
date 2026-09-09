@@ -1,3 +1,5 @@
+"""Tests for identity-preserving active and matched-deletion input construction."""
+
 from __future__ import annotations
 
 import importlib.util

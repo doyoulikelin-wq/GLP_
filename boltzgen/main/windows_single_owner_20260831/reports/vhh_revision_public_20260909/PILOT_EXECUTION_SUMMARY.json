@@ -1,0 +1,25 @@
+{
+  "schema": "VHH_DIVERSE_PILOT_EXECUTION_PUBLIC_V1",
+  "status": "GPU_COMPLETE_SCIENTIFIC_STAGE_BLOCKED",
+  "biological_pass": false,
+  "started_at_utc": "2026-09-09T15:09:13.595658Z",
+  "finished_at_utc": "2026-09-09T15:15:20.809567Z",
+  "wall_seconds": 359.95847823000076,
+  "candidate_count": 4,
+  "fold_sample_count": 20,
+  "scaffold_count": 2,
+  "weights_unchanged": true,
+  "oom": false,
+  "timed_out": false,
+  "automatic_retry": false,
+  "legacy_filter_pass_count": 0,
+  "legacy_filter_candidate_count": 4,
+  "legacy_filter_interpretation": "Historical strict criteria remain unchanged; not the revised biological endpoint.",
+  "terminal_checks": "Frozen legacy runner requires before/after used-runtime-manifest verification before publishing successful terminal status.",
+  "paired_gpu_executed": false,
+  "stop_reason": "POSE_COMPARABILITY_PREREQUISITE_UNMET",
+  "generator_source_commit": "592571c",
+  "planned_summarizer_sha256": "376afefa4c89af444a31098cb417d2b1f65241905246686b5813973f027b7d54",
+  "actual_summarizer_sha256": "d44c3040c7fa110dff56cd91dfcca2bb34912f417eb2274d4d103cab04bd7240"
+}
+

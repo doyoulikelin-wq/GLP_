@@ -111,8 +111,10 @@ def pilot_fixture(base, duplicate=False):
         cell = base / f"cell_{number}"
         source, attempt = cell / "source", cell / "attempt"
         source.mkdir(parents=True)
-        root = attempt / "intermediate_designs"
+        root = attempt / "intermediate_designs_inverse_folded"
         (root / "fold_out_npz").mkdir(parents=True)
+        (attempt / "config").mkdir()
+        (attempt / "config" / "folding.yaml").write_text(json.dumps({"data": {"design_dir": str(root)}}))
         cdr_text = "1..1,3..3,5..6" if number == 0 else "1..1,3..3,5..7"
         scaffold_yaml = {"design": [{"chain": {"id": "A", "res_index": cdr_text}}]}
         (source / "scaffold.yaml").write_text(json.dumps(scaffold_yaml))
@@ -188,3 +190,35 @@ def test_source_mutation_and_unbound_rule_rejected(tmp_path):
     (tmp_path / "cell_0" / "source" / "target.cif").write_text("mutated")
     with pytest.raises(ValueError):
         M.summarize_index(index, tmp_path / "summary")
+
+
+def test_folding_directory_resolved_from_configuration_not_raw_designs(tmp_path):
+    pilot_fixture(tmp_path)
+    attempt = tmp_path / "cell_0" / "attempt"
+    (attempt / "intermediate_designs").mkdir()
+    root, receipt = M.fold_design_root(attempt)
+    assert root.name == "intermediate_designs_inverse_folded"
+    assert receipt["path"].endswith("config/folding.yaml")
+    (attempt / "config" / "folding.yaml").write_text(json.dumps({"data": {"design_dir": str(tmp_path)}}))
+    with pytest.raises(ValueError):
+        M.fold_design_root(attempt)
+
+
+def test_target_difference_retains_contacts_but_blocks_pose_gate(tmp_path):
+    index = pilot_fixture(tmp_path)
+    path = tmp_path / "cell_1" / "attempt" / "intermediate_designs_inverse_folded" / "fold_out_npz" / "design_0.npz"
+    with np.load(path, allow_pickle=False) as data:
+        arrays = {key: data[key].copy() for key in data.files}
+    arrays["input_coords"][0, 0, :10] += 3
+    np.savez(path, **arrays)
+    public = M.summarize_index(index, tmp_path / "summary")
+    assert public["status"] == "DIAGNOSTIC_COMPLETE_POSE_COMPARABILITY_BLOCKED"
+    assert public["candidate_count"] == 2
+    assert public["generated_pose_class_count"] is None
+    assert public["free_fold_modal_fraction_distribution"] is None
+    assert public["diversity_requirements_satisfied"] is False
+    assert public["target_reference_comparability"]["exceeding_tolerance_candidate_count"] == 1
+    assert public["pose_classification"] == M.POSE_RULE
+    assert public["free_fold_epitope_summary"]
+    private = json.loads((tmp_path / "summary" / "PRIVATE_PILOT_SUMMARY.json").read_text())
+    assert all(row["generated_pose_class"] is None for row in private["candidates"])

@@ -136,8 +136,11 @@ def score_outputs(attempt, preparation):
                 a,b = {tuple(p) for p in left["shared_segment_contact_pairs"]},{tuple(p) for p in right["shared_segment_contact_pairs"]}
                 if a|b:
                     cross.append(len(a&b)/len(a|b))
+        pair_count = len(states[0]["samples"]) * len(states[1]["samples"])
+        jaccard = {**geometry._summary(cross), "pair_count": pair_count,
+                   "defined_pair_count": len(cross), "both_empty_undefined_pair_count": pair_count - len(cross)}
         candidates.append({"candidate_id": candidate["candidate_id"], "vhh_sequence_sha256": candidate["vhh_sequence_sha256"],
-                           "states": states, "shared_segment_cross_state_jaccard": geometry._summary(cross),
+                           "states": states, "shared_segment_cross_state_jaccard": jaccard,
                            "shared_segment_contact_change_truncated_minus_active": states[1]["shared_segment_contact_pair_count"]["median"]-states[0]["shared_segment_contact_pair_count"]["median"]})
     common = {"schema": "VHH_MATCHED_PAIR_RESULTS_V1", "status": "COMPUTATIONAL_PAIRING_COMPLETE", "candidate_count": len(candidates),
               "fold_sample_count": len(candidates)*4, "target_states": STATE_IDS, "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED",
