@@ -1,0 +1,86 @@
+{
+  "schema": "VHH_REVISED_PROTOCOL_V1",
+  "protocol_id": "vhh-revision-20260909",
+  "status": "IMPLEMENTED_NOT_ALL_STAGES_EXECUTED",
+  "objective": "Computational hypotheses for preferential recognition of GLP-1(7-36)NH2 over GLP-1(9-36)NH2",
+  "claim_boundary": "COMPUTATIONAL_EXPLORATION_ONLY_NO_BIOLOGICAL_PASS",
+  "receipt_age_advisory_days": 30,
+  "receipt_freshness_policy": "CONTENT_AND_CONFIGURATION_BINDING_NOT_CALENDAR_EXPIRY",
+  "metrics": {
+    "primary_mechanistic_descriptors": ["cdr_target_interface", "his7_cdr_contact", "ala8_cdr_contact", "both_terminal_residues_cdr_contact", "interface_repeat_consistency", "matched_terminal_deletion_response"],
+    "secondary_pose_descriptors": ["target_aligned_cdr_rmsd_angstrom", "framework_aligned_cdr_rmsd_angstrom"],
+    "heavy_atom_contact_cutoff_angstrom": 4.5,
+    "contact_cutoff_role": "DESCRIPTIVE_NOT_VALIDATED_BINDING_OR_SELECTIVITY_THRESHOLD",
+    "uncertainty_unit": "candidate_not_fold",
+    "reference_pose_provenance": "ARTIFICIALLY_RIGID_PLACED_DESIGN_NOT_EXPERIMENTAL_COMPLEX"
+  },
+  "mechanism": {
+    "split_template_relative_pose_encoded": false,
+    "current_folding_checkpoint_consumes_binding_type": false,
+    "enable_untrained_conditioning_switch": false,
+    "separate_constrained_design_from_free_evaluation": true,
+    "native_cross_chain_template_in_free_evaluation": false
+  },
+  "pairing": {
+    "primary_states": ["GLP1_7_36_NH2", "GLP1_9_36_NH2"],
+    "secondary_specificity_family": "GLP2",
+    "match_candidate_sequence_and_inference_settings": true,
+    "terminal_chemistry_statuses": ["ATOMICALLY_VERIFIED", "NOT_ATOMICALLY_VERIFIED"],
+    "unverified_terminal_chemistry_is_exploratory_only": true,
+    "balance_by_source_group_not_conformer_count": true,
+    "raw_iptm_difference_is_not_selectivity": true,
+    "previous_candidate_results_transferable_to_new_sequences": false,
+    "used_lockbox_status": "DEVELOPMENT_NEGATIVE_CONTROL_NOT_BLINDED"
+  },
+  "developability_risks": ["unpaired_cysteine", "exposed_hydrophobic_patch", "extreme_charge", "sequence_composition", "framework_integrity"],
+  "execution": {
+    "one_question_per_run": true,
+    "one_gpu_main_task_at_a_time": true,
+    "training_allowed": false,
+    "weight_mutation_allowed": false,
+    "bindcraft_allowed": false,
+    "overwrite_existing_results_allowed": false,
+    "automatic_seed_expansion_allowed": false,
+    "source_audit": "VALIDATE_CHANGED_SMALL_INPUTS_AND_REUSE_VALIDATED_ATOM_MAPS",
+    "weight_audit": "HASH_ACTUALLY_USED_WEIGHT_ASSETS_ONCE_BEFORE_AND_ONCE_AFTER_EACH_GPU_RUN_NO_UNUSED_CHECKPOINT_OR_TREE_SCAN",
+    "stop_on": ["timeout", "oom", "nonfinite_coordinates", "missing_outputs", "invalid_atom_mapping", "failed_calibration", "input_binding_mismatch"]
+  },
+  "stages": [
+    {
+      "id": "existing_fold_reassessment",
+      "question": "Do existing predictions contact the intended terminal epitope rather than only deviate from an artificial reference?",
+      "evidence_kind": "retrospective_cpu_reassessment",
+      "registration": "RETROSPECTIVE",
+      "budget": {"gpu_allowed": false, "max_samples": 60, "required_samples": 60},
+      "required_checks": ["source_identity_valid", "atom_mapping_valid", "finite_coordinates", "epitope_interface_metrics_reported", "candidate_repeat_summaries_reported", "developability_risks_reported", "retrospective_label_explicit"]
+    },
+    {
+      "id": "native_free_refold",
+      "question": "Can the current free-folding evaluator recover a known benign VHH-antigen interface without the native cross-chain template?",
+      "evidence_kind": "native_complex_free_refold_gpu",
+      "registration": "PROSPECTIVE",
+      "budget": {"gpu_allowed": true, "max_fold_samples": 2, "required_fold_samples": 2, "max_wall_seconds": 900},
+      "calibration_thresholds": {
+        "target_aligned_binder_ca_rmsd_angstrom": {"direction": "max", "value": 5.0},
+        "native_heavy_residue_contact_recall": {"direction": "min", "value": 0.3}
+      },
+      "required_checks": ["source_identity_valid", "atom_mapping_valid", "finite_coordinates", "outputs_complete", "thresholds_frozen_before_run", "no_native_cross_chain_template", "free_evaluation_configuration_verified", "native_interface_recovered", "no_untrained_conditioning_switch", "weights_unchanged"]
+    },
+    {
+      "id": "diversified_pilot",
+      "question": "Does limited scaffold/CDR3/pose diversity produce distinct plausible terminal-recognition hypotheses?",
+      "evidence_kind": "bounded_diverse_design_gpu",
+      "registration": "PROSPECTIVE",
+      "budget": {"gpu_allowed": true, "max_candidates": 12, "max_wall_seconds": 1800, "min_scaffolds": 2, "max_scaffolds": 3, "min_cdr3_classes": 2, "min_pose_classes": 2},
+      "required_checks": ["source_identity_valid", "atom_mapping_valid", "finite_coordinates", "outputs_complete", "thresholds_frozen_before_run", "candidate_sequences_unique", "diversity_axes_reported", "developability_risks_reported", "no_automatic_seed_expansion", "weights_unchanged"]
+    },
+    {
+      "id": "active_truncated_pairing",
+      "question": "For the exact new candidates, how do matched active and truncated GLP-1 states differ in the predicted terminal interface?",
+      "evidence_kind": "matched_active_truncated_free_refold_gpu",
+      "registration": "PROSPECTIVE",
+      "budget": {"gpu_allowed": true, "max_candidates": 12, "max_fold_samples": 48, "max_wall_seconds": 1800, "folds_per_candidate_per_state": 2},
+      "required_checks": ["source_identity_valid", "atom_mapping_valid", "finite_coordinates", "outputs_complete", "thresholds_frozen_before_run", "candidate_sequences_match_pilot", "matched_inference_settings", "terminal_chemistry_status_explicit", "source_group_balance_reported", "candidate_repeat_summaries_reported", "no_raw_iptm_selectivity_claim", "no_native_cross_chain_template", "weights_unchanged"]
+    }
+  ]
+}

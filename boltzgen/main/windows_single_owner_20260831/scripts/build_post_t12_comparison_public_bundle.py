@@ -596,19 +596,19 @@ def _render_public_files(
         and primary["t11"]["at_or_below_threshold_count"]
         == primary["t12"]["at_or_below_threshold_count"]
     ):
-        primary_finding = "目标相对位姿未显示明确改善，候选层面的方向相互抵消。"
+        primary_finding = "对人工设计参考姿态的重现未显示明确改善，候选层面的方向相互抵消；不等于脱离目标或不能结合。"
         primary_short = "未见明确改善"
     elif primary_directions["improved"] > primary_directions["worsened"]:
-        primary_finding = "目标相对位姿出现描述性改善方向，但不足以形成确认性结论。"
+        primary_finding = "对人工设计参考姿态的重现出现描述性改善方向，不代表真实结合改善。"
         primary_short = "出现描述性改善方向"
     else:
-        primary_finding = "目标相对位姿出现描述性变差方向。"
+        primary_finding = "对人工设计参考姿态的重现出现描述性变差方向，不代表真实结合变差。"
         primary_short = "出现描述性变差方向"
     if (
         framework["t12_minus_t11_median_angstrom"] < 0
         and framework_directions["improved"] > framework_directions["worsened"]
     ):
-        framework_finding = "分子内部的 CDR 保持指标出现描述性改善，但不能替代目标相对位姿结果。"
+        framework_finding = "分子内部的 CDR 保持指标出现描述性改善，但不能替代界面、端部识别及配对选择性评价。"
         framework_short = "有描述性改善"
     elif framework["t12_minus_t11_median_angstrom"] > 0:
         framework_finding = "分子内部的 CDR 保持指标出现描述性变差。"
@@ -637,6 +637,8 @@ def _render_public_files(
             "decision": "当前结果不足以支持继续追加计算；若继续，应先修改约束或方法并预先登记评价规则。",
         },
         "limitations": [
+            "参考构象是人工定位的设计假说，不是实验复合物；RMSD 只衡量参考姿态自洽，不能判定结合或脱离。",
+            "模板分槽同时改变框架信息和模板槽聚合，不能将差异唯一归因于某项机制。",
             "只有六个候选；每个候选的五次折叠不是五个独立候选。",
             "两轮没有可验证的共同随机种子，因此样本序号不能跨方法配对。",
             "判定规则未在读取本轮结果前预先登记，整体结论只能是探索性且不确定。",
@@ -653,7 +655,7 @@ def _render_public_files(
         "population": "同一组六个候选在两种模板组织方式下的既有折叠结果",
         "exclusion_rule": "排除未完成的首次 T12 运行，仅使用封存且验证通过的完整运行。",
         "alignment": {
-            "primary": "以目标区域对齐后评估 CDR 骨架偏差",
+            "primary": "以目标区域对齐后评估对人工设计参考姿态的 CDR 骨架偏差；不是结合位置真值",
             "secondary": "以框架区域对齐后评估 CDR 骨架偏差",
         },
         "aggregation_order": "先在每个候选内汇总五次折叠，再按六个候选比较方向；不进行逐样本跨方法配对。",

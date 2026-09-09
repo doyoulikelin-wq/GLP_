@@ -1,0 +1,47 @@
+{
+  "schema": "VHH_STAGE_GATE_REPORT_V1",
+  "protocol_id": "vhh-revision-20260909",
+  "protocol_sha256": "63e8ba809b4183ad02cd00b55ea3db2c4771ecadfbfc67a955f08c5556564eb9",
+  "biological_pass": false,
+  "selectivity_claim_allowed": false,
+  "gpu_started": false,
+  "claim_boundary": "COMPUTATIONAL_EXPLORATION_ONLY_NO_BIOLOGICAL_PASS",
+  "stages": [
+    {
+      "stage_id": "existing_fold_reassessment",
+      "state": "COMPLETE",
+      "issues": [],
+      "advisories": []
+    },
+    {
+      "stage_id": "native_free_refold",
+      "state": "READY",
+      "issues": [
+        "stage receipt missing; stage is not completed"
+      ],
+      "advisories": []
+    },
+    {
+      "stage_id": "diversified_pilot",
+      "state": "NOT_EVALUATED",
+      "issues": [],
+      "advisories": []
+    },
+    {
+      "stage_id": "active_truncated_pairing",
+      "state": "NOT_EVALUATED",
+      "issues": [],
+      "advisories": []
+    }
+  ],
+  "next_stage": "native_free_refold",
+  "next_stage_budget": {
+    "gpu_allowed": true,
+    "max_fold_samples": 2,
+    "required_fold_samples": 2,
+    "max_wall_seconds": 900
+  },
+  "next_stage_question": "Can the current free-folding evaluator recover a known benign VHH-antigen interface without the native cross-chain template?",
+  "status": "READY",
+  "action": "PREPARE_AND_EXECUTE_ONLY_NEXT_STAGE_WITH_ITS_BUDGET"
+}

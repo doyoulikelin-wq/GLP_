@@ -1,5 +1,12 @@
 # BoltzGen × 活性 GLP-1 选择性 VHH：无上下文可执行实施方案
 
+> **2026-09-09 当前执行指引**：负责人已批准 VHH 六项改进。
+> 后续 VHH 评价和分阶段推进使用
+> [修订方案](../main/windows_single_owner_20260831/VHH_REVISED_PROTOCOL_ZH_20260909.md)
+> 与 [执行记录](../main/windows_single_owner_20260831/VHH_REVISION_EXECUTION_ZH_20260909.md)。
+> 本文保留历史合同、尝试和数值，不再是当前工作的唯一上下文。
+> 新方案不追溯改变历史阈值或通过状态，不授权训练权重或自动转入 BindCraft。
+
 > 文档版本：1.2  
 > 冻结日期：2026-08-26（Asia/Shanghai）  
 > 项目根目录：`$PROJECT_ROOT`  

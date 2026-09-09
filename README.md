@@ -8,6 +8,16 @@
 
 ## 当前结论
 
+当前执行入口是 [Windows/WSL2 主工作区](boltzgen/main/windows_single_owner_20260831/README.md)，
+不是下表中的早期 Mac 批次。2026-09-09 已进入
+[VHH 评价与研究方案修订](boltzgen/main/windows_single_owner_20260831/VHH_REVISED_PROTOCOL_ZH_20260909.md)：
+T12 GPU 已完成（同一组 6 个候选、30 次预测），但没有实验结合或选择性证据。
+修订将端部识别和活性／截短配对比较放回中心，参考姿态偏差只作自洽性诊断；
+后续扩样须先经过对照校准。BindCraft 未自动启动。
+本轮进展与明确未完成项见 [修订执行记录](boltzgen/main/windows_single_owner_20260831/VHH_REVISION_EXECUTION_ZH_20260909.md)。
+
+### 历史基线（2026-08-26；不代表当前运行状态）
+
 | 路线 | 已完成 | 最新结果 | 当前状态 |
 |---|---|---|---|
 | BoltzGen | 数据资产核验、VHH 骨架筛选、Mac 冒烟、旧 12 骨架第一轮和增强轮、失败归因、正式执行合同 | 冒烟 `0/2`、第一轮 `0/24`、增强轮 `0/48`、深度探针 `0/4` 严格通过 | 工程链路完成；Linux/NVIDIA 正式 campaign 尚未启动；无实验命中 |

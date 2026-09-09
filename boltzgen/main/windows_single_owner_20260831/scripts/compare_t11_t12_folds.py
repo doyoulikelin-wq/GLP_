@@ -1012,6 +1012,9 @@ def compare(
             "escalation_supported_by_this_analysis": False,
             "causal_effect_claimed": False,
             "experimental_binding_claimed": False,
+            "reference_pose_kind": "ARTIFICIALLY_POSITIONED_DESIGN_HYPOTHESIS_NOT_EXPERIMENTAL_COMPLEX",
+            "rmsd_scope": "REFERENCE_POSE_SELF_CONSISTENCY_NOT_BINDING_OR_EPITOPE_TEST",
+            "large_rmsd_implies_detachment": False,
         },
     }
     payload["source_read_replay"] = _replay_source_bindings(

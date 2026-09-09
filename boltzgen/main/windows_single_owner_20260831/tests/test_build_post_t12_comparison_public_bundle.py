@@ -1,3 +1,5 @@
+"""Regression checks for aggregate-only publication and scientific caveats."""
+
 from __future__ import annotations
 
 import csv
@@ -113,6 +115,8 @@ class BuildPostT12ComparisonPublicBundleTest(unittest.TestCase):
             )
             self.assertEqual(summary["comparison_outcome"], "INCONCLUSIVE")
             self.assertFalse(summary["scope"]["cross_method_fold_pairing"])
+            self.assertIn("人工设计参考姿态", summary["interpretation_zh"]["primary"])
+            self.assertTrue(any("不是实验复合物" in item for item in summary["limitations"]))
             index_rows = list(
                 csv.DictReader(
                     io.StringIO(

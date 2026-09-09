@@ -1,0 +1,13 @@
+{
+  "schema": "VHH_REVISION_TEST_SUMMARY_V1",
+  "status": "TESTS_PASSED",
+  "test_scope": "windows_single_owner_20260831/tests",
+  "passed": 154,
+  "failed": 0,
+  "duration_seconds": 27.93,
+  "warning_count": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "changed_file_repository_policy": "PASS",
+  "full_worktree_repository_policy": "FAIL_PREEXISTING_ISSUES_NOT_CLAIMED_PASS",
+  "tests_are_not_biological_validation": true
+}

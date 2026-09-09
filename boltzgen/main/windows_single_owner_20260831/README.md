@@ -1,5 +1,19 @@
 # Windows 单机所有者迁移包
 
+## 当前入口（2026-09-09）
+
+Windows 接管和 T12 GPU 均已完成，以下迁移说明保留为历史操作记录。
+当前工作是 [VHH 六项修订方案](VHH_REVISED_PROTOCOL_ZH_20260909.md)，
+实际进度、可复现入口及尚未完成的科学验证见
+[修订执行记录](VHH_REVISION_EXECUTION_ZH_20260909.md)。
+机器可读规则在 [修订配置](configs/vhh_revision_20260909.json)。
+
+解释更正：历史目标对齐 RMSD 衡量的是对人工设计参考姿态的重现，
+不是实验结合位置误差；大 RMSD 不能推断 VHH 整体脱离或不能结合。
+T12 的 target/framework 分槽不提供跨链相对姿态；复折叠模型也不消费输入中的
+His/Ala BINDING 条件分支。自由复核与受约束设计应分开解释。
+历史封存 JSON、运行收据和报告不改写，历史数值和失败状态不倒填。
+
 本目录把旧的“Mac 权威、Windows 只执行并回传”的交接方式切换为 Windows/WSL2 单机
 所有者模式。它面向已经完成 T0–T6、当前停在“下一步 T7”的 Windows 工作区。
 
@@ -36,8 +50,8 @@ codex --sandbox danger-full-access --ask-for-approval never
 
 ```bash
 bash boltzgen/main/windows_single_owner_20260831/scripts/build_windows_owner_handoff.sh \
-  /Users/linlin/Desktop/creator \
-  /Users/linlin/Desktop/creator/transfer
+  "$MAC_WORKSPACE_ROOT" \
+  "$MAC_TRANSFER_ROOT"
 ```
 
 成品目录名为 `WINDOWS_SINGLE_OWNER_HANDOFF_20260831_V1`。它应与 Windows 已有的
@@ -127,7 +141,8 @@ T12 的预注册 CPU 门结果为 `7/30 < 10/30`，因此当时终态是
   描述阈值仍为 `0/30 → 0/30`，6 个候选为 3 个改善、3 个变差，未见明确改善。
 - 辅助指标（框架对齐后的 CDR 骨架偏差）：中位数 `5.980 Å → 5.207 Å`，既有 `≤4 Å`
   描述阈值为 `7/30 → 10/30`，6 个候选为 4 个改善、2 个变差，显示描述性改善。
-- 综合解释：T12 对分子内部 CDR 保持有一定帮助，但没有显示解决分子相对目标的位置漂移。
+- 综合解释（2026-09-09 收窄措辞）：T12 的分子内部 CDR 保持有描述性改善，
+  但对人工设计参考姿态的重现未见明确改善；这不能推断预测分子脱离目标或不能结合。
   评价规则未在读取结果前预先登记，因此整体结论保持 `INCONCLUSIVE`，不支持直接追加计算。
 
 - 脱敏公开结果：[`reports/post_t12_readonly_comparison_public_20260903/`](reports/post_t12_readonly_comparison_public_20260903/)
