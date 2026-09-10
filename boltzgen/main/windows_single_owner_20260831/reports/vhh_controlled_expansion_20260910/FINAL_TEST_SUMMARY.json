@@ -1,0 +1,16 @@
+{
+  "schema": "VHH_CONTROLLED_EXPANSION_TEST_SUMMARY_V1",
+  "phase": "POST_RUN_SOFTWARE_REGRESSION",
+  "passed": 281,
+  "failed": 0,
+  "warnings": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "wall_seconds": 28.15,
+  "test_scope": "boltzgen/main/windows_single_owner_20260831/tests",
+  "observed_interface_tests_passed": 8,
+  "focused_geometry_and_observed_interface_tests_passed": 45,
+  "pre_gpu_test_summary_preserved": true,
+  "gpu_performed_by_this_test_suite": false,
+  "biological_validation_performed": false,
+  "interpretation": "Software regression success does not restore full-atom validity for 8IM0 or establish binding."
+}

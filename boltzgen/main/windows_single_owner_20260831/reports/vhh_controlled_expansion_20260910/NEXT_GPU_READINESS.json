@@ -1,0 +1,23 @@
+{
+  "schema": "VHH_NEXT_GPU_READINESS_SNAPSHOT_V1",
+  "date": "2026-09-10",
+  "status": "BLOCKED_UNTIL_INPUT_EVALUATOR_COMPATIBILITY_DEFINED",
+  "record_type": "POST_RUN_STOP_CONDITION_NOT_A_RUNNER_IMPLEMENTATION_CHANGE",
+  "automatic_additional_gpu": false,
+  "old_pilot_status": "BLOCKED_UNCHANGED",
+  "current_expansion_status": "COMPUTATION_COMPLETE_STRICT_COMPARISON_INCOMPLETE",
+  "current_8im0_input_ready_for_strict_full_atom_evaluation": false,
+  "unresolved_framework_sidechain_atoms_per_8im0_candidate": 16,
+  "observed_interface_diagnostic_available": true,
+  "observed_interface_classification": "RETROSPECTIVE_PARTIAL_OBSERVED_INTERFACE",
+  "observed_interface_preregistered_for_future_run": false,
+  "requirements_before_any_new_gpu": [
+    "Choose and document full-atom evaluation or a clearly scoped observed-interface evaluation before a new run.",
+    "Validate each actual source scaffold against the chosen evaluator atom-resolution requirements on CPU.",
+    "For strict full-atom evaluation, use a traceable complete input; do not relabel unresolved atoms as resolved.",
+    "If adopting scoped evaluation, independently freeze its implementation, exclusions and tests before generating new candidates.",
+    "Keep original strict failures, historical stage gates and retrospective diagnostic results unchanged.",
+    "Define a bounded terminal-conditioning comparison before spending additional GPU time; do not expand scaffold count automatically."
+  ],
+  "biological_pass": false
+}

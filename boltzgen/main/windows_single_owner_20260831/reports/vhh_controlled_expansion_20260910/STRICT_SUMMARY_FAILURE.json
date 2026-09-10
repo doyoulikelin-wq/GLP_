@@ -1,0 +1,27 @@
+{
+  "schema": "VHH_CONTROLLED_EXPANSION_STRICT_SUMMARY_FAILURE_V1",
+  "status": "FAILED_FULL_ATOM_EVALUATOR_COMPATIBILITY",
+  "gpu_execution_completed": true,
+  "gpu_rerun_performed": false,
+  "failed_stage": "frozen CPU summary",
+  "error_type": "ValidationError",
+  "error_message": "assigned/resolved mismatch: cannot establish modeled atom validity",
+  "strict_assessable_candidate_count": 4,
+  "strict_not_assessable_candidate_count": 2,
+  "affected_scaffold": "09_pdb_00008im0-B",
+  "missing_framework_sidechain_atoms_per_affected_candidate": 16,
+  "affected_framework_residue_numbers": [
+    3,
+    44,
+    88,
+    113
+  ],
+  "target_and_cdr_atoms_complete": true,
+  "backbone_atoms_complete": true,
+  "original_evaluator_modified": false,
+  "source_resolved_flags_modified": false,
+  "old_pilot_status": "BLOCKED_UNCHANGED",
+  "cause": "CPU scaffold readiness permitted missing fixed-framework sidechain atoms; frozen full-atom evaluator required assigned==resolved.",
+  "corrective_boundary": "Preserve strict N/A; supplementary observed-interface analysis is retrospective and excludes all framework sidechains. Further GPU must first declare and validate evaluator/input compatibility.",
+  "biological_pass": false
+}

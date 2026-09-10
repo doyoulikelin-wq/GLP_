@@ -3,6 +3,10 @@
 ## 当前入口（2026-09-10）
 
 最新执行见 [骨架受控拓展与中间过程记录](VHH_SCAFFOLD_EXPANSION_PROCESS_ZH_20260910.md)。
+三骨架、六候选、30 次预测已计算完成；没有稳定 5/5 双端部接触候选。
+8IM0 严格评价保留 N/A，事后局部诊断不替代完整验证。
+[结果与测试索引](reports/vhh_controlled_expansion_20260910/README.md)及
+[下一轮停止条件](reports/vhh_controlled_expansion_20260910/NEXT_GPU_READINESS.json)已记录。
 这是新的方法与小试版本，不给旧试点倒填成功。生成模型读取已训练的端部软条件，
 与下文“不消费该分支”的自由复折叠模型必须区分。
 

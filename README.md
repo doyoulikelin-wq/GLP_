@@ -15,8 +15,11 @@ T12 GPU 已完成（同一组 6 个候选、30 次预测），但没有实验结
 修订将端部识别和活性／截短配对比较放回中心，参考姿态偏差只作自洽性诊断；
 后续扩样须先经过对照校准。BindCraft 未自动启动。
 本轮进展与明确未完成项见 [修订执行记录](boltzgen/main/windows_single_owner_20260831/VHH_REVISION_EXECUTION_ZH_20260909.md)。
-2026-09-10 正在进行 [骨架受控拓展与中间过程记录](boltzgen/main/windows_single_owner_20260831/VHH_SCAFFOLD_EXPANSION_PROCESS_ZH_20260910.md)：
-从既有资源登记六个备选，核查生成端部条件，建立独立姿态方法，再开展三骨架等预算小试；旧失败不改写。
+2026-09-10 已完成 [骨架受控拓展与中间过程记录](boltzgen/main/windows_single_owner_20260831/VHH_SCAFFOLD_EXPANSION_PROCESS_ZH_20260910.md)：
+登记六个备选，实际运行三骨架、六候选、30 次预测，GPU 工作流约 9 分 2 秒。
+没有候选在 5/5 次预测中持续双端部接触；8IM0 因缺失框架侧链在严格评价中保留 N/A。
+[结果索引](boltzgen/main/windows_single_owner_20260831/reports/vhh_controlled_expansion_20260910/README.md)
+区分原严格结果和事后局部诊断；下一轮先解决输入与评价兼容性，不自动扩大骨架或追加 GPU。
 
 ### 历史基线（2026-08-26；不代表当前运行状态）
 
