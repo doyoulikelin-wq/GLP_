@@ -1,0 +1,33 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_TEST_SUMMARY_V1",
+  "phase": "PRE_GPU",
+  "passed": 358,
+  "failed": 0,
+  "warnings": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "wall_seconds": 29.15,
+  "test_scope": "boltzgen/main/windows_single_owner_20260831/tests",
+  "new_tests": {
+    "evaluator_compatibility": 20,
+    "control_preparation": 12,
+    "strict_summary": 16,
+    "controlled_runner": 19,
+    "legacy_adapter": 10
+  },
+  "development_test_attempts": [
+    {
+      "passed": 341,
+      "failed": 4,
+      "wall_seconds": 29.92,
+      "context": "Development suite overlapped test-fixture updates for the new frozen source identity and strict output hook. Failures retained; not a GPU run."
+    },
+    {
+      "passed": 358,
+      "failed": 0,
+      "wall_seconds": 29.15,
+      "context": "Final collected suite after new modules and tests stopped editing."
+    }
+  ],
+  "gpu_performed": false,
+  "biological_validation_performed": false
+}

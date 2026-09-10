@@ -1,0 +1,368 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_PUBLIC_PREREGISTRATION_V1",
+  "registration": "PROSPECTIVE_STOCHASTIC_CONDITION_CONTROL_NOT_PAIRED_MOLECULES",
+  "created_at_utc": "2026-09-10T17:42:15.726713Z",
+  "rule": {
+    "automatic_downstream_gpu": false,
+    "automatic_retry": false,
+    "biological_pass": false,
+    "candidates_per_condition": 2,
+    "checkpoint": "adherence",
+    "condition_ids": [
+      "A",
+      "B",
+      "C"
+    ],
+    "evaluation_scope": "STRICT_FULL_ASSIGNED_CANONICAL_HEAVY_ATOMS",
+    "experiment_id": "vhh-terminal-control-20260911",
+    "free_folds_per_candidate": 5,
+    "hard_timeout_seconds": 1800,
+    "legacy_binding_site_filter": false,
+    "old_pilot_status": "BLOCKED_UNCHANGED",
+    "primary_descriptors": [
+      "generated_his_ala_contact",
+      "free_fold_his_ala_contact",
+      "candidate_all_five_his_ala_contact"
+    ],
+    "scaffold_id": "01_pdb_00007xl0-A",
+    "seed_interpretation": "EQUAL_BUDGET_STOCHASTIC_DRAWS_NOT_COMMON_RANDOM_NUMBER_PAIRS",
+    "source_cdr_lengths": [
+      8,
+      7,
+      15
+    ],
+    "source_file_sha256": {
+      "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+      "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+      "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+    }
+  },
+  "private_plan_sha256": "3633291b9d4e22b2b7d68fda4f45b24f5e320c399a8c4f0d576e0f772d91a1e4",
+  "cells": [
+    {
+      "condition_id": "A",
+      "scaffold_id": "01_pdb_00007xl0-A",
+      "num_designs": 2,
+      "cdr3_length": 15,
+      "cdr_ranges_one_based": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          110
+        ]
+      ],
+      "spec_hashes": {
+        "design.yaml": "79ffee087b1898fe0eb2e200410c41eb89d1126cbe557ca4b2b7277011c17e53",
+        "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "expected_target_binding_types": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "condition_id": "B",
+      "scaffold_id": "01_pdb_00007xl0-A",
+      "num_designs": 2,
+      "cdr3_length": 15,
+      "cdr_ranges_one_based": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          110
+        ]
+      ],
+      "spec_hashes": {
+        "design.yaml": "79db1b1ca409c86fc2ac90c21795466cd1b2e924eef50f0c424d19f3b3e32b00",
+        "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "expected_target_binding_types": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "condition_id": "C",
+      "scaffold_id": "01_pdb_00007xl0-A",
+      "num_designs": 2,
+      "cdr3_length": 15,
+      "cdr_ranges_one_based": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          110
+        ]
+      ],
+      "spec_hashes": {
+        "design.yaml": "6e040064c68c45eb24136b73c59d65637de3859471fd08d397451f79481a1eb3",
+        "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "expected_target_binding_types": [
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  ],
+  "input_compatibility": [
+    {
+      "condition_id": "A",
+      "result": {
+        "canonical_source_features": {
+          "assigned_atoms": 1148,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": false,
+          "representation": "canonical_source",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": true,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "fixed_atom_identity_resolution_equivalent": true,
+        "generation_features": {
+          "assigned_atoms": 1338,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": true,
+          "representation": "generation_atom14",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": false,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "postgeneration_full_candidate_evaluation_still_required": true,
+        "ready": true,
+        "source_spec_label": "controlled_spec",
+        "status": "PASS",
+        "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED"
+      }
+    },
+    {
+      "condition_id": "B",
+      "result": {
+        "canonical_source_features": {
+          "assigned_atoms": 1148,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": false,
+          "representation": "canonical_source",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": true,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "fixed_atom_identity_resolution_equivalent": true,
+        "generation_features": {
+          "assigned_atoms": 1338,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": true,
+          "representation": "generation_atom14",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": false,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "postgeneration_full_candidate_evaluation_still_required": true,
+        "ready": true,
+        "source_spec_label": "controlled_spec",
+        "status": "PASS",
+        "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED"
+      }
+    },
+    {
+      "condition_id": "C",
+      "result": {
+        "canonical_source_features": {
+          "assigned_atoms": 1148,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": false,
+          "representation": "canonical_source",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": true,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "fixed_atom_identity_resolution_equivalent": true,
+        "generation_features": {
+          "assigned_atoms": 1338,
+          "cdr_token_count": 30,
+          "finite_coordinates": true,
+          "fixed_heavy_atoms": 918,
+          "generation_cdr_placeholders_excluded_from_fixed_atom_diagnosis": true,
+          "representation": "generation_atom14",
+          "source_target_identity_valid": true,
+          "status": "PASS",
+          "strict_evaluator_source_pass": false,
+          "token_count": 151,
+          "unresolved_fixed_heavy_atoms": 0,
+          "unresolved_framework_heavy_atoms": 0,
+          "unresolved_framework_token_indices": [],
+          "unresolved_target_heavy_atoms": 0
+        },
+        "postgeneration_full_candidate_evaluation_still_required": true,
+        "ready": true,
+        "source_spec_label": "controlled_spec",
+        "status": "PASS",
+        "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED"
+      }
+    }
+  ],
+  "implementation_sha256": {
+    "check_vhh_generation_conditioning.py": "2375f1535dad991fe1e8d2e84b6bc215092ae744e1eb973cdb0346a7e62c8e78",
+    "evaluate_vhh_epitope.py": "bca24706b6392881f7f169467d2fb3df5bf8dd69089441af4f4b03d35d1df249",
+    "evaluate_vhh_pose_v2.py": "4e25163dfded6c03589437e6064e4804b95852010ecb7af772ed078662c9f2f9",
+    "preflight_vhh_evaluator_compatibility.py": "ebbd79fa5418f89826bedc19451e5ed3a9d028f79e6dce83b7f6abd37d3db4b9",
+    "prepare_vhh_terminal_controls.py": "d24f3f8d5e2b1df65fdec4e0a93a14f3ac402d460a67fea77be880232a6c656d",
+    "run_owner_exploratory_cell.sh": "db4375e4f991772703f49435f0b780b3e42117d2a744e0dc1af7f25fdf2b7be0",
+    "run_owner_t12_split_template.py": "f1a6a0b0103fcdb25d9472672424f41565b8ae883cf5a315b1a7ccc2356ac158",
+    "run_vhh_controlled_expansion.py": "69f4fbe4d8597f037fd12ef30dfe181c15fead9e8ebe2bd82db5c8d4103c99f9",
+    "run_vhh_diversified_pilot.py": "e705266420e59c26020b3c2994c464d0549331c6969a3323026c13e18d74e061",
+    "run_vhh_terminal_cell.py": "d7a9b9d6be3de71d05723748bd96e055f811434ed42bb835d873a1e28251a2f4",
+    "run_vhh_terminal_controls.py": "c10f48e8fa059ccdbb98cf69a19d4b23bab0f1ed3b9b57ae842ece4829838aa9",
+    "summarize_vhh_controlled_expansion.py": "fdf8118aab2c9b41521d2677af90b23b44e03b12195b7fa1f6bb93ceeaacb36d",
+    "summarize_vhh_pilot.py": "d44c3040c7fa110dff56cd91dfcca2bb34912f417eb2274d4d103cab04bd7240",
+    "summarize_vhh_terminal_controls.py": "3e90365132f741d09a1f4d2588dad969896344cd03376b8149378a77c169cf59",
+    "vhh_stage_gate.py": "1ca0d74f1f6eb49b806bce84d1d3f1886d8a293064eb0c5ef8fe83149b251641"
+  },
+  "gpu_started": false,
+  "biological_pass": false,
+  "interpretation": "Pre-run snapshot, not a claim of later computational completion. Unseeded stochastic arms are not common-random-number pairs."
+}
