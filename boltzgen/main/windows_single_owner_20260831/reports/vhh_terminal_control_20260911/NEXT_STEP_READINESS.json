@@ -1,0 +1,50 @@
+{
+  "schema": "VHH_TERMINAL_NEXT_STEP_READINESS_V1",
+  "status": "SMALL_CONTROL_COMPLETE_STOP_NO_AUTOMATIC_GPU",
+  "completed_candidate_count": 6,
+  "completed_free_fold_count": 30,
+  "input_compatibility": {
+    "generation_and_canonical_source_preflight": "PASS_FOR_USED_7XL0",
+    "all_real_outputs_strict_all_atom_evaluable": true,
+    "all_framework_identities_match_source": true,
+    "source_8IM0": "REJECTED_16_MISSING_FRAMEWORK_ATOMS_NOT_REPAIRED",
+    "legacy_optional_metric": "ABSENT_IS_NOT_APPLICABLE_NO_SYNTHESIZED_ZERO"
+  },
+  "both_terminal_contact_counts": {
+    "A": {
+      "generated": 0,
+      "free_folds": 1,
+      "five_of_five_candidates": 0
+    },
+    "B": {
+      "generated": 0,
+      "free_folds": 0,
+      "five_of_five_candidates": 0
+    },
+    "C": {
+      "generated": 0,
+      "free_folds": 0,
+      "five_of_five_candidates": 0
+    }
+  },
+  "denominators_per_arm": {
+    "generated": 2,
+    "free_folds": 10,
+    "five_of_five_candidates": 2
+  },
+  "historical_A_failure_preserved": true,
+  "A_GPU_rerun": false,
+  "original_deadline_extended": false,
+  "biological_pass": false,
+  "automatic_downstream_gpu": false,
+  "automatic_bindcraft": false,
+  "unresolved": [
+    "No candidate maintained both terminal contacts in all five free folds.",
+    "Active-versus-truncated selectivity was not tested in this three-arm experiment.",
+    "Terminal NH2 chemistry remains NOT_ATOMICALLY_VERIFIED.",
+    "Two independent-entropy generation draws per arm cannot establish a statistically reliable ranking or causal conditioning effect.",
+    "Strict compatibility gate excludes incomplete source structures; it does not reconstruct missing atoms."
+  ],
+  "proposed_next_scope": "CPU-only review of existing terminal-conditioning and generated-to-free-fold contact changes; define a new fixed plan before any further GPU budget.",
+  "historical_20260910_readiness": "BLOCKED_UNCHANGED"
+}

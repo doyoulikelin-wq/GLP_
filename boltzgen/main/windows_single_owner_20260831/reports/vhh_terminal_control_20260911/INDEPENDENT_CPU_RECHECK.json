@@ -1,0 +1,42 @@
+{
+  "schema": "VHH_TERMINAL_INDEPENDENT_CPU_RECHECK_V1",
+  "status": "PASS",
+  "method": "Direct NumPy heavy-atom minimum distances from six original generated NPZ and thirty free-fold conformations; no contact evaluator or aggregate function called.",
+  "source_continuation_index_sha256": "7eb7367ba2d9572b0bcd410bdddd8736085a6150edb356070acb403c35adf957",
+  "source_public_summary_sha256": "f25054710869b2d49301e3fcd5f24fcfd8b4c8d14be281802177ea9cb80d5020",
+  "contact_threshold_angstrom": 4.5,
+  "group_counts": {
+    "A": {
+      "generated_both": 0,
+      "free_fold_both": 1,
+      "all_five_both": 0
+    },
+    "B": {
+      "generated_both": 0,
+      "free_fold_both": 0,
+      "all_five_both": 0
+    },
+    "C": {
+      "generated_both": 0,
+      "free_fold_both": 0,
+      "all_five_both": 0
+    }
+  },
+  "denominators_per_arm": {
+    "generated": 2,
+    "free_folds": 10,
+    "all_five_candidates": 2
+  },
+  "agreement_with_frozen_summary": true,
+  "all_36_structures_canonical_assigned_resolved_finite_and_backbone_checks": true,
+  "all_six_framework_91_residues_match_source": true,
+  "all_target_30_residue_identities_match": true,
+  "actual_binding_labels_match_each_arm": true,
+  "binder_binding_labels_all_unspecified": true,
+  "inverse_folded_CIF_identity_matches_fold_mapping": true,
+  "unique_sequence_count": 6,
+  "source_outputs_modified": false,
+  "gpu_started": false,
+  "biological_pass": false,
+  "statistical_ranking_supported": false
+}

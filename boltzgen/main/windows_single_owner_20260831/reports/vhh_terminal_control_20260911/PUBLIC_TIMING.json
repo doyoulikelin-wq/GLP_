@@ -1,0 +1,181 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_PUBLIC_TIMING_V1",
+  "status": "COMPLETE",
+  "read_only_analysis": true,
+  "biological_pass": false,
+  "time_unit": "seconds",
+  "boundaries_utc": {
+    "original_started": "2026-09-10T17:43:32.235893Z",
+    "original_finished": "2026-09-10T17:46:50.894192Z",
+    "continuation_started": "2026-09-10T17:59:19.362729Z",
+    "continuation_finished": "2026-09-10T18:05:40.961398Z",
+    "original_deadline": "2026-09-10T18:13:32.235893Z"
+  },
+  "stage_command_wall_seconds": [
+    {
+      "stage": "configure",
+      "label": "配置生成",
+      "A": 5,
+      "B": 5,
+      "C": 5,
+      "total": 15
+    },
+    {
+      "stage": "resolved_config_validation",
+      "label": "配置检查",
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "total": 0
+    },
+    {
+      "stage": "design",
+      "label": "结构设计",
+      "A": 55,
+      "B": 57,
+      "C": 54,
+      "total": 166
+    },
+    {
+      "stage": "inverse_folding",
+      "label": "序列设计",
+      "A": 12,
+      "B": 14,
+      "C": 13,
+      "total": 39
+    },
+    {
+      "stage": "folding",
+      "label": "自由复折叠",
+      "A": 71,
+      "B": 69,
+      "C": 69,
+      "total": 209
+    },
+    {
+      "stage": "analysis",
+      "label": "分析",
+      "A": 23,
+      "B": 22,
+      "C": 23,
+      "total": 68
+    },
+    {
+      "stage": "filtering",
+      "label": "筛选",
+      "A": 13,
+      "B": 13,
+      "C": 13,
+      "total": 39
+    },
+    {
+      "stage": "validation",
+      "label": "输出验证",
+      "A": 1,
+      "B": 2,
+      "C": 1,
+      "total": 4
+    }
+  ],
+  "per_condition": [
+    {
+      "condition": "A",
+      "logged_all_commands_seconds": 180,
+      "pipeline_core_five_stages_seconds": 174,
+      "cell_utc_wall_seconds": 186,
+      "cell_unitemized_seconds": 6,
+      "original_validation_exit_code": 1,
+      "historical_terminal_status": "EXPLORATORY_INFERENCE_FAILED",
+      "original_gpu_outputs_reused_after_cpu_revalidation": true
+    },
+    {
+      "condition": "B",
+      "logged_all_commands_seconds": 182,
+      "pipeline_core_five_stages_seconds": 175,
+      "cell_utc_wall_seconds": 187,
+      "cell_unitemized_seconds": 5,
+      "validation_exit_code": 0,
+      "terminal_status": "EXPLORATORY_INFERENCE_COMPLETE"
+    },
+    {
+      "condition": "C",
+      "logged_all_commands_seconds": 178,
+      "pipeline_core_five_stages_seconds": 172,
+      "cell_utc_wall_seconds": 181,
+      "cell_unitemized_seconds": 3,
+      "validation_exit_code": 0,
+      "terminal_status": "EXPLORATORY_INFERENCE_COMPLETE"
+    }
+  ],
+  "command_totals": {
+    "pipeline_core_five_stages_seconds": 521,
+    "pipeline_core_stages": [
+      "design",
+      "inverse_folding",
+      "folding",
+      "analysis",
+      "filtering"
+    ],
+    "all_eight_logged_commands_seconds": 540,
+    "three_model_inference_commands_seconds": 414,
+    "three_model_inference_commands_are_pure_gpu_kernel_time": false
+  },
+  "execution_envelopes": {
+    "original_monotonic_wall_seconds": 198.6582898179986,
+    "continuation_monotonic_wall_seconds": 381.5987013949998,
+    "original_utc_wall_seconds": 198.658299,
+    "continuation_utc_wall_seconds": 381.598669,
+    "combined_execution_utc_wall_seconds": 580.256968,
+    "repair_validation_tests_freeze_publish_gap_utc_seconds": 748.468537,
+    "overall_elapsed_utc_seconds": 1328.725505,
+    "deadline_remaining_seconds": 471.274495
+  },
+  "nonoverlapping_overall_partition": [
+    {
+      "category": "所有已单独计时的阶段命令",
+      "seconds": 540,
+      "percent_of_overall": 40.640448
+    },
+    {
+      "category": "两次执行之间的修复、CPU补验、测试、冻结与发布空档",
+      "seconds": 748.468537,
+      "percent_of_overall": 56.329809
+    },
+    {
+      "category": "执行期间其余未单项计时开销",
+      "seconds": 40.256968,
+      "percent_of_overall": 3.029743
+    }
+  ],
+  "unitemized_reconciliation": {
+    "within_three_cells_seconds": 14,
+    "outside_cells_within_execution_envelopes_seconds": 26.256968,
+    "total_seconds": 40.256968
+  },
+  "reconciliation": {
+    "formula": "540 + 748.468537 + 40.256968 = 1328.725505",
+    "uses_utc_wall_for_additive_partition": true,
+    "original_30_minute_deadline_extended": false
+  },
+  "caveats": [
+    "阶段计时来自 run_logged 的 date +%s 差值，精度为整数秒；记录为0不代表完全没有耗时。",
+    "阶段命令包含模型加载、CPU准备等工作，不等于纯GPU内核时间。",
+    "修复空档是两外层执行之间的经过时间，不是CPU忙碌时间；子任务没有逐项计时。",
+    "其余未单项计时开销不能全部归因于哈希；现有记录不能给出哈希检查占比。",
+    "A原1秒输出验证失败，新CPU补验发生在修复空档内，原失败未改写。",
+    "对账统一使用UTC时间差；与monotonic计时有微秒级差别。",
+    "本窗口从首次GPU尝试开始至续跑INDEX完成，不包括此前开发、此后汇总和最终发布。"
+  ],
+  "provenance": {
+    "execution_sources": [
+      "原始运行 INDEX.json",
+      "续跑 INDEX.json"
+    ],
+    "stage_sources": "A/B/C operator_logs/*.duration_seconds.txt",
+    "stage_status_sources": "A/B/C operator_logs/*.exit_code.txt",
+    "cell_boundary_sources": [
+      "operator_logs/started_at_utc.txt",
+      "operator_logs/ended_at_utc.txt"
+    ]
+  }
+}

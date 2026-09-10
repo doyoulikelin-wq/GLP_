@@ -1,0 +1,530 @@
+{
+  "administrative_recovery": "A_ORIGINAL_GPU_OUTPUTS_CPU_REVALIDATED_B_C_NEW_EXECUTIONS",
+  "all_framework_identities_match_source": true,
+  "analysis_seconds": 0.439836491997994,
+  "biological_pass": false,
+  "by_condition": {
+    "A": {
+      "candidate_all_free_folds_contact_counts": {
+        "ala_contact": 0,
+        "any_target_cdr_contact": 2,
+        "both_epitope_contacts": 0,
+        "his_contact": 0,
+        "severe_close_contact_diagnostic": 0
+      },
+      "candidate_contact_map_jaccard_median_distribution": {
+        "max": 0.163926499032882,
+        "median": 0.1278912798194713,
+        "min": 0.09185606060606061
+      },
+      "candidate_count": 2,
+      "candidate_developability_distributions": {
+        "cdr_cysteine_count": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0
+        },
+        "cdr_hydrophobic_residue_fraction": {
+          "max": 0.4,
+          "median": 0.3833333333333333,
+          "min": 0.36666666666666664
+        },
+        "cdr_kr_minus_de_charge_proxy": {
+          "max": -4.0,
+          "median": -5.0,
+          "min": -6.0
+        },
+        "cdr_residue_count": {
+          "max": 30.0,
+          "median": 30.0,
+          "min": 30.0
+        }
+      },
+      "candidate_five_of_five_both_terminal_contact_count": 0,
+      "candidate_jaccard_undefined_median_count": 0,
+      "denominators": {
+        "candidates_for_five_of_five_terminal_contact": 2,
+        "folds_nested_within_each_candidate": 5,
+        "free_fold_samples": 10,
+        "generated_candidates": 2
+      },
+      "fold_sample_count": 10,
+      "free_fold_contacts": {
+        "counts": {
+          "ala_contact": 1,
+          "any_target_cdr_contact": 10,
+          "both_epitope_contacts": 1,
+          "his_contact": 1,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 29.171732393508545,
+            "median": 22.2739714407821,
+            "min": 3.099042766953867
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 30.886543431938403,
+            "median": 23.889147363586442,
+            "min": 1.7717181423221873
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 2.8476950983808007,
+            "median": 2.261967750134054,
+            "min": 1.7717181423221873
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 2.8476950983808007,
+            "median": 2.2576339627879065,
+            "min": 1.7574559765819706
+          },
+          "participating_cdr_fraction": {
+            "max": 0.5333333333333333,
+            "median": 0.35,
+            "min": 0.3
+          },
+          "participating_cdr_residue_count": {
+            "max": 16.0,
+            "median": 10.5,
+            "min": 9.0
+          },
+          "participating_target_residue_count": {
+            "max": 17.0,
+            "median": 6.5,
+            "min": 5.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 40.0,
+            "median": 18.5,
+            "min": 14.0
+          }
+        },
+        "sample_count": 10
+      },
+      "free_fold_pose_applicable_count": 0,
+      "free_fold_pose_not_applicable_count": 10,
+      "generated_both_terminal_contact_candidate_count": 0,
+      "generated_contacts": {
+        "counts": {
+          "ala_contact": 0,
+          "any_target_cdr_contact": 2,
+          "both_epitope_contacts": 0,
+          "his_contact": 0,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 24.097892702319083,
+            "median": 21.779530873829593,
+            "min": 19.461169045340107
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 26.591477569332493,
+            "median": 23.42726129875728,
+            "min": 20.26304502818207
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 3.4531320828463374,
+            "median": 3.121040362177683,
+            "min": 2.7889486415090294
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 3.2243231979120326,
+            "median": 2.6097850875023827,
+            "min": 1.9952469770927326
+          },
+          "participating_cdr_fraction": {
+            "max": 0.23333333333333334,
+            "median": 0.18333333333333335,
+            "min": 0.13333333333333333
+          },
+          "participating_cdr_residue_count": {
+            "max": 7.0,
+            "median": 5.5,
+            "min": 4.0
+          },
+          "participating_target_residue_count": {
+            "max": 7.0,
+            "median": 4.5,
+            "min": 2.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 12.0,
+            "median": 8.0,
+            "min": 4.0
+          }
+        },
+        "sample_count": 2
+      },
+      "generated_epitope_footprint_descriptive_counts": {
+        "C": 2
+      },
+      "generated_pose_applicable_count": 2,
+      "generated_pose_class_count_descriptive_only": 2,
+      "generated_pose_class_sizes": [
+        1,
+        1
+      ],
+      "generated_pose_not_applicable_count": 0,
+      "unique_vhh_sequence_count": 2
+    },
+    "B": {
+      "candidate_all_free_folds_contact_counts": {
+        "ala_contact": 0,
+        "any_target_cdr_contact": 1,
+        "both_epitope_contacts": 0,
+        "his_contact": 0,
+        "severe_close_contact_diagnostic": 0
+      },
+      "candidate_contact_map_jaccard_median_distribution": {
+        "max": 0.23180076628352492,
+        "median": 0.11590038314176246,
+        "min": 0.0
+      },
+      "candidate_count": 2,
+      "candidate_developability_distributions": {
+        "cdr_cysteine_count": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0
+        },
+        "cdr_hydrophobic_residue_fraction": {
+          "max": 0.4,
+          "median": 0.33333333333333337,
+          "min": 0.26666666666666666
+        },
+        "cdr_kr_minus_de_charge_proxy": {
+          "max": -1.0,
+          "median": -3.0,
+          "min": -5.0
+        },
+        "cdr_residue_count": {
+          "max": 30.0,
+          "median": 30.0,
+          "min": 30.0
+        }
+      },
+      "candidate_five_of_five_both_terminal_contact_count": 0,
+      "candidate_jaccard_undefined_median_count": 0,
+      "denominators": {
+        "candidates_for_five_of_five_terminal_contact": 2,
+        "folds_nested_within_each_candidate": 5,
+        "free_fold_samples": 10,
+        "generated_candidates": 2
+      },
+      "fold_sample_count": 10,
+      "free_fold_contacts": {
+        "counts": {
+          "ala_contact": 0,
+          "any_target_cdr_contact": 7,
+          "both_epitope_contacts": 0,
+          "his_contact": 0,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 47.459841258967515,
+            "median": 20.84512101891884,
+            "min": 8.840922104940994
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 42.66293679485546,
+            "median": 20.870006457635842,
+            "min": 9.268363077236064
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 11.687031038548039,
+            "median": 3.0227901178742407,
+            "min": 1.8829632136296293
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 2.7532093177430124,
+            "median": 2.392733262212333,
+            "min": 1.6360032555644861
+          },
+          "participating_cdr_fraction": {
+            "max": 0.5666666666666667,
+            "median": 0.3333333333333333,
+            "min": 0.0
+          },
+          "participating_cdr_residue_count": {
+            "max": 17.0,
+            "median": 10.0,
+            "min": 0.0
+          },
+          "participating_target_residue_count": {
+            "max": 13.0,
+            "median": 6.5,
+            "min": 0.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 35.0,
+            "median": 16.5,
+            "min": 0.0
+          }
+        },
+        "sample_count": 10
+      },
+      "free_fold_pose_applicable_count": 0,
+      "free_fold_pose_not_applicable_count": 10,
+      "generated_both_terminal_contact_candidate_count": 0,
+      "generated_contacts": {
+        "counts": {
+          "ala_contact": 0,
+          "any_target_cdr_contact": 2,
+          "both_epitope_contacts": 0,
+          "his_contact": 0,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 34.072083464384185,
+            "median": 30.733643971466755,
+            "min": 27.39520447854932
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 35.235562860185084,
+            "median": 31.62043102507664,
+            "min": 28.005299189968202
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 3.6430720826966843,
+            "median": 3.2559326952575343,
+            "min": 2.8687933078183843
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 3.147008412580106,
+            "median": 3.0079008601992454,
+            "min": 2.8687933078183843
+          },
+          "participating_cdr_fraction": {
+            "max": 0.16666666666666666,
+            "median": 0.11666666666666667,
+            "min": 0.06666666666666667
+          },
+          "participating_cdr_residue_count": {
+            "max": 5.0,
+            "median": 3.5,
+            "min": 2.0
+          },
+          "participating_target_residue_count": {
+            "max": 2.0,
+            "median": 1.5,
+            "min": 1.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 5.0,
+            "median": 3.5,
+            "min": 2.0
+          }
+        },
+        "sample_count": 2
+      },
+      "generated_epitope_footprint_descriptive_counts": {
+        "C": 2
+      },
+      "generated_pose_applicable_count": 2,
+      "generated_pose_class_count_descriptive_only": 2,
+      "generated_pose_class_sizes": [
+        1,
+        1
+      ],
+      "generated_pose_not_applicable_count": 0,
+      "unique_vhh_sequence_count": 2
+    },
+    "C": {
+      "candidate_all_free_folds_contact_counts": {
+        "ala_contact": 0,
+        "any_target_cdr_contact": 0,
+        "both_epitope_contacts": 0,
+        "his_contact": 0,
+        "severe_close_contact_diagnostic": 0
+      },
+      "candidate_contact_map_jaccard_median_distribution": {
+        "max": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      },
+      "candidate_count": 2,
+      "candidate_developability_distributions": {
+        "cdr_cysteine_count": {
+          "max": 0.0,
+          "median": 0.0,
+          "min": 0.0
+        },
+        "cdr_hydrophobic_residue_fraction": {
+          "max": 0.26666666666666666,
+          "median": 0.26666666666666666,
+          "min": 0.26666666666666666
+        },
+        "cdr_kr_minus_de_charge_proxy": {
+          "max": -3.0,
+          "median": -3.5,
+          "min": -4.0
+        },
+        "cdr_residue_count": {
+          "max": 30.0,
+          "median": 30.0,
+          "min": 30.0
+        }
+      },
+      "candidate_five_of_five_both_terminal_contact_count": 0,
+      "candidate_jaccard_undefined_median_count": 0,
+      "denominators": {
+        "candidates_for_five_of_five_terminal_contact": 2,
+        "folds_nested_within_each_candidate": 5,
+        "free_fold_samples": 10,
+        "generated_candidates": 2
+      },
+      "fold_sample_count": 10,
+      "free_fold_contacts": {
+        "counts": {
+          "ala_contact": 0,
+          "any_target_cdr_contact": 4,
+          "both_epitope_contacts": 0,
+          "his_contact": 0,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 43.75851847085946,
+            "median": 32.25046368941507,
+            "min": 16.527480496683513
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 44.56376576931769,
+            "median": 34.78718192375227,
+            "min": 16.900968306275054
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 12.57003516717139,
+            "median": 9.754607060656785,
+            "min": 2.251771882179264
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 3.34157611460458,
+            "median": 2.556111207639523,
+            "min": 1.9460820338704226
+          },
+          "participating_cdr_fraction": {
+            "max": 0.36666666666666664,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "participating_cdr_residue_count": {
+            "max": 11.0,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "participating_target_residue_count": {
+            "max": 10.0,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 21.0,
+            "median": 0.0,
+            "min": 0.0
+          }
+        },
+        "sample_count": 10
+      },
+      "free_fold_pose_applicable_count": 0,
+      "free_fold_pose_not_applicable_count": 10,
+      "generated_both_terminal_contact_candidate_count": 0,
+      "generated_contacts": {
+        "counts": {
+          "ala_contact": 0,
+          "any_target_cdr_contact": 0,
+          "both_epitope_contacts": 0,
+          "his_contact": 0,
+          "severe_close_contact_diagnostic": 0
+        },
+        "metrics": {
+          "ala_min_cdr_distance_angstrom": {
+            "max": 7.020388411079034,
+            "median": 6.927404812030112,
+            "min": 6.834421212981189
+          },
+          "his_min_cdr_distance_angstrom": {
+            "max": 5.0032362749087085,
+            "median": 4.786682912837145,
+            "min": 4.570129550765583
+          },
+          "min_target_cdr_distance_angstrom": {
+            "max": 5.0032362749087085,
+            "median": 4.786682912837145,
+            "min": 4.570129550765583
+          },
+          "min_target_vhh_distance_angstrom": {
+            "max": 5.0032362749087085,
+            "median": 3.835320060647514,
+            "min": 2.6674038463863194
+          },
+          "participating_cdr_fraction": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "participating_cdr_residue_count": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "participating_target_residue_count": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0
+          },
+          "target_cdr_residue_pair_count": {
+            "max": 0.0,
+            "median": 0.0,
+            "min": 0.0
+          }
+        },
+        "sample_count": 2
+      },
+      "generated_epitope_footprint_descriptive_counts": {
+        "none": 2
+      },
+      "generated_pose_applicable_count": 2,
+      "generated_pose_class_count_descriptive_only": 2,
+      "generated_pose_class_sizes": [
+        1,
+        1
+      ],
+      "generated_pose_not_applicable_count": 0,
+      "unique_vhh_sequence_count": 2
+    }
+  },
+  "candidate_count": 6,
+  "clean_first_pass_execution": false,
+  "condition_ids": [
+    "A",
+    "B",
+    "C"
+  ],
+  "contact_threshold_angstrom": 4.5,
+  "continuation_wall_seconds": 381.5987013949998,
+  "duplicate_sequence_count": 0,
+  "fold_sample_count": 30,
+  "historical_original_attempt_status": "EXECUTION_FAILED",
+  "limitations": [
+    "The original A workflow failed on an absent legacy optional binding-site column after GPU stages completed; its failed receipt is preserved and CPU output validation was corrected.",
+    "All six generation draws are retained, including repeated sequences; five free folds are nested repeats, not independent molecules.",
+    "Two draws per condition do not establish statistical sufficiency or a biological success rate; no common-random-number pairing is assumed.",
+    "His/Ala geometric contact does not establish binding, active-versus-truncated selectivity, or terminal chemistry; close-contact diagnostics are not atom-type-aware clashes.",
+    "Original contact thresholds and pose applicability rules are unchanged; pose is diagnostic only, never a continuation gate."
+  ],
+  "new_downstream_gpu_authorized_by_summary": false,
+  "original_30_minute_deadline_extended": false,
+  "original_a_gpu_rerun": false,
+  "overall_elapsed_seconds": 1328.725505,
+  "partial_fallback_used": false,
+  "pose_v2_role": "DIAGNOSTIC_ONLY_NOT_A_CONTINUATION_GATE",
+  "schema": "VHH_TERMINAL_CONTINUATION_SUMMARY_V1",
+  "scientific_evaluation_unchanged": true,
+  "status": "STRICT_ALL_ATOM_DESCRIPTIVE_ANALYSIS_COMPLETE_AFTER_ADMINISTRATIVE_CONTINUATION",
+  "strict_all_atom_validation": true,
+  "unique_sequence_count": 6
+}

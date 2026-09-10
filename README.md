@@ -11,6 +11,9 @@
 2026-09-11 新入口：[输入兼容性修复与端部条件对照](boltzgen/main/windows_single_owner_20260831/VHH_TERMINAL_CONTROL_PROCESS_ZH_20260911.md)。
 本轮在实际 GPU 前使用严格全原子输入门，并在每组完成后再次检查完整候选；
 以同一完整 7XL0 骨架比较三种端部软条件，不继续扩骨架、不改写旧失败。
+本轮已完成 6 条候选和 30 次复折叠，全部可严格评价，但三组均无 5/5 持续双端接触候选。
+A 的旧可选列检查失败保留，CPU 修复后仅续跑 B/C；实验窗口 22 分 9 秒，未延长原截止。
+详见 [结果与复现索引](boltzgen/main/windows_single_owner_20260831/reports/vhh_terminal_control_20260911/README.md)。
 
 当前执行入口是 [Windows/WSL2 主工作区](boltzgen/main/windows_single_owner_20260831/README.md)，
 不是下表中的早期 Mac 批次。2026-09-09 已进入
