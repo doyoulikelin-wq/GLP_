@@ -1,0 +1,17 @@
+{
+  "schema": "VHH_CONTROLLED_EXPANSION_TEST_SUMMARY_V1",
+  "phase": "PRE_GPU",
+  "passed": 273,
+  "failed": 0,
+  "warnings": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "wall_seconds": 28.11,
+  "test_scope": "boltzgen/main/windows_single_owner_20260831/tests",
+  "pose_v2_tests_passed": 16,
+  "scaffold_library_tests_passed": 11,
+  "generation_conditioning_tests_passed": 5,
+  "controlled_runner_and_summary_tests_passed": 22,
+  "gpu_performed": false,
+  "biological_validation_performed": false
+}
+

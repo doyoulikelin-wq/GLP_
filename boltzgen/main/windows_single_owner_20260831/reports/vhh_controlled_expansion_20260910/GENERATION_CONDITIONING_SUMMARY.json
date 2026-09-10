@@ -1,0 +1,184 @@
+{
+  "causal_explanation_of_observed_c_terminal_contacts": "NOT_ESTABLISHED_NO_GENERATION_ABLATION_RUN",
+  "cell_count": 3,
+  "cells": [
+    {
+      "binding_residue_names": [
+        "HIS",
+        "ALA"
+      ],
+      "binding_token_indices": [
+        0,
+        1
+      ],
+      "cdr_token_count": 30,
+      "checkpoint_name": "boltzgen1_adherence.ckpt",
+      "configuration_role": "HISTORICAL_CONFIG_CPU_RECONSTRUCTION",
+      "distance_channel_shift_invariant": true,
+      "effective_masker_args": {
+        "mask": true,
+        "mask_backbone": false,
+        "mask_disto": false
+      },
+      "enabled_checkpoint_backed_binding_branch": true,
+      "generation_starts_from_random_noise_not_input_pose": true,
+      "invariance_scope": "masked token-distance channel only, not full network causal invariance",
+      "masker_preserves_binding": true,
+      "not_binding_token_indices": [],
+      "shifted_vhh_masked_distance_max_difference_angstrom": 0,
+      "source_spec_label": "01_pdb_00007xl0-A",
+      "structure_group_token_counts": {
+        "0": 30,
+        "1": 30,
+        "2": 91
+      },
+      "target_token_count": 30,
+      "target_vhh_visible_distance_pair_count": 0,
+      "token_count": 151,
+      "unspecified_target_token_count": 28
+    },
+    {
+      "binding_residue_names": [
+        "HIS",
+        "ALA"
+      ],
+      "binding_token_indices": [
+        0,
+        1
+      ],
+      "cdr_token_count": 26,
+      "checkpoint_name": "boltzgen1_adherence.ckpt",
+      "configuration_role": "HISTORICAL_CONFIG_CPU_RECONSTRUCTION",
+      "distance_channel_shift_invariant": true,
+      "effective_masker_args": {
+        "mask": true,
+        "mask_backbone": false,
+        "mask_disto": false
+      },
+      "enabled_checkpoint_backed_binding_branch": true,
+      "generation_starts_from_random_noise_not_input_pose": true,
+      "invariance_scope": "masked token-distance channel only, not full network causal invariance",
+      "masker_preserves_binding": true,
+      "not_binding_token_indices": [],
+      "shifted_vhh_masked_distance_max_difference_angstrom": 0,
+      "source_spec_label": "02_pdb_00006apo-A",
+      "structure_group_token_counts": {
+        "0": 26,
+        "1": 30,
+        "2": 90
+      },
+      "target_token_count": 30,
+      "target_vhh_visible_distance_pair_count": 0,
+      "token_count": 146,
+      "unspecified_target_token_count": 28
+    },
+    {
+      "binding_residue_names": [
+        "HIS",
+        "ALA"
+      ],
+      "binding_token_indices": [
+        0,
+        1
+      ],
+      "cdr_token_count": 30,
+      "checkpoint_name": "boltzgen1_adherence.ckpt",
+      "configuration_role": "NEW_SPEC_CPU_PREPARATION_NOT_HISTORICAL_RUN",
+      "distance_channel_shift_invariant": true,
+      "effective_masker_args": {
+        "mask": true,
+        "mask_backbone": false,
+        "mask_disto": false
+      },
+      "enabled_checkpoint_backed_binding_branch": true,
+      "generation_starts_from_random_noise_not_input_pose": true,
+      "invariance_scope": "masked token-distance channel only, not full network causal invariance",
+      "masker_preserves_binding": true,
+      "not_binding_token_indices": [],
+      "shifted_vhh_masked_distance_max_difference_angstrom": 0,
+      "source_spec_label": "09_pdb_00008im0-B",
+      "structure_group_token_counts": {
+        "0": 30,
+        "1": 30,
+        "2": 91
+      },
+      "target_token_count": 30,
+      "target_vhh_visible_distance_pair_count": 0,
+      "token_count": 151,
+      "unspecified_target_token_count": 28
+    }
+  ],
+  "checkpoint_diagnostics": [
+    {
+      "add_binding_specification": true,
+      "binding_embedding_present": true,
+      "binding_embedding_row_norms": [
+        0.2909146547317505,
+        1.6014965772628784,
+        1.6223000288009644
+      ],
+      "binding_embedding_shape": [
+        3,
+        384
+      ],
+      "binding_vs_unspecified_delta_norm": 1.6449583768844604,
+      "checkpoint_masker_args": {
+        "mask": true,
+        "mask_backbone": false,
+        "mask_disto": true
+      },
+      "checkpoint_name": "boltzgen1_adherence.ckpt",
+      "checkpoint_unchanged_stat": true,
+      "embedder_args": {
+        "add_binding_specification": true,
+        "add_cyclic_flag": true,
+        "add_design_mask_flag": true,
+        "add_method_conditioning": true,
+        "add_modified_flag": true,
+        "add_mol_type_feat": true,
+        "add_ss_specification": true,
+        "atom_encoder_depth": 3,
+        "atom_encoder_heads": 4
+      },
+      "inspection": "CPU mmap metadata and tiny embedding only; no full model instantiation",
+      "not_binding_vs_unspecified_delta_norm": 1.6153498888015747
+    }
+  ],
+  "conclusion": "GENERATION_CONSUMES_TRAINED_BINDING_CONDITION_BUT_CONTACT_ADHERENCE_NOT_GUARANTEED",
+  "gpu_started": false,
+  "limitations": [
+    "Soft token conditioning is not a hard contact constraint.",
+    "Remainder of target is UNSPECIFIED, not NOT_BINDING.",
+    "Masked geometry-channel invariance does not prove whole-network causal invariance.",
+    "Fresh CPU features check the actual config path but are not captured historical GPU batches.",
+    "No candidate generation or folding was run; no binding or selectivity conclusion."
+  ],
+  "model_weights_modified": false,
+  "schema": "VHH_GENERATION_CONDITIONING_DIAGNOSTIC_V1",
+  "source_implementation": {
+    "data/feature/featurizer.py": {
+      "sha256": "c5efa28e70cb84138bc2308e393bee22fd6c12b4bda3da59cb06018e4971615c"
+    },
+    "data/parse/schema.py": {
+      "sha256": "8026046bfcd7ae663d6ffe6ede2ba8e1d159c4ffbfaa6aaf4d3331adb6594ea4"
+    },
+    "model/modules/diffusion.py": {
+      "sha256": "83fec5a63ce480a7f65ddb424d886f93e30007f7b38796556a9f64dd0dfc2338"
+    },
+    "model/modules/masker.py": {
+      "sha256": "d5d151cc49ec99820a170860825fb3a86fa22062f1120aa575e43a12fad0fb58"
+    },
+    "model/modules/trunk.py": {
+      "sha256": "873f8e7515041f31c1700dcee67e19255908706ddb465f7abf54a7dedb0f0257"
+    },
+    "task/predict/data_from_yaml.py": {
+      "sha256": "ee48b780ff43fab1428a6bb53bb23134360962c455a3d4857461e122fe217217"
+    },
+    "task/predict/predict.py": {
+      "sha256": "6f077e537c1c1addbd320ba8f935b8a886d425975f40e78e339e446ab024efcb"
+    }
+  },
+  "status": "CPU_MECHANISM_CHECK_COMPLETE",
+  "training_performed": false
+}
+

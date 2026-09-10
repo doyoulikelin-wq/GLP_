@@ -1,0 +1,463 @@
+{
+  "baseline_scaffolds": [
+    "01_pdb_00007xl0-A",
+    "02_pdb_00006apo-A"
+  ],
+  "biological_pass": false,
+  "created_at_utc": "2026-09-10T08:23:01.302064+00:00",
+  "date": "2026-09-10",
+  "distinct_framework_count": 6,
+  "elapsed_seconds": 0.044169861999989735,
+  "framework_comparisons": [
+    {
+      "framework_edit_distance": 22,
+      "identical_framework": false,
+      "left": "01_pdb_00007xl0-A",
+      "normalized_edit_distance": 0.24175824175824176,
+      "right": "02_pdb_00006apo-A"
+    },
+    {
+      "framework_edit_distance": 19,
+      "identical_framework": false,
+      "left": "01_pdb_00007xl0-A",
+      "normalized_edit_distance": 0.2087912087912088,
+      "right": "09_pdb_00008im0-B"
+    },
+    {
+      "framework_edit_distance": 23,
+      "identical_framework": false,
+      "left": "01_pdb_00007xl0-A",
+      "normalized_edit_distance": 0.25274725274725274,
+      "right": "03_pdb_00008v9x-A"
+    },
+    {
+      "framework_edit_distance": 15,
+      "identical_framework": false,
+      "left": "01_pdb_00007xl0-A",
+      "normalized_edit_distance": 0.16483516483516483,
+      "right": "06_pdb_00008fq7-A"
+    },
+    {
+      "framework_edit_distance": 17,
+      "identical_framework": false,
+      "left": "01_pdb_00007xl0-A",
+      "normalized_edit_distance": 0.18681318681318682,
+      "right": "11_pdb_00008gz6-A"
+    },
+    {
+      "framework_edit_distance": 28,
+      "identical_framework": false,
+      "left": "02_pdb_00006apo-A",
+      "normalized_edit_distance": 0.3076923076923077,
+      "right": "09_pdb_00008im0-B"
+    },
+    {
+      "framework_edit_distance": 32,
+      "identical_framework": false,
+      "left": "02_pdb_00006apo-A",
+      "normalized_edit_distance": 0.3516483516483517,
+      "right": "03_pdb_00008v9x-A"
+    },
+    {
+      "framework_edit_distance": 24,
+      "identical_framework": false,
+      "left": "02_pdb_00006apo-A",
+      "normalized_edit_distance": 0.26373626373626374,
+      "right": "06_pdb_00008fq7-A"
+    },
+    {
+      "framework_edit_distance": 23,
+      "identical_framework": false,
+      "left": "02_pdb_00006apo-A",
+      "normalized_edit_distance": 0.25555555555555554,
+      "right": "11_pdb_00008gz6-A"
+    },
+    {
+      "framework_edit_distance": 25,
+      "identical_framework": false,
+      "left": "09_pdb_00008im0-B",
+      "normalized_edit_distance": 0.27472527472527475,
+      "right": "03_pdb_00008v9x-A"
+    },
+    {
+      "framework_edit_distance": 18,
+      "identical_framework": false,
+      "left": "09_pdb_00008im0-B",
+      "normalized_edit_distance": 0.1978021978021978,
+      "right": "06_pdb_00008fq7-A"
+    },
+    {
+      "framework_edit_distance": 21,
+      "identical_framework": false,
+      "left": "09_pdb_00008im0-B",
+      "normalized_edit_distance": 0.23076923076923078,
+      "right": "11_pdb_00008gz6-A"
+    },
+    {
+      "framework_edit_distance": 24,
+      "identical_framework": false,
+      "left": "03_pdb_00008v9x-A",
+      "normalized_edit_distance": 0.26373626373626374,
+      "right": "06_pdb_00008fq7-A"
+    },
+    {
+      "framework_edit_distance": 22,
+      "identical_framework": false,
+      "left": "03_pdb_00008v9x-A",
+      "normalized_edit_distance": 0.24175824175824176,
+      "right": "11_pdb_00008gz6-A"
+    },
+    {
+      "framework_edit_distance": 17,
+      "identical_framework": false,
+      "left": "06_pdb_00008fq7-A",
+      "normalized_edit_distance": 0.18681318681318682,
+      "right": "11_pdb_00008gz6-A"
+    }
+  ],
+  "gpu_started": false,
+  "input_ready_count": 6,
+  "limitations": [
+    "Existing normalized VHH fragments, not newly downloaded full original complexes",
+    "CDR ranges are local curated label indices, not independent IMGT reannotation",
+    "Framework nonidentity is sequence-based; not a claim of independent fold class",
+    "Complete modeled backbone does not establish expression, stability or binding",
+    "Input readiness tolerates explicitly recorded missing sidechain atoms; no sidechains were rebuilt by this screen",
+    "Matching loop lengths reduces but does not remove scaffold/geometry confounding",
+    "No de novo sequences, GPU predictions, affinity measurements or target selectivity evidence"
+  ],
+  "next_gpu_new_scaffold_limit": 1,
+  "recommended_addition": {
+    "all_three_cdr_lengths_matched": true,
+    "framework_edit_distance": 19,
+    "matched_baseline": "01_pdb_00007xl0-A",
+    "reason": "exact fixed loop lengths but a nonidentical framework; computational comparison only",
+    "scaffold_id": "09_pdb_00008im0-B"
+  },
+  "records": [
+    {
+      "all_heavy_atom_counts_complete": true,
+      "cdr_lengths": [
+        8,
+        7,
+        15
+      ],
+      "cdr_ranges": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          110
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 91,
+      "framework_sequence_sha256": "08e69b6569e2d2df25827e5759e5be09d6901c6dc3ceddde5be47548a7dc5b3c",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [],
+      "incomplete_heavy_residues": [],
+      "input_readiness_note": "MODELED_BACKBONE_AND_HEAVY_ATOM_COUNTS_COMPLETE",
+      "length": 121,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "7XL0",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.7,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "01_pdb_00007xl0-A",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "89af5c7f8f67620323146074a1aa4a14896b637c8b32e1ab2a52bdfe82721e68",
+      "source_auth_chain": "A",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/7XL0"
+    },
+    {
+      "all_heavy_atom_counts_complete": true,
+      "cdr_lengths": [
+        8,
+        7,
+        11
+      ],
+      "cdr_ranges": [
+        [
+          24,
+          31
+        ],
+        [
+          50,
+          56
+        ],
+        [
+          95,
+          105
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 90,
+      "framework_sequence_sha256": "bf0d93c0e5759362a8acaa795072c5164bdbc6f211178d9fde83d1df8a0a5f39",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [],
+      "incomplete_heavy_residues": [],
+      "input_readiness_note": "MODELED_BACKBONE_AND_HEAVY_ATOM_COUNTS_COMPLETE",
+      "length": 116,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "6APO",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.168,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "02_pdb_00006apo-A",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "7b7362bcc0b2ddbe1e479c8e3a6725eebb8bf6ddb84a4218890173a6a5d664cc",
+      "source_auth_chain": "A",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "5c7b992221555eac4629220a8a5bf718b389c4ac9679a4e5b941cb3b0f21394f",
+        "scaffold.yaml": "8aa5c61deca68bd11227da7b7aba7be4fad1a272916cac2ca6dfbd750de2437f",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/6APO"
+    },
+    {
+      "all_heavy_atom_counts_complete": false,
+      "cdr_lengths": [
+        8,
+        7,
+        15
+      ],
+      "cdr_ranges": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          110
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 91,
+      "framework_sequence_sha256": "85ec5604f371c72e009824236d036db387a7984f9510dea2fadda3e6e55fb05d",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [
+        3,
+        44,
+        88,
+        113
+      ],
+      "incomplete_heavy_residues": [
+        3,
+        44,
+        88,
+        113
+      ],
+      "input_readiness_note": "SIDECHAIN_GAPS_RECORDED_BACKBONE_INPUT_ONLY",
+      "length": 121,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "8IM0",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.31,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "09_pdb_00008im0-B",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "3f7d7e2e8bfaeaa0a33ad0fa0239e5c49ef0dae3e41fa938c64dd74570d6ddbe",
+      "source_auth_chain": "B",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "7e347f7a9ea18381729170d3610780513f098fb36d58168b0262ac9de9218214",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/8IM0"
+    },
+    {
+      "all_heavy_atom_counts_complete": true,
+      "cdr_lengths": [
+        8,
+        7,
+        7
+      ],
+      "cdr_ranges": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          57
+        ],
+        [
+          96,
+          102
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 91,
+      "framework_sequence_sha256": "95de083175ed8e7842ed5f5f08c9eecad20fabe02fd4385a634455cde94ef844",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [],
+      "incomplete_heavy_residues": [],
+      "input_readiness_note": "MODELED_BACKBONE_AND_HEAVY_ATOM_COUNTS_COMPLETE",
+      "length": 113,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "8V9X",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.55,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "03_pdb_00008v9x-A",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "a518ddbf0954bbf71f5c33599b56989b59733964f397645d46d41b89b065cc66",
+      "source_auth_chain": "A",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "578fb2b132815365f7821d43e4e3c58ec19fde76ce6dfd9ed76fc34bade13f58",
+        "scaffold.yaml": "df60169e94c362fba27ecf6594c0da037a6713aced4211fba7d8de096e336b68",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/8V9X"
+    },
+    {
+      "all_heavy_atom_counts_complete": false,
+      "cdr_lengths": [
+        8,
+        8,
+        11
+      ],
+      "cdr_ranges": [
+        [
+          26,
+          33
+        ],
+        [
+          51,
+          58
+        ],
+        [
+          97,
+          107
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 91,
+      "framework_sequence_sha256": "83345cabc734420f7612ce6f53749b8f41439a7464ed46fe24b9d96fec401f96",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [
+        1
+      ],
+      "incomplete_heavy_residues": [
+        1
+      ],
+      "input_readiness_note": "SIDECHAIN_GAPS_RECORDED_BACKBONE_INPUT_ONLY",
+      "length": 118,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "8FQ7",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.4,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "06_pdb_00008fq7-A",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "c1d2f3aa7f8ec0ffa3f03e40330e33f5e829b120b0a353833449115765077667",
+      "source_auth_chain": "A",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "2f7cbef863086e04a60de4c89e951dc026eaa4723749be599b00082f068bad31",
+        "scaffold.yaml": "a854a4aa2222b4d7d645992fc5d22cc8ac58c83bd205c14025b32617c737702b",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/8FQ7"
+    },
+    {
+      "all_heavy_atom_counts_complete": false,
+      "cdr_lengths": [
+        8,
+        8,
+        13
+      ],
+      "cdr_ranges": [
+        [
+          25,
+          32
+        ],
+        [
+          50,
+          57
+        ],
+        [
+          96,
+          108
+        ]
+      ],
+      "cysteine_count": 2,
+      "finite_coordinates": true,
+      "framework_length": 90,
+      "framework_sequence_sha256": "74c3a3f41fd4256c603474abda71520f9b6b8d573af6552d0de6c9b518f3df65",
+      "heavy_atom_screen_method": "per-residue canonical heavy atom count excluding OXT; not atom identity/chemical validity proof",
+      "historical_machine_input_check": "PASS",
+      "incomplete_cdr_heavy_residues": [],
+      "incomplete_framework_heavy_residues": [
+        73
+      ],
+      "incomplete_heavy_residues": [
+        73
+      ],
+      "input_readiness_note": "SIDECHAIN_GAPS_RECORDED_BACKBONE_INPUT_ONLY",
+      "length": 119,
+      "missing_backbone_residues": [],
+      "normalized_input_chain": "A",
+      "pdb_id": "8GZ6",
+      "peptide_continuity_outliers": [],
+      "resolution_angstrom": 1.35,
+      "resolution_source": "existing_T4_curated_registry_not_remeasured",
+      "scaffold_id": "11_pdb_00008gz6-A",
+      "scaffold_input_ready": true,
+      "sequence_sha256": "3f26f0b0e854f8ba0416b35e56db9a7031ab1aa4efd694048dacc7ac8779f409",
+      "source_auth_chain": "A",
+      "source_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "a587894157fdcfa7c49f3e2cbc1a639c6fbeb2f0e23963c8cb65b49d29ac4cfd",
+        "scaffold.yaml": "50d99883b936bcee34fe69089a376277fca7a126908965785533efb27173a59c",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      },
+      "source_url": "https://www.rcsb.org/structure/8GZ6"
+    }
+  ],
+  "schema": "VHH_SCAFFOLD_LIBRARY_SCREEN_V1",
+  "screened_count": 6,
+  "source_receipts": {
+    "curated_registry_sha256": "5de25678bccc3596a3ecd9cb4187faaec432c48a4ebb9fafca13b8a9ebcfae8e",
+    "t4_spec_verification_sha256": "9b8b272ea6ceb4f80629044f05bef977bc4e45ddc0a80e1f3ed1b7f8a39e257a"
+  }
+}

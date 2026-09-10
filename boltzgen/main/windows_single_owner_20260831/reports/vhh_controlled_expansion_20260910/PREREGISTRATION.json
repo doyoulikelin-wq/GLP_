@@ -1,0 +1,152 @@
+{
+  "schema": "VHH_CONTROLLED_EXPANSION_PUBLIC_PREREGISTRATION_V1",
+  "created_at_utc": "2026-09-10T08:30:01.517205Z",
+  "registration": "PROSPECTIVE_NEW_EXPERIMENT_AFTER_RETROSPECTIVE_METHOD_DEVELOPMENT",
+  "rule": {
+    "automatic_retry": false,
+    "binding_condition_role": "TRAINED_SOFT_CONDITION_NOT_HARD_CONTACT_CONSTRAINT",
+    "biological_pass": false,
+    "candidates_per_scaffold": 2,
+    "checkpoint": "adherence",
+    "experiment_id": "vhh-controlled-expansion-20260910",
+    "free_folds_per_candidate": 5,
+    "hard_timeout_seconds": 1800,
+    "matched_cdr_lengths": [
+      8,
+      7,
+      15
+    ],
+    "matched_framework_comparison": [
+      "01_pdb_00007xl0-A",
+      "09_pdb_00008im0-B"
+    ],
+    "old_pilot_status": "BLOCKED_UNCHANGED",
+    "pose_class_count_role": "DESCRIPTIVE_NOT_REQUIRED_SUCCESS_GATE",
+    "primary_descriptors": [
+      "generated_his_ala_contact",
+      "free_fold_his_ala_contact",
+      "within_candidate_repeat_consistency"
+    ],
+    "scaffolds": [
+      "01_pdb_00007xl0-A",
+      "02_pdb_00006apo-A",
+      "09_pdb_00008im0-B"
+    ]
+  },
+  "pose_rule": {
+    "alignment_core_biological_numbers": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33
+    ],
+    "descriptive_cluster_direction_separation_degrees": 45,
+    "descriptive_cluster_position_separation_angstrom": 8,
+    "domain_role": "engineering_coordinate_comparability_not_biological_threshold",
+    "local_epitope_biological_numbers": [
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "mapping": "explicit_GLP1_biological_residue_numbers_7_through_36",
+    "maximum_core_rmsd_angstrom": 0.5,
+    "maximum_global_rmsd_angstrom": 1,
+    "maximum_local_epitope_residue_displacement_angstrom": 1,
+    "minimum_core_second_to_first_singular_value_ratio": 0.02,
+    "old_gate_unlock_allowed": false,
+    "outside_domain_action": "pose_NA_contacts_still_reported_no_candidate_biological_failure",
+    "point": "per_residue_N_CA_C_O_centroid",
+    "pose_diversity_required_for_progress": false,
+    "reference": "one_original_target_cif_shared_by_all_candidates_not_first_generated_candidate",
+    "schema": "VHH_POSE_METHOD_V2"
+  },
+  "private_plan_sha256": "6059e63e3d146b65509b74f9f675f2b6a8415291bc3fb3ef46f2d0be2f0ff015",
+  "implementation_sha256": {
+    "evaluate_vhh_epitope.py": "bca24706b6392881f7f169467d2fb3df5bf8dd69089441af4f4b03d35d1df249",
+    "evaluate_vhh_pose_v2.py": "4e25163dfded6c03589437e6064e4804b95852010ecb7af772ed078662c9f2f9",
+    "run_owner_exploratory_cell.sh": "db4375e4f991772703f49435f0b780b3e42117d2a744e0dc1af7f25fdf2b7be0",
+    "run_owner_t12_split_template.py": "f1a6a0b0103fcdb25d9472672424f41565b8ae883cf5a315b1a7ccc2356ac158",
+    "run_vhh_controlled_expansion.py": "69f4fbe4d8597f037fd12ef30dfe181c15fead9e8ebe2bd82db5c8d4103c99f9",
+    "run_vhh_diversified_pilot.py": "e705266420e59c26020b3c2994c464d0549331c6969a3323026c13e18d74e061",
+    "summarize_vhh_controlled_expansion.py": "fdf8118aab2c9b41521d2677af90b23b44e03b12195b7fa1f6bb93ceeaacb36d",
+    "summarize_vhh_pilot.py": "d44c3040c7fa110dff56cd91dfcca2bb34912f417eb2274d4d103cab04bd7240",
+    "vhh_stage_gate.py": "1ca0d74f1f6eb49b806bce84d1d3f1886d8a293064eb0c5ef8fe83149b251641"
+  },
+  "cpu_checks": {
+    "scaffold_library_screened": true,
+    "new_framework_identity_distinct": true,
+    "matched_cdr_lengths_verified": true,
+    "generation_binding_feature_verified": true,
+    "generation_trained_branch_verified": true,
+    "pose_v2_synthetic_tests_passed": true,
+    "old_failed_pilot_preserved": true,
+    "no_untrained_conditioning_switch": true
+  },
+  "source_target_sha256": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+  "scaffold_spec_hashes": [
+    {
+      "scaffold_id": "01_pdb_00007xl0-A",
+      "checkpoint": "adherence",
+      "num_designs": 2,
+      "cdr3_length": 15,
+      "spec_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "68a4c9545a51c56f652c503c94e572e035556998bb3a83d78b99ad80ae1a97d2",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      }
+    },
+    {
+      "scaffold_id": "02_pdb_00006apo-A",
+      "checkpoint": "adherence",
+      "num_designs": 2,
+      "cdr3_length": 11,
+      "spec_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "5c7b992221555eac4629220a8a5bf718b389c4ac9679a4e5b941cb3b0f21394f",
+        "scaffold.yaml": "8aa5c61deca68bd11227da7b7aba7be4fad1a272916cac2ca6dfbd750de2437f",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      }
+    },
+    {
+      "scaffold_id": "09_pdb_00008im0-B",
+      "checkpoint": "adherence",
+      "num_designs": 2,
+      "cdr3_length": 15,
+      "spec_hashes": {
+        "design.yaml": "bfec74b9744e3f4edd54498b95670685256e1207741e54d14df2162c96f19b4f",
+        "scaffold.cif": "7e347f7a9ea18381729170d3610780513f098fb36d58168b0262ac9de9218214",
+        "scaffold.yaml": "6f2ce02ad5e314b5c971491d54b10f83c69178491adfa523cf83a3965c6582d0",
+        "target.cif": "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53"
+      }
+    }
+  ],
+  "gpu_started": false,
+  "biological_pass": false,
+  "scope": "This is the pre-run snapshot; later execution has a separate receipt.",
+  "known_limitations": [
+    "Soft conditioning is present, but the cause of observed terminal-adherence failure has not been established by ablation.",
+    "8IM0 has four framework residues with missing sidechain heavy atoms; this is retained, not repaired or claimed fully atomically complete."
+  ]
+}
+
