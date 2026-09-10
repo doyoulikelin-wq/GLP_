@@ -1,0 +1,24 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_PUBLIC_CPU_REVALIDATION_V1",
+  "condition_id": "A",
+  "original_terminal_status": "EXPLORATORY_INFERENCE_FAILED",
+  "original_failure_preserved": true,
+  "new_validator_status": "PASS",
+  "observed_unique_ids": 2,
+  "fold_samples_per_candidate": 5,
+  "base_validator_sha256": "55c59b5ba738511496d301ca16454deda6334a6072072295a74ac8fb58d76e83",
+  "wrapper_sha256": "fe6890025e02986ebf2a3f4bb39442da9e74d00b606ccaacbc10a1e3cccd602d",
+  "optional_analysis_metric": {
+    "finite_check_when_present": true,
+    "name": "bindsite_under_8rmsd",
+    "present": false,
+    "required": false,
+    "role": "legacy token-centre binding-site descriptor; not the common strict E His/Ala endpoint",
+    "status": "NOT_APPLICABLE_ABSENT_NO_VALUE_SYNTHESIZED"
+  },
+  "base_checks_otherwise_unchanged": true,
+  "source_outputs_modified": false,
+  "gpu_repeated": false,
+  "strict_E_evaluation_still_required": true,
+  "biological_pass": false
+}

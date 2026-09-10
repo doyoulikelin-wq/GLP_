@@ -1,0 +1,33 @@
+{
+  "schema": "VHH_TERMINAL_CONTINUATION_PREREGISTRATION_PUBLIC_V1",
+  "frozen_at_utc": "2026-09-10T17:56:24.903827Z",
+  "resume_plan_sha256": "409c1a03835ab93b4686bb74e5412c2f9d16225b4ad17ba324a9b334fa8da0b3",
+  "original_plan_sha256": "3633291b9d4e22b2b7d68fda4f45b24f5e320c399a8c4f0d576e0f772d91a1e4",
+  "historical_original_attempt_status": "EXECUTION_FAILED",
+  "a_reused_without_gpu_rerun": true,
+  "a_cpu_validation_sha256": "c694adc686e198a6376ecbef1eeb18086670513c53d631bbce805d94d55d622b",
+  "a_strict_check": {
+    "status": "PASS",
+    "candidate_count": 2,
+    "free_fold_sample_count": 10,
+    "scope": "STRICT_FULL_ASSIGNED_CANONICAL_HEAVY_ATOMS"
+  },
+  "remaining_conditions": [
+    "B",
+    "C"
+  ],
+  "original_started_at_utc": "2026-09-10T17:43:32.235893Z",
+  "deadline_at_utc": "2026-09-10T18:13:32.235893Z",
+  "deadline_extended": false,
+  "scientific_inputs_and_thresholds_changed": false,
+  "optional_legacy_metric_missing": "NOT_APPLICABLE_NO_VALUE_SYNTHESIZED",
+  "automatic_retry": false,
+  "automatic_downstream_gpu": false,
+  "biological_pass": false,
+  "implementation_sha256": {
+    "resume_vhh_terminal_controls.py": "c7b754841a9a7ee2d1c193d2b86764210b19899d97f3a9d5dc8dbfc6ec3c747b",
+    "run_vhh_terminal_cell_v2.py": "b816e9fd4491a71fc171502a365ddccd8820bda44c1e30b2e2a052e221505949",
+    "summarize_vhh_terminal_continuation.py": "8f27975b80c025dac265e7aff929d818275ebd57b27f9ba8c1ad4785ad468943",
+    "validate_vhh_terminal_cell.py": "fe6890025e02986ebf2a3f4bb39442da9e74d00b606ccaacbc10a1e3cccd602d"
+  }
+}

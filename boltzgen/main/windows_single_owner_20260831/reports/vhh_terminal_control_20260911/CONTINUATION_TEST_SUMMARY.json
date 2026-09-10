@@ -1,0 +1,19 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_CONTINUATION_TEST_SUMMARY_V1",
+  "phase": "BEFORE_UNSTARTED_B_C_GPU",
+  "passed": 403,
+  "failed": 0,
+  "warnings": 1,
+  "warning": "Existing pynvml deprecation warning",
+  "wall_seconds": 28.92,
+  "test_scope": "boltzgen/main/windows_single_owner_20260831/tests",
+  "new_continuation_tests": {
+    "optional_metric_validator_and_adapter": 14,
+    "remaining_conditions_runner": 16,
+    "combined_summary": 15
+  },
+  "original_pre_gpu_test_summary_preserved": true,
+  "scientific_evaluation_unchanged": true,
+  "gpu_repeated": false,
+  "biological_validation_performed": false
+}

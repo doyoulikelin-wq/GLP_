@@ -1,0 +1,32 @@
+{
+  "schema": "VHH_TERMINAL_CONTROL_FIRST_ATTEMPT_FAILURE_V1",
+  "original_status": "EXECUTION_FAILED",
+  "started_at_utc": "2026-09-10T17:43:32.235893Z",
+  "finished_at_utc": "2026-09-10T17:46:50.894192Z",
+  "wall_seconds": 198.6582898179986,
+  "condition_started": "A",
+  "conditions_not_started": [
+    "B",
+    "C"
+  ],
+  "actual_generated_candidates": 2,
+  "actual_free_fold_samples": 10,
+  "gpu_generation_repeated": false,
+  "stage_exit_codes": {
+    "configure": 0,
+    "resolved_config_validation": 0,
+    "design": 0,
+    "inverse_folding": 0,
+    "folding": 0,
+    "analysis": 0,
+    "filtering": 0,
+    "validation": 1
+  },
+  "failure": "Original validator required bindsite_under_8rmsd, which is not emitted for an input with no binding labels.",
+  "failure_class": "LEGACY_OPTIONAL_METRIC_SCHEMA_INCOMPATIBILITY_NOT_A_STRUCTURE_OR_GPU_FAILURE",
+  "original_failure_preserved": true,
+  "original_full_target_cdr_metrics_unchanged": true,
+  "all_original_outputs_preserved": true,
+  "cpu_revalidation_required_before_remaining_conditions": true,
+  "biological_pass": false
+}
