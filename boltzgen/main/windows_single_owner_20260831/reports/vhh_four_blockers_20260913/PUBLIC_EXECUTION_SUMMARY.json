@@ -1,0 +1,86 @@
+{
+  "schema": "VHH_FOUR_BLOCKERS_EXECUTION_SUMMARY_20260913_V1",
+  "status": "BOUNDED_ENGINEERING_CORRECTIONS_AND_COMPUTATIONAL_TESTS_COMPLETE",
+  "biological_pass": false,
+  "terminal_recognition_goal_met": false,
+  "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED",
+  "actual_new_fold_samples": 34,
+  "runs": [
+    {
+      "name": "9NK9 short-peptide recovery",
+      "source_commit": "20f4643",
+      "execution_device": "cuda",
+      "fold_samples": 2,
+      "wall_seconds": 55.88901343502221,
+      "status": "COMPLETED",
+      "calibration_status": "PASSED_TWO_OF_TWO",
+      "weights_unchanged": true,
+      "started_at_utc": "2026-09-12T17:19:11.561274Z",
+      "finished_at_utc": "2026-09-12T17:20:07.856355Z",
+      "result": "PUBLIC_CALIBRATION_RESULT.json"
+    },
+    {
+      "name": "same-candidate matched deletion",
+      "source_commit": "0ea926a",
+      "candidates": 6,
+      "execution_device": "cuda",
+      "fold_samples": 24,
+      "wall_seconds": 168.00265018400387,
+      "status": "COMPLETED",
+      "weights_unchanged": true,
+      "started_at_utc": "2026-09-12T17:20:55.673287Z",
+      "finished_at_utc": "2026-09-12T17:23:43.675944Z",
+      "result": "PUBLIC_MATCHED_PAIR_SUMMARY.json"
+    },
+    {
+      "name": "raw versus inverse-folded sequence",
+      "source_commit": "8cce0e6",
+      "execution_device": "cuda",
+      "fold_samples": 8,
+      "wall_seconds": 83.38049401299213,
+      "status": "COMPLETED",
+      "weights_unchanged": true,
+      "started_at_utc": "2026-09-12T17:25:16.130245Z",
+      "finished_at_utc": "2026-09-12T17:26:39.510743Z",
+      "result": "PUBLIC_SEQUENCE_RETENTION_RESULT.json"
+    }
+  ],
+  "tests": {
+    "suite": "windows_single_owner_20260831/tests",
+    "count": 454,
+    "passed": 454,
+    "failed": 0,
+    "seconds": 35.71,
+    "warning": "Existing pynvml deprecation FutureWarning"
+  },
+  "limitations": [
+    "Engineering completion is not successful terminal recognition or experimental binding.",
+    "One short-peptide positive control is not universal calibration, specificity, or a certified holdout.",
+    "Only two C-arm source candidates compared for sequence retention; folds are nested and not seed-paired.",
+    "The matched deletion experiment does not atomically verify terminal chemistry."
+  ],
+  "issues": [
+    {
+      "issue": "端部识别与错误定位",
+      "engineering": "已修正阶段口径与占位坐标误判",
+      "remaining": "端部稳定识别仍未达标"
+    },
+    {
+      "issue": "软条件与序列改写",
+      "engineering": "已完成同结构来源的两版序列自由复核",
+      "remaining": "一般CDR接触差异是探索信号，不证明方法优越或端部特异性"
+    },
+    {
+      "issue": "短肽评价校准",
+      "engineering": "9NK9已知短肽界面2/2恢复",
+      "remaining": "仅一个正对照，无生物阴性，泛化能力仍未知"
+    },
+    {
+      "issue": "活性/截短配对与端基",
+      "engineering": "已修复编号和标签，完成同6候选24次预测",
+      "remaining": "端基化学仍未核实，不能宣称选择性"
+    }
+  ],
+  "runner_wall_seconds_sum": 307.2721576320182,
+  "timing_definition": "Sum of three runner wall clocks, including startup, input/used-asset verification, inference and scoring; excludes coding/reporting time and is not pure GPU kernel time."
+}

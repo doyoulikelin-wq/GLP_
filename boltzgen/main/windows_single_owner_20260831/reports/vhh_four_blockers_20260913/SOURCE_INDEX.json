@@ -1,0 +1,93 @@
+{
+  "schema": "VHH_FOUR_BLOCKERS_PUBLIC_SOURCE_INDEX_20260913_V1",
+  "created_at_utc": "2026-09-12T17:30:15.986512+00:00",
+  "purpose": "Inspect four-blocker engineering corrections and bounded inference, not biological validation.",
+  "sources": [
+    {
+      "id": "original_terminal_control",
+      "revision": "2a3a0e789001e8568ab364341a66f89515a8aab8",
+      "public_summary": "../vhh_terminal_control_20260911/PUBLIC_TERMINAL_CONTINUATION_SUMMARY.json",
+      "correction": "Old generated fields were IF placeholder inputs; use new three-stage diagnosis."
+    },
+    {
+      "id": "short_peptide_positive_control",
+      "pdb": "9NK9",
+      "url": "https://www.rcsb.org/structure/9NK9",
+      "paper_doi": "10.1016/j.jbc.2025.110268",
+      "license_scope": "Public entry metadata and locally derived numerical summary only; no third-party structure or source copied into Git."
+    }
+  ],
+  "formats": [
+    ".json",
+    ".jsx",
+    ".md"
+  ],
+  "grain": "candidate or nested fold, explicitly labeled in each source artifact",
+  "file_count": 11,
+  "total_bytes": 65140,
+  "files": [
+    {
+      "file": "PROCESS_20260913.md",
+      "bytes": 4318,
+      "sha256": "bb3ec2b57d34c6f84c35d4efa68ed21b3454bec1417d5cdb08543ad09429a79b"
+    },
+    {
+      "file": "PUBLIC_CALIBRATION_PREPARATION.json",
+      "bytes": 3549,
+      "sha256": "3e63696c22362939cedbcb345fb1254a7437cb704ef6c105d8eea93048e912cc"
+    },
+    {
+      "file": "PUBLIC_CALIBRATION_RESULT.json",
+      "bytes": 1758,
+      "sha256": "571645445710eb04c25cbfbb034b4a6707e832516ea3d15f502f36205ec50d6f"
+    },
+    {
+      "file": "PUBLIC_EXECUTION_SUMMARY.json",
+      "bytes": 3356,
+      "sha256": "bdf8078413f513aaf186ec1f3e437ca64509add96e6c2303b7cf6a5c2d03380b"
+    },
+    {
+      "file": "PUBLIC_INTERFACE_DIAGNOSIS.json",
+      "bytes": 20385,
+      "sha256": "61de10c9b9c2f46bcf5b93f02f4cfd340abc435106ba29d1a6e08c7dcfab245e"
+    },
+    {
+      "file": "PUBLIC_MATCHED_PAIR_SUMMARY.json",
+      "bytes": 1853,
+      "sha256": "f9f762da4fff4431c2ea82ceb51d12e95b59b8d7e85b256c72a09d11b6d91535"
+    },
+    {
+      "file": "PUBLIC_PAIRING_PREPARATION.json",
+      "bytes": 1726,
+      "sha256": "e6304ef0e21a999bce51f5676c792c72307ac85c76a45400c656d19ee66a8ad8"
+    },
+    {
+      "file": "PUBLIC_SEQUENCE_RETENTION_RESULT.json",
+      "bytes": 1292,
+      "sha256": "52c18e6d59455b0bed82d276b52fe436601dc7e05f44bbe2ee3af45c032d2040"
+    },
+    {
+      "file": "README.md",
+      "bytes": 7057,
+      "sha256": "1a46bd309513cedfed39966a8c0453e27ba1de2ec0839fc669a666bd2347c235"
+    },
+    {
+      "file": "ReportContent.jsx",
+      "bytes": 1767,
+      "sha256": "0564d9d64a14223ec011e5976a2ced116f869c0e3d88ed75ef7983dba96b6358"
+    },
+    {
+      "file": "data_report_reviewed_20260913.json",
+      "bytes": 18079,
+      "sha256": "888b1308a24b3e9d3bcec0d123e0089e0295108a976f315edda4ec773564e8d3"
+    }
+  ],
+  "sensitivity": "sanitized public derived data; no sequences, coordinates, raw NPZ, private paths, weights or credentials",
+  "git_policy": "small authored sources and sanitized summaries only; portable runtime export remains local",
+  "license": "Authored text/code inherit repository terms; third-party metadata attribution retained, no broader license asserted.",
+  "consumers": [
+    "project maintainers",
+    "Data report readers"
+  ],
+  "validation_scope": "Changed-file policy plus explicitly recorded scientific checks; not full repository compliance."
+}

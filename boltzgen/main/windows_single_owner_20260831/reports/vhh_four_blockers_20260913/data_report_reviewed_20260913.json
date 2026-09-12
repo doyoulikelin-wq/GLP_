@@ -1,0 +1,439 @@
+{
+  "surface": "report",
+  "title": "VHH 四项问题：修正结果与剩余阻碍",
+  "generatedAt": "2026-09-12T17:29:07Z",
+  "status": "reviewed",
+  "buildStatus": "complete",
+  "filters": [],
+  "queries": {
+    "issues": {
+      "rows": [
+        {
+          "issue": "端部识别与错误定位",
+          "engineering": "已修正阶段口径与占位坐标误判",
+          "remaining": "端部稳定识别仍未达标"
+        },
+        {
+          "issue": "软条件与序列改写",
+          "engineering": "已完成同结构来源的两版序列自由复核",
+          "remaining": "一般CDR接触差异是探索信号，不证明方法优越或端部特异性"
+        },
+        {
+          "issue": "短肽评价校准",
+          "engineering": "9NK9已知短肽界面2/2恢复",
+          "remaining": "仅一个正对照，无生物阴性，泛化能力仍未知"
+        },
+        {
+          "issue": "活性/截短配对与端基",
+          "engineering": "已修复编号和标签，完成同6候选24次预测",
+          "remaining": "端基化学仍未核实，不能宣称选择性"
+        }
+      ],
+      "source": {
+        "label": "本轮四项处理结果",
+        "files": [
+          {
+            "label": "PUBLIC_EXECUTION_SUMMARY.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_EXECUTION_SUMMARY.json"
+          }
+        ],
+        "caveats": [
+          "Engineering completion is not successful terminal recognition or experimental binding.",
+          "One short-peptide positive control is not universal calibration, specificity, or a certified holdout.",
+          "Only two C-arm source candidates compared for sequence retention; folds are nested and not seed-paired.",
+          "The matched deletion experiment does not atomically verify terminal chemistry."
+        ]
+      },
+      "displayTable": {
+        "title": "四项问题逐项交代",
+        "columns": [
+          {
+            "field": "issue",
+            "label": "问题"
+          },
+          {
+            "field": "engineering",
+            "label": "已完成"
+          },
+          {
+            "field": "remaining",
+            "label": "尚未解决"
+          }
+        ]
+      }
+    },
+    "baseline": {
+      "rows": [
+        {
+          "condition": "A",
+          "candidate_count": 2,
+          "free_fold_count": 10,
+          "free_both_count": 1,
+          "stable_count": 0
+        },
+        {
+          "condition": "B",
+          "candidate_count": 2,
+          "free_fold_count": 10,
+          "free_both_count": 0,
+          "stable_count": 0
+        },
+        {
+          "condition": "C",
+          "candidate_count": 2,
+          "free_fold_count": 10,
+          "free_both_count": 0,
+          "stable_count": 0
+        }
+      ],
+      "source": {
+        "label": "2026-09-11基线自由复折叠",
+        "files": [
+          {
+            "label": "PUBLIC_TERMINAL_CONTINUATION_SUMMARY.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/2a3a0e7/boltzgen/main/windows_single_owner_20260831/reports/vhh_terminal_control_20260911/PUBLIC_TERMINAL_CONTINUATION_SUMMARY.json"
+          }
+        ],
+        "metricDefinitions": [
+          {
+            "label": "双端接触",
+            "definition": "His7与Ala8分别在4.5Å内接触CDR；五次预测嵌套于同一候选。"
+          }
+        ],
+        "caveats": [
+          "几何接触不是实验结合；三组每组只有两个候选。"
+        ]
+      }
+    },
+    "interface": {
+      "rows": [
+        {
+          "condition": "A",
+          "raw": "0/2",
+          "rewritten": "不可评价（占位侧链）",
+          "free": "1/10"
+        },
+        {
+          "condition": "B",
+          "raw": "0/2",
+          "rewritten": "不可评价（占位侧链）",
+          "free": "0/10"
+        },
+        {
+          "condition": "C",
+          "raw": "1/2",
+          "rewritten": "不可评价（占位侧链）",
+          "free": "0/10"
+        }
+      ],
+      "displayTable": {
+        "title": "三个阶段不能混为一谈",
+        "columns": [
+          {
+            "field": "condition",
+            "label": "条件"
+          },
+          {
+            "field": "raw",
+            "label": "原始生成·双端接触"
+          },
+          {
+            "field": "rewritten",
+            "label": "序列改写输入"
+          },
+          {
+            "field": "free",
+            "label": "自由复核·双端接触"
+          }
+        ]
+      },
+      "source": {
+        "label": "三阶段实测更正",
+        "files": [
+          {
+            "label": "PUBLIC_INTERFACE_DIAGNOSIS.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_INTERFACE_DIAGNOSIS.json"
+          }
+        ],
+        "caveats": [
+          "Retrospective diagnosis after seeing these six draws; not a preregistered causal test or new acceptance gate.",
+          "Identity is read from each actual stage; inverse-fold input_coords is not the original generation stage.",
+          "CDR shape uses four-backbone-atom residue centroids; it does not resolve individual side-chain rotations.",
+          "Framework alignment removes rigid-body motion; differences between independent free predictions are not a physical time trajectory.",
+          "Target-anchored V2 pose applicability is diagnostic; outside-domain pose is not replaced by a fabricated orientation.",
+          "Each condition has two draws; five free folds per draw are nested, not five independent sequences."
+        ],
+        "metricDefinitions": [
+          {
+            "label": "双端接触",
+            "definition": "His7和Ala8分别有重原子在CDR重原子4.5Å以内。每候选5次自由复核；IF占位坐标不参与此比较。"
+          }
+        ]
+      }
+    },
+    "calibration": {
+      "rows": [
+        {
+          "sample": 1,
+          "rmsd": "1.98 Å",
+          "recall": "30/38",
+          "status": "通过"
+        },
+        {
+          "sample": 2,
+          "rmsd": "2.19 Å",
+          "recall": "28/38",
+          "status": "通过"
+        }
+      ],
+      "displayTable": {
+        "title": "已知短肽恢复检查：2/2 通过",
+        "columns": [
+          {
+            "field": "sample",
+            "label": "预测"
+          },
+          {
+            "field": "rmsd",
+            "label": "位置偏差"
+          },
+          {
+            "field": "recall",
+            "label": "原生接触找回"
+          },
+          {
+            "field": "status",
+            "label": "门槛结果"
+          }
+        ]
+      },
+      "source": {
+        "label": "9NK9 两次自由复核",
+        "files": [
+          {
+            "label": "PUBLIC_CALIBRATION_RESULT.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_CALIBRATION_RESULT.json"
+          }
+        ],
+        "links": [
+          {
+            "label": "9NK9 实验结构",
+            "href": "https://www.rcsb.org/structure/9NK9"
+          },
+          {
+            "label": "原始论文",
+            "href": "https://pubmed.ncbi.nlm.nih.gov/40409557/"
+          }
+        ],
+        "caveats": [
+          "Known experimental Nb127/10-aa peptide positive control; not GLP1 selectivity or affinity evidence.",
+          "One positive complex and two stochastic folds do not establish sensitivity or specificity.",
+          "No validated biological negative is included; a rigid displacement is only a geometric sanity control.",
+          "Training-set overlap is unknown; this is not a certified holdout.",
+          "Only the contiguous experimentally modeled VHH slice is used; omitted terminal residues are recorded.",
+          "Canonical residue heavy-atom representation does not verify terminal protonation or amidation.",
+          "Only peptide internal conformation is templated; native relative VHH-peptide pose is not templated."
+        ],
+        "metricDefinitions": [
+          {
+            "label": "预设恢复门槛",
+            "definition": "目标对齐后VHH Cα RMSD≤5Å，且原生重原子残基对接触召回≥0.30；两次全部满足。未提供跨链原生姿态模板。"
+          }
+        ]
+      }
+    },
+    "sequence": {
+      "rows": [
+        {
+          "sequence": "原始生成序列",
+          "ordinary": "4/4",
+          "terminal": "0/4",
+          "repeated": "0/2"
+        },
+        {
+          "sequence": "改写后序列",
+          "ordinary": "0/4",
+          "terminal": "0/4",
+          "repeated": "0/2"
+        }
+      ],
+      "source": {
+        "label": "全C组两个来源、两版固定序列、各2次自由复核",
+        "files": [
+          {
+            "label": "PUBLIC_SEQUENCE_RETENTION_RESULT.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_SEQUENCE_RETENTION_RESULT.json"
+          }
+        ],
+        "caveats": [
+          "Two source draws, with two nested stochastic folds per sequence, cannot establish a robust method superiority or binding effect.",
+          "RAW_GENERATION and INVERSE_FOLDED name the true sequence provenance; neither input contact geometry is used as a free-fold result.",
+          "No active-versus-truncated state comparison or atomically verified terminal chemistry is performed."
+        ]
+      },
+      "displayTable": {
+        "title": "保留原序列：更多一般接触，但没有双端识别",
+        "columns": [
+          {
+            "field": "sequence",
+            "label": "序列来源"
+          },
+          {
+            "field": "ordinary",
+            "label": "任意位置·CDR接触"
+          },
+          {
+            "field": "terminal",
+            "label": "双端接触"
+          },
+          {
+            "field": "repeated",
+            "label": "两次均双端的来源"
+          }
+        ]
+      }
+    },
+    "pairing": {
+      "rows": [
+        {
+          "candidates": 6,
+          "states": 2,
+          "foldsPerState": 2,
+          "total": 24,
+          "activeBothStable": 0,
+          "activeAnyStable": 3,
+          "truncatedAnyStable": 3,
+          "chemistry": "未原子级核实"
+        }
+      ],
+      "source": {
+        "label": "同六个IF候选的匹配删除对照",
+        "files": [
+          {
+            "label": "PUBLIC_MATCHED_PAIR_SUMMARY.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_MATCHED_PAIR_SUMMARY.json"
+          }
+        ],
+        "caveats": [
+          "No raw iPTM difference is interpreted as selectivity.",
+          "New N-terminus and C-terminal amide chemistry not atomically verified.",
+          "Contact distance and close-overlap indicators are not affinity or atom-type-aware clash measurements."
+        ]
+      }
+    },
+    "execution": {
+      "rows": [
+        {
+          "task": "短肽正对照",
+          "folds": 2,
+          "seconds": "55.89",
+          "limit": 900,
+          "status": "完整完成"
+        },
+        {
+          "task": "同候选活性/截短",
+          "folds": 24,
+          "seconds": "168.00",
+          "limit": 1800,
+          "status": "完整完成"
+        },
+        {
+          "task": "原始/改写序列",
+          "folds": 8,
+          "seconds": "83.38",
+          "limit": 900,
+          "status": "完整完成"
+        }
+      ],
+      "source": {
+        "label": "三个独立冻结的串行作业",
+        "files": [
+          {
+            "label": "PUBLIC_EXECUTION_SUMMARY.json",
+            "href": "https://github.com/doyoulikelin-wq/GLP_/blob/codex/windows-primary-20260831-131352/boltzgen/main/windows_single_owner_20260831/reports/vhh_four_blockers_20260913/PUBLIC_EXECUTION_SUMMARY.json"
+          }
+        ],
+        "caveats": [
+          "Sum of three runner wall clocks, including startup, input/used-asset verification, inference and scoring; excludes coding/reporting time and is not pure GPU kernel time."
+        ]
+      },
+      "displayTable": {
+        "title": "34次预测，作业总执行约5分7秒",
+        "columns": [
+          {
+            "field": "task",
+            "label": "作业"
+          },
+          {
+            "field": "folds",
+            "label": "预测次数"
+          },
+          {
+            "field": "seconds",
+            "label": "实际秒"
+          },
+          {
+            "field": "limit",
+            "label": "硬上限秒"
+          },
+          {
+            "field": "status",
+            "label": "结果"
+          }
+        ]
+      }
+    }
+  },
+  "id": "report:25573d05-4da5-424d-9050-d8050fdbf3f4",
+  "report": {
+    "sections": [
+      {
+        "id": "summary",
+        "queryId": "issues",
+        "tableQuery": "issues",
+        "title": "先说结论",
+        "text": "本轮完成了四项问题的工程修正与受控计算，共新增34次复折叠。短肽校准通过、配对输入和执行链已修复；但端部稳定识别仍未达标，真实端基化学也尚未解决。不能把这次流程跑通称为VHH结合成功。"
+      },
+      {
+        "id": "stages",
+        "queryId": "interface",
+        "tableQuery": "interface",
+        "title": "1｜纠正了“生成阶段全部失败”的误判",
+        "text": "之前说“6条生成候选都没有双端接触”不准确：原始C组中实际有1/2达到几何双端接触。旧汇总取的是序列改写后输入，其中设计侧链是零坐标占位，应记不可评价，而不是0。新诊断分开三个阶段，原始文件和旧失败均保留。\n\nA：无端部提示；B：提示His7/Ala8；C：提示这两个位置、其余设非结合软条件。CDR就是抗体识别环；双端接触要求His7与Ala8分别在CDR重原子4.5 Å以内。每组只有两条候选；同候选的五次预测不是五条独立分子。"
+      },
+      {
+        "id": "sequence",
+        "queryId": "sequence",
+        "tableQuery": "sequence",
+        "title": "2｜用同一来源的两版序列检验改写环节",
+        "text": "全C组的两个来源都纳入，分别保留原始序列或使用改写序列，各做两次自由复核。四任务采用相同目标几何，不给VHH位置模板，也不强加端部提示。\n\n原始序列4/4有一般CDR接触，改写序列为0/4，但双方双端接触都是0/4。保留原序列值得作为后续对照分支，却没有解决端部识别。样本很小，不能认定改写有害、原序列方案优越或真实结合改善。"
+      },
+      {
+        "id": "known-control",
+        "queryId": "calibration",
+        "tableQuery": "calibration",
+        "title": "3｜补上短肽已知界面的恢复校准",
+        "text": "采用实验复合物9NK9：10残基短肽全部已建模，VHH用连续118残基已建模部分，原沉积序列中未建模的14个末端残基明确省略。原生跨链相对位置没有作为模板提供。\n\n预先固定门槛是位置偏差≤5 Å、原生接触找回率≥30%，两次都通过。独立重算与结果一致。这仅说明本设置能恢复这个已知短肽界面；没有生物阴性，训练集重叠未知，不能推广成GLP-1识别普遍可靠。"
+      },
+      {
+        "id": "pairing",
+        "queryId": "pairing",
+        "title": "4｜同候选活性/截短对照已跑完，化学仍有缺口",
+        "text": "同六个候选×两个状态×两次预测，共24次完成。修复了删除His/Ala后的残基编号错误，并逐一验证VHH序列、共享目标原子坐标及映射不变；被删的正标签不挪给Glu9。\n\n活性型两次都保持双端接触的候选仍为0/6。两状态各有3/6候选在两次预测中与目标某处保持CDR接触，但这不等于结合强度相等。截短型已无His/Ala，其接触记不适用，不记零。\n\n当前输入未原子级证实C端酰胺和N端电荷；ARG侧链的NH2不是C端酰胺。本次只支持“几何匹配的两残基删除对照”，不支持生理活性/截短选择性结论。"
+      },
+      {
+        "id": "execution",
+        "queryId": "execution",
+        "tableQuery": "execution",
+        "title": "执行完整性与时间",
+        "text": "三组GPU作业串行完成，无自动重试，实际使用的权重前后不变。454项相关测试通过；独立数值复算确认校准指标、24个配对结构及8个序列对照结构完整，未发现预测结构的零坐标占位侧链。\n\n下表合计307.27秒，包含作业启动、输入及资产校验、推理和评分；不是纯GPU时间，也不包含代码开发、分析与报告制作。全仓规范检查仍有历史问题，本轮不做范围外清理，不能声称全仓规范通过。"
+      },
+      {
+        "id": "next",
+        "queryId": "issues",
+        "title": "下一步的重点已更清楚",
+        "text": "暂不扩大骨架或随机采样。先围绕“有一般CDR接触，却没有端部接触”改进界面策略，并保留原始序列分支作为对照；不要把软提示当作成功保证。若要研究真实活性/截短选择性，必须先建立可明确表达和校验端部修饰、电荷的输入协议，不能靠改名称解决。\n\n这份报告可在上述计算边界内分享。当前没有实验结合、亲和力、选择性或成药性证据。原始序列、坐标、NPZ、完整日志、私有路径与权重留在本机；GitHub只发布代码、测试、脱敏汇总和过程记录。"
+      }
+    ]
+  }
+}

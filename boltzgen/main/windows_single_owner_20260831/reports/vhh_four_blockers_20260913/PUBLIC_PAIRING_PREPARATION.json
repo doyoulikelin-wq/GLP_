@@ -1,0 +1,36 @@
+{
+  "ARG_sidechain_NH2_is_not_C_terminal_amide": true,
+  "C_terminal_amide_nitrogen_absent_in_canonical_representation": true,
+  "actual_freefold_CPU_tasks_verified": 12,
+  "all_candidate_sequences_and_shared_coordinates_preserved": true,
+  "biological_pass": false,
+  "candidate_count": 6,
+  "chemical_fix_applied": false,
+  "claim_boundary": "SAME_CANDIDATE_MATCHED_GEOMETRIC_DELETION_ONLY_NOT_SELECTIVITY",
+  "deleted_hotspot_not_reassigned": true,
+  "deleted_target_label_seq_id_normalization_applied": true,
+  "dummy_atoms_added": false,
+  "folds_per_state": 2,
+  "free_N_terminal_protonation_and_charge_unverified": true,
+  "gpu_started": false,
+  "limits": [
+    "Deleting His/Ala changes geometric sequence length, not a validated physiologic active/truncated chemistry model.",
+    "Historical NH2 state IDs are nominal labels only; no chemically verified NH2 state is claimed.",
+    "Candidate/state is the pairing unit; two stochastic folds are nested repeats, not independent molecules.",
+    "No new natural truncated source or lockbox was read; shared-target geometry is deliberately matched."
+  ],
+  "model_support_assessment": "Current canonical protein path strips H and selects fixed reference atom lists; no verified terminal amidation/protonation protocol was established.",
+  "old_stage_gate_status": "BLOCKED_UNCHANGED",
+  "planned_fold_count": 24,
+  "schema": "VHH_SAME_CANDIDATE_PAIRING_PREPARATION_20260913_V1",
+  "source_candidate_count_includes_duplicates": true,
+  "source_groups": {
+    "A": 2,
+    "B": 2,
+    "C": 2
+  },
+  "state_count_per_candidate": 2,
+  "status": "CPU_PREPARATION_COMPLETE",
+  "target_only_template_verified": true,
+  "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED"
+}

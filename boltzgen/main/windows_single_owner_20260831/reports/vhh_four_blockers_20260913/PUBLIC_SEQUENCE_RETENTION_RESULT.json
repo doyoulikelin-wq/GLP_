@@ -1,0 +1,33 @@
+{
+  "binder_template_used": false,
+  "binding_type_conditioning_used": false,
+  "biological_pass": false,
+  "by_sequence_source": {
+    "INVERSE_FOLDED": {
+      "any_target_cdr_contact_fold_count": 0,
+      "both_folds_terminal_contact_candidate_count": 0,
+      "both_terminal_contact_fold_count": 0,
+      "fold_sample_count": 4,
+      "source_draw_count": 2
+    },
+    "RAW_GENERATION": {
+      "any_target_cdr_contact_fold_count": 4,
+      "both_folds_terminal_contact_candidate_count": 0,
+      "both_terminal_contact_fold_count": 0,
+      "fold_sample_count": 4,
+      "source_draw_count": 2
+    }
+  },
+  "contact_threshold_angstrom": 4.5,
+  "fold_sample_count": 8,
+  "limitations": [
+    "Two source draws, with two nested stochastic folds per sequence, cannot establish a robust method superiority or binding effect.",
+    "RAW_GENERATION and INVERSE_FOLDED name the true sequence provenance; neither input contact geometry is used as a free-fold result.",
+    "No active-versus-truncated state comparison or atomically verified terminal chemistry is performed."
+  ],
+  "same_original_target_geometry": true,
+  "schema": "VHH_SEQUENCE_RETENTION_RESULT_V1",
+  "selection": "ENTIRE_C_ARM_TWO_SOURCE_DRAWS",
+  "status": "COMPUTATIONAL_SEQUENCE_COMPARISON_COMPLETE",
+  "task_count": 4
+}

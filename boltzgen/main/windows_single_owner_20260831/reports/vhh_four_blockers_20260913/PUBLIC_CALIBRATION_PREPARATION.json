@@ -1,0 +1,87 @@
+{
+  "automatic_retry": false,
+  "binder_tokens": 118,
+  "biological_pass": false,
+  "calibration_thresholds": {
+    "native_heavy_residue_contact_recall": {
+      "direction": "min",
+      "value": 0.3
+    },
+    "target_aligned_binder_ca_rmsd_angstrom": {
+      "direction": "max",
+      "value": 5
+    }
+  },
+  "chains": [
+    {
+      "deposited_residues": 10,
+      "input_chain": "A",
+      "modeled_residues": 10,
+      "omitted_noncanonical_model_atoms": [],
+      "omitted_prefix_residues": 0,
+      "omitted_suffix_residues": 0,
+      "role": "short_peptide",
+      "source_auth_chain": "B"
+    },
+    {
+      "deposited_residues": 132,
+      "input_chain": "B",
+      "modeled_residues": 118,
+      "omitted_noncanonical_model_atoms": [],
+      "omitted_prefix_residues": 0,
+      "omitted_suffix_residues": 14,
+      "role": "VHH_Nb127",
+      "source_auth_chain": "A"
+    }
+  ],
+  "contact_cutoff_angstrom": 4.5,
+  "elapsed_seconds": 9.402402209001593,
+  "fold_samples": 2,
+  "gpu_started": false,
+  "hard_timeout_seconds": 900,
+  "implementation_sha256": {
+    "evaluate_vhh_epitope.py": "bca24706b6392881f7f169467d2fb3df5bf8dd69089441af4f4b03d35d1df249",
+    "prepare_vhh_native_control.py": "44bfc7268524104c9ad92d8dad57fd952e122f055189e0619b21de0f1ee39f40",
+    "prepare_vhh_short_peptide_control.py": "d26efed60ac48fc4c226349901b64e51f0ad459057e8a07961c3eb806dfa9d5e",
+    "run_owner_t12_split_template.py": "f1a6a0b0103fcdb25d9472672424f41565b8ae883cf5a315b1a7ccc2356ac158",
+    "run_vhh_short_peptide_control.py": "c669cbb2db8bb50d6911c8aaa690f1cba41dae400ca5f9348c4c0ff19a41c6a8"
+  },
+  "limitations": [
+    "Known experimental Nb127/10-aa peptide positive control; not GLP1 selectivity or affinity evidence.",
+    "One positive complex and two stochastic folds do not establish sensitivity or specificity.",
+    "No validated biological negative is included; a rigid displacement is only a geometric sanity control.",
+    "Training-set overlap is unknown; this is not a certified holdout.",
+    "Only the contiguous experimentally modeled VHH slice is used; omitted terminal residues are recorded.",
+    "Canonical residue heavy-atom representation does not verify terminal protonation or amidation.",
+    "Only peptide internal conformation is templated; native relative VHH-peptide pose is not templated."
+  ],
+  "minimum_recovered_samples_of_two": 2,
+  "negative_control_status": "NO_VALIDATED_BIOLOGICAL_NEGATIVE",
+  "preflight": {
+    "all_assigned_atoms_resolved": true,
+    "assigned_heavy_atoms": 989,
+    "binder_tokens": 118,
+    "cpu_displaced_contact_pairs": 0,
+    "cpu_displaced_rmsd_angstrom": 99.99999995340495,
+    "cpu_self_rmsd_angstrom": 1.0820011444653162e-14,
+    "native_contact_pairs": 38,
+    "status": "PASS",
+    "strict_full_canonical_heavy_atom_validation": true,
+    "target_tokens": 10,
+    "template_features_native_displaced_equal": true,
+    "visible_binder_tokens": 0,
+    "visible_target_tokens": 10
+  },
+  "prepared_at_utc": "2026-09-12T17:17:40.392579Z",
+  "primary_paper_doi": "10.1016/j.jbc.2025.110268",
+  "primary_paper_url": "https://pubmed.ncbi.nlm.nih.gov/40409557/",
+  "protocol_id": "vhh-short-peptide-9nk9-20260913",
+  "reference_url": "https://www.rcsb.org/structure/9NK9",
+  "resolution_angstrom": 2.1,
+  "schema": "VHH_SHORT_PEPTIDE_CONTROL_PREPARATION_V1",
+  "source_pdb": "9NK9",
+  "source_sha256": "897b7cbb37ee3e219ee8448a50bbe668ef536ef13f582ad970cf40b4afb6173d",
+  "source_url": "https://files.rcsb.org/download/9NK9.cif",
+  "status": "CPU_READY",
+  "target_tokens": 10
+}

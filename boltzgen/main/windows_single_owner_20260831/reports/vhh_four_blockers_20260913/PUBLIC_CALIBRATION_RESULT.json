@@ -1,0 +1,45 @@
+{
+  "binder_tokens": 118,
+  "biological_pass": false,
+  "limitations": [
+    "Known experimental Nb127/10-aa peptide positive control; not GLP1 selectivity or affinity evidence.",
+    "One positive complex and two stochastic folds do not establish sensitivity or specificity.",
+    "No validated biological negative is included; a rigid displacement is only a geometric sanity control.",
+    "Training-set overlap is unknown; this is not a certified holdout.",
+    "Only the contiguous experimentally modeled VHH slice is used; omitted terminal residues are recorded.",
+    "Canonical residue heavy-atom representation does not verify terminal protonation or amidation.",
+    "Only peptide internal conformation is templated; native relative VHH-peptide pose is not templated."
+  ],
+  "native_interface_recovered": true,
+  "protocol_id": "vhh-short-peptide-9nk9-20260913",
+  "samples": [
+    {
+      "native_contact_pairs": 38,
+      "native_heavy_residue_contact_recall": 0.7894736842105263,
+      "predicted_contact_pairs": 32,
+      "recovered_native_contact_pairs": 30,
+      "sample_index": 0,
+      "target_aligned_binder_ca_rmsd_angstrom": 1.9807692509546346
+    },
+    {
+      "native_contact_pairs": 38,
+      "native_heavy_residue_contact_recall": 0.7368421052631579,
+      "predicted_contact_pairs": 31,
+      "recovered_native_contact_pairs": 28,
+      "sample_index": 1,
+      "target_aligned_binder_ca_rmsd_angstrom": 2.1882342149556266
+    }
+  ],
+  "strict_full_canonical_heavy_atom_validation": true,
+  "target_tokens": 10,
+  "thresholds": {
+    "native_heavy_residue_contact_recall": {
+      "direction": "min",
+      "value": 0.3
+    },
+    "target_aligned_binder_ca_rmsd_angstrom": {
+      "direction": "max",
+      "value": 5
+    }
+  }
+}

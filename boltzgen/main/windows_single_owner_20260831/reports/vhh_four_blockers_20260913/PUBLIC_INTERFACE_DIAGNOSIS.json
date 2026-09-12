@@ -1,0 +1,608 @@
+{
+  "analysis_seconds": 0.8417438379838131,
+  "biological_pass": false,
+  "by_condition": {
+    "A": {
+      "free_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 29.171732393508545,
+          "median": 22.2739714407821,
+          "min": 3.099042766953867
+        },
+        "any_target_cdr_contact_count": 10,
+        "any_target_framework_contact_count": 10,
+        "both_epitope_contacts_count": 1,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 10,
+          "any_target_framework_contact": 10,
+          "both_epitope_contacts": 10,
+          "framework_only_contact": 10
+        },
+        "framework_only_contact_count": 0,
+        "his_min_cdr_distance_angstrom": {
+          "max": 30.886543431938403,
+          "median": 23.889147363586442,
+          "min": 1.7717181423221873
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 2.8476950983808007,
+          "median": 2.261967750134054,
+          "min": 1.7717181423221873
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.1835004334863437,
+          "median": 2.51349217678606,
+          "min": 1.7574559765819706
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 0,
+        "sample_count": 10,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "generation": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 23.464431488941297,
+          "median": 19.618410814516267,
+          "min": 15.77239014009124
+        },
+        "any_target_cdr_contact_count": 2,
+        "any_target_framework_contact_count": 2,
+        "both_epitope_contacts_count": 0,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 2,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 2,
+          "framework_only_contact": 2
+        },
+        "framework_only_contact_count": 0,
+        "his_min_cdr_distance_angstrom": {
+          "max": 26.396599961792337,
+          "median": 21.3064032764444,
+          "min": 16.216206591096466
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 2.764100677424532,
+          "median": 2.5636715987934733,
+          "min": 2.3632425201624145
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.224323197536567,
+          "median": 2.609785084613211,
+          "min": 1.995246971689855
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "inverse_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "any_target_cdr_contact_count": null,
+        "any_target_framework_contact_count": 2,
+        "both_epitope_contacts_count": null,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 0,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 0,
+          "framework_only_contact": 0
+        },
+        "framework_only_contact_count": null,
+        "his_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.2243231975365667,
+          "median": 2.609785086520262,
+          "min": 1.9952469755039575
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 111,
+          "median": 104,
+          "min": 97
+        }
+      },
+      "transitions": {
+        "generation_to_inverse_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 2.4658178383509046e-7,
+            "median": 2.4655408029362707e-7,
+            "min": 2.465263767521637e-7
+          },
+          "cdr_identity_change_count": {
+            "max": 14,
+            "median": 11.5,
+            "min": 9
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 1.5500662475202986e-7,
+            "median": 1.5460622341348855e-7,
+            "min": 1.5420582207494724e-7
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 2.662714170059151e-7,
+            "median": 2.445691565711464e-7,
+            "min": 2.2286689613637773e-7
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 0.0000012074182697257333,
+            "median": 6.037091348628667e-7,
+            "min": 0
+          },
+          "sample_count": 2
+        },
+        "inverse_to_free_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 4.024890428547853,
+            "median": 2.761781398989313,
+            "min": 1.8598528001141557
+          },
+          "cdr_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 2.164980099570624,
+            "median": 1.2315931661465216,
+            "min": 0.4567054480276453
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 0.9973056944834675,
+            "median": 0.8186784182933613,
+            "min": 0.75167197463758
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 7.503252475480815,
+            "median": 3.7955034116922888,
+            "min": 0.9826842168822385
+          },
+          "sample_count": 10
+        }
+      }
+    },
+    "B": {
+      "free_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 47.459841258967515,
+          "median": 20.84512101891884,
+          "min": 8.840922104940994
+        },
+        "any_target_cdr_contact_count": 7,
+        "any_target_framework_contact_count": 10,
+        "both_epitope_contacts_count": 0,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 10,
+          "any_target_framework_contact": 10,
+          "both_epitope_contacts": 10,
+          "framework_only_contact": 10
+        },
+        "framework_only_contact_count": 3,
+        "his_min_cdr_distance_angstrom": {
+          "max": 42.66293679485546,
+          "median": 20.870006457635842,
+          "min": 9.268363077236064
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 11.687031038548039,
+          "median": 3.0227901178742407,
+          "min": 1.8829632136296293
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.2612656636871056,
+          "median": 2.4773355337524863,
+          "min": 1.6360032555644861
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 0,
+        "sample_count": 10,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "generation": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 34.072083238730016,
+          "median": 30.713743977563034,
+          "min": 27.355404716396052
+        },
+        "any_target_cdr_contact_count": 2,
+        "any_target_framework_contact_count": 2,
+        "both_epitope_contacts_count": 0,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 2,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 2,
+          "framework_only_contact": 2
+        },
+        "framework_only_contact_count": 0,
+        "his_min_cdr_distance_angstrom": {
+          "max": 35.235562546519134,
+          "median": 31.855341844479234,
+          "min": 28.475121142439335
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 2.8687931840351215,
+          "median": 2.8162137360732333,
+          "min": 2.763634288111345
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.4266471090925936,
+          "median": 3.2868277567221122,
+          "min": 3.1470084043516304
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "inverse_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "any_target_cdr_contact_count": null,
+        "any_target_framework_contact_count": 2,
+        "both_epitope_contacts_count": null,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 0,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 0,
+          "framework_only_contact": 0
+        },
+        "framework_only_contact_count": null,
+        "his_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.4266472240736374,
+          "median": 3.286827817686415,
+          "min": 3.1470084112991934
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 88,
+          "median": 83,
+          "min": 78
+        }
+      },
+      "transitions": {
+        "generation_to_inverse_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 5.418716499142073e-7,
+            "median": 3.849349485471334e-7,
+            "min": 2.2799824718005946e-7
+          },
+          "cdr_identity_change_count": {
+            "max": 12,
+            "median": 11.5,
+            "min": 11
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 3.6533289735782883e-7,
+            "median": 2.8770250239103455e-7,
+            "min": 2.100721074242402e-7
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 2.9411250399362635e-7,
+            "median": 2.9048583416626545e-7,
+            "min": 2.868591643389045e-7
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "sample_count": 2
+        },
+        "inverse_to_free_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 2.5438453550771367,
+            "median": 1.9160606987721804,
+            "min": 1.2213899320876622
+          },
+          "cdr_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 1.7043913539661153,
+            "median": 0.7522133801585466,
+            "min": 0.3564766419002192
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 0.9729975070197461,
+            "median": 0.7823812702637929,
+            "min": 0.6316316265230429
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 5.533590651899783,
+            "median": 3.4186789293671236,
+            "min": 2.0058890658792947
+          },
+          "sample_count": 10
+        }
+      }
+    },
+    "C": {
+      "free_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 43.75851847085946,
+          "median": 32.25046368941507,
+          "min": 16.527480496683513
+        },
+        "any_target_cdr_contact_count": 4,
+        "any_target_framework_contact_count": 10,
+        "both_epitope_contacts_count": 0,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 10,
+          "any_target_framework_contact": 10,
+          "both_epitope_contacts": 10,
+          "framework_only_contact": 10
+        },
+        "framework_only_contact_count": 6,
+        "his_min_cdr_distance_angstrom": {
+          "max": 44.56376576931769,
+          "median": 34.78718192375227,
+          "min": 16.900968306275054
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 12.57003516717139,
+          "median": 9.754607060656785,
+          "min": 2.251771882179264
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 3.34157611460458,
+          "median": 2.556111207639523,
+          "min": 1.9460820338704226
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 0,
+        "sample_count": 10,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "generation": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": 5.432295755833017,
+          "median": 4.838098388474634,
+          "min": 4.24390102111625
+        },
+        "any_target_cdr_contact_count": 2,
+        "any_target_framework_contact_count": 1,
+        "both_epitope_contacts_count": 1,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 2,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 2,
+          "framework_only_contact": 2
+        },
+        "framework_only_contact_count": 0,
+        "his_min_cdr_distance_angstrom": {
+          "max": 3.644277166387815,
+          "median": 3.3466119593959234,
+          "min": 3.048946752404032
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": 3.644277166387815,
+          "median": 3.3466119593959234,
+          "min": 3.048946752404032
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 5.766223182950029,
+          "median": 4.216813152004506,
+          "min": 2.667403121058984
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 0,
+          "median": 0,
+          "min": 0
+        }
+      },
+      "inverse_folding": {
+        "ala_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "any_target_cdr_contact_count": null,
+        "any_target_framework_contact_count": 1,
+        "both_epitope_contacts_count": null,
+        "contact_metric_applicable_sample_counts": {
+          "any_target_cdr_contact": 0,
+          "any_target_framework_contact": 2,
+          "both_epitope_contacts": 0,
+          "framework_only_contact": 0
+        },
+        "framework_only_contact_count": null,
+        "his_min_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_cdr_distance_angstrom": {
+          "max": null,
+          "median": null,
+          "min": null
+        },
+        "min_target_framework_distance_angstrom": {
+          "max": 5.7662231634609835,
+          "median": 4.216813422434347,
+          "min": 2.6674036814077113
+        },
+        "observed_candidate_count": 2,
+        "pose_applicable_count": 2,
+        "sample_count": 2,
+        "zero_coordinate_cdr_sidechain_atom_count": {
+          "max": 99,
+          "median": 96.5,
+          "min": 94
+        }
+      },
+      "transitions": {
+        "generation_to_inverse_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 3.7254285836400666e-7,
+            "median": 3.0436713043307856e-7,
+            "min": 2.361914025021505e-7
+          },
+          "cdr_identity_change_count": {
+            "max": 12,
+            "median": 11.5,
+            "min": 11
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 3.270111485268669e-7,
+            "median": 2.0201526830547644e-7,
+            "min": 7.701938808408602e-8
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 4.22850656867374e-7,
+            "median": 3.751167566340549e-7,
+            "min": 3.2738285640073573e-7
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "sample_count": 2
+        },
+        "inverse_to_free_folding": {
+          "candidate_count": 2,
+          "cdr_centroid_rmsd_after_framework_fit_angstrom": {
+            "max": 3.026848046756384,
+            "median": 1.3659905710023001,
+            "min": 1.1692515781390322
+          },
+          "cdr_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "cdr_internal_distance_rms_change_angstrom": {
+            "max": 1.5075169432803308,
+            "median": 0.9489294989974101,
+            "min": 0.5127949441679872
+          },
+          "framework_fit_rmsd_angstrom": {
+            "max": 0.9243695384455529,
+            "median": 0.8013517729314223,
+            "min": 0.5433976603652003
+          },
+          "framework_identity_change_count": {
+            "max": 0,
+            "median": 0,
+            "min": 0
+          },
+          "framework_relative_cdr_direction_change_degrees": {
+            "max": 3.0388413360843,
+            "median": 2.3357749129744554,
+            "min": 1.4457536157923112
+          },
+          "sample_count": 10
+        }
+      }
+    }
+  },
+  "candidate_count": 6,
+  "causal_failure_mechanism_established": false,
+  "contact_threshold_angstrom": 4.5,
+  "historical_label_correction": "Old generated_input summaries describe INVERSE_FOLDED input, not RAW_GENERATION; historical files remain unchanged.",
+  "implementation_sha256": "3387d71a48d12cc52fa6fd8c227e1d05b08745c0156a5b5a1859640be5cebf49",
+  "inverse_cif_to_fold_input_max_heavy_atom_difference_angstrom": {
+    "max": 0.0000011093449562227372,
+    "median": 3.5391681328004075e-7,
+    "min": 1.3163538594332275e-7
+  },
+  "inverse_fold_input_correction": "Inverse-fold writer adds zero-coordinate designed side-chain placeholders. CDR heavy-atom contact of those inputs is NOT_ASSESSABLE, not biological loss or a valid zero-contact structure.",
+  "limitations": [
+    "Retrospective diagnosis after seeing these six draws; not a preregistered causal test or new acceptance gate.",
+    "Identity is read from each actual stage; inverse-fold input_coords is not the original generation stage.",
+    "CDR shape uses four-backbone-atom residue centroids; it does not resolve individual side-chain rotations.",
+    "Framework alignment removes rigid-body motion; differences between independent free predictions are not a physical time trajectory.",
+    "Target-anchored V2 pose applicability is diagnostic; outside-domain pose is not replaced by a fabricated orientation.",
+    "Each condition has two draws; five free folds per draw are nested, not five independent sequences."
+  ],
+  "schema": "VHH_TERMINAL_INTERFACE_DIAGNOSIS_V1",
+  "stage_sources": {
+    "free_folding": "five NPZ predicted structures",
+    "generation": "original generation CIF",
+    "inverse_folding": "inverse-folded CIF"
+  },
+  "status": "RETROSPECTIVE_DESCRIPTIVE_DIAGNOSIS_COMPLETE"
+}

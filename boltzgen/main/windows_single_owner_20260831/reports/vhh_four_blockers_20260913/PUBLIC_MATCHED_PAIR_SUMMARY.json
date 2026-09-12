@@ -1,0 +1,55 @@
+{
+  "active_candidate_all_two_folds_both_terminal_contacts": 0,
+  "biological_pass": false,
+  "candidate_count": 6,
+  "candidate_shared_contact_change_distribution": {
+    "max": 13,
+    "median": 0.25,
+    "min": -10
+  },
+  "claim_boundary": "MATCHED_GEOMETRIC_DELETION_ONLY_NOT_BINDING_AFFINITY_OR_SELECTIVITY",
+  "contact_cutoff_angstrom": 4.5,
+  "fold_sample_count": 24,
+  "limitations": [
+    "No raw iPTM difference is interpreted as selectivity.",
+    "New N-terminus and C-terminal amide chemistry not atomically verified.",
+    "Contact distance and close-overlap indicators are not affinity or atom-type-aware clash measurements."
+  ],
+  "nominal_NH2_state_ids_do_not_establish_terminal_amidation": true,
+  "old_stage_gate_status": "BLOCKED_UNCHANGED",
+  "repeat_rule": "candidate paired; repeats not seed-paired; all four cross-state map comparisons descriptive",
+  "schema": "VHH_MATCHED_PAIR_RESULTS_V1",
+  "source_condition_groups": [
+    "A",
+    "B",
+    "C"
+  ],
+  "source_group_rule": "two matched deletion states from the same active geometry per candidate; not independent natural conformers",
+  "state_aggregates": [
+    {
+      "candidate_all_two_folds_contact_count": 3,
+      "candidate_median_shared_contact_pair_distribution": {
+        "max": 24.5,
+        "median": 10,
+        "min": 0
+      },
+      "state_id": "GLP1_7_36_NH2"
+    },
+    {
+      "candidate_all_two_folds_contact_count": 3,
+      "candidate_median_shared_contact_pair_distribution": {
+        "max": 24,
+        "median": 14.25,
+        "min": 0
+      },
+      "state_id": "GLP1_9_36_NH2"
+    }
+  ],
+  "status": "COMPUTATIONAL_PAIRING_COMPLETE",
+  "target_states": [
+    "GLP1_7_36_NH2",
+    "GLP1_9_36_NH2"
+  ],
+  "terminal_chemistry_status": "NOT_ATOMICALLY_VERIFIED",
+  "truncated_his_ala_contact_status": "ABSENT_NOT_APPLICABLE_NOT_ZERO_MEASUREMENT"
+}
