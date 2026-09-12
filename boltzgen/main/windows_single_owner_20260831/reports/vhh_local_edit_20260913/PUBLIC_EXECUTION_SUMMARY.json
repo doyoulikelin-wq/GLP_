@@ -1,0 +1,226 @@
+{
+  "schema": "VHH_LOCAL_EDIT_PUBLIC_EXECUTION_V1",
+  "status": "COMPLETED",
+  "execution_commit": "9a0576dd1510298a00ea0472bdf4de4740f8bada",
+  "execution_tree": "cbbb317768127faa74eae7f531ff1f1e40fd67da",
+  "started_at_utc": "2026-09-12T17:59:02.940587Z",
+  "finished_at_utc": "2026-09-12T18:02:51.589622Z",
+  "actual": {
+    "fold_samples": 18,
+    "wall_seconds": 228.1449337209924
+  },
+  "hard_timeout_seconds": 1200,
+  "automatic_retry": false,
+  "cloud_api_used": false,
+  "cloud_upload_performed": false,
+  "biological_pass": false,
+  "weights_unchanged": true,
+  "assets_verified": {
+    "boltz2_conf_final.ckpt": "525a51ef306da7282a54d23a4a5b91212fc60d0ff6b23b56dd6351de3b387530",
+    "boltzgen1_adherence.ckpt": "ac7078b3dc13064c68e0c3fd542e5bc538c33558bf6607f65e499eb336ca5e5d",
+    "boltzgen1_ifold.ckpt": "dd4cf108c94471bdc3a326b7b180fa3854dc019110fae780208c30b50bd56578",
+    "mols.zip": "3d4f56ac4262e745bb3d09cfaa19099b1d01be208122d501667b952e45521e53"
+  },
+  "stages": [
+    {
+      "automatic_retry": false,
+      "exit_code": 0,
+      "fatal_log_files": [],
+      "status": "COMPLETED",
+      "step": "inverse_folding",
+      "task_id": "c0_sequence_only",
+      "timed_out": false,
+      "wall_seconds": 11.49736636702437
+    },
+    {
+      "automatic_retry": false,
+      "exit_code": 0,
+      "fatal_log_files": [],
+      "status": "COMPLETED",
+      "step": "design",
+      "task_id": "c0_local_inpaint",
+      "timed_out": false,
+      "wall_seconds": 42.00199684599647
+    },
+    {
+      "automatic_retry": false,
+      "exit_code": 0,
+      "fatal_log_files": [],
+      "status": "COMPLETED",
+      "step": "inverse_folding",
+      "task_id": "c1_sequence_only",
+      "timed_out": false,
+      "wall_seconds": 11.252510696009267
+    },
+    {
+      "automatic_retry": false,
+      "exit_code": 0,
+      "fatal_log_files": [],
+      "status": "COMPLETED",
+      "step": "design",
+      "task_id": "c1_local_inpaint",
+      "timed_out": false,
+      "wall_seconds": 40.76223544598906
+    },
+    {
+      "automatic_retry": false,
+      "exit_code": 0,
+      "fatal_log_files": [],
+      "status": "COMPLETED",
+      "step": "folding",
+      "timed_out": false,
+      "wall_seconds": 108.68485752301058
+    }
+  ],
+  "edit_audit": [
+    {
+      "arm": "ORIGINAL",
+      "changed_outside_window": 0,
+      "changed_residue_count": 0,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 2.1990264548214973e-14,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 1.047676473872146e-15,
+        "cdr_internal_distance_rms_change_angstrom": 0,
+        "fixed_backbone_atom_rmsd_angstrom": 9.837098304657981e-15,
+        "fixed_backbone_max_displacement_angstrom": 2.1990264548214973e-14,
+        "framework_fit_rmsd_angstrom": 4.462348459603634e-15,
+        "framework_relative_cdr_direction_change_degrees": 8.537736462515939e-7
+      },
+      "source_draw": 0,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c0_original",
+      "zero_cdr_sidechain_placeholders": 0
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "changed_outside_window": 0,
+      "changed_residue_count": 0,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 0.0000015441359734034154,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 1.5935053832163334e-7,
+        "cdr_internal_distance_rms_change_angstrom": 7.529170225165722e-8,
+        "fixed_backbone_atom_rmsd_angstrom": 6.678347178144268e-7,
+        "fixed_backbone_max_displacement_angstrom": 0.0000015441359734034154,
+        "framework_fit_rmsd_angstrom": 4.289059950367287e-7,
+        "framework_relative_cdr_direction_change_degrees": 0
+      },
+      "source_draw": 0,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c0_sequence_only",
+      "zero_cdr_sidechain_placeholders": 25
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "changed_outside_window": 0,
+      "changed_residue_count": 1,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 1.5515379124300965,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 0.3203128312955045,
+        "cdr_internal_distance_rms_change_angstrom": 0.02692065619979804,
+        "fixed_backbone_atom_rmsd_angstrom": 0.18368257068912666,
+        "fixed_backbone_max_displacement_angstrom": 1.5515379124300965,
+        "framework_fit_rmsd_angstrom": 0.17379121864128652,
+        "framework_relative_cdr_direction_change_degrees": 2.3376494688747713
+      },
+      "source_draw": 0,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c0_local_inpaint",
+      "zero_cdr_sidechain_placeholders": 0
+    },
+    {
+      "arm": "ORIGINAL",
+      "changed_outside_window": 0,
+      "changed_residue_count": 0,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 3.632041641770971e-14,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 5.067836732096227e-15,
+        "cdr_internal_distance_rms_change_angstrom": 0,
+        "fixed_backbone_atom_rmsd_angstrom": 1.4609712800708462e-14,
+        "fixed_backbone_max_displacement_angstrom": 3.632041641770971e-14,
+        "framework_fit_rmsd_angstrom": 1.1355781973629255e-14,
+        "framework_relative_cdr_direction_change_degrees": 0
+      },
+      "source_draw": 1,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c1_original",
+      "zero_cdr_sidechain_placeholders": 0
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "changed_outside_window": 0,
+      "changed_residue_count": 0,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 0.0000012566578896106597,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 1.5519423756909634e-7,
+        "cdr_internal_distance_rms_change_angstrom": 1.310577026623132e-7,
+        "fixed_backbone_atom_rmsd_angstrom": 6.731985514995887e-7,
+        "fixed_backbone_max_displacement_angstrom": 0.0000012566578896106597,
+        "framework_fit_rmsd_angstrom": 4.365825795616441e-7,
+        "framework_relative_cdr_direction_change_degrees": 8.537736462515939e-7
+      },
+      "source_draw": 1,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c1_sequence_only",
+      "zero_cdr_sidechain_placeholders": 23
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "changed_outside_window": 0,
+      "changed_residue_count": 1,
+      "geometry_audit": {
+        "all_backbone_max_displacement_after_fixed_fit_angstrom": 1.5008522504452184,
+        "cdr_centroid_rmsd_after_framework_fit_angstrom": 0.21171922735726179,
+        "cdr_internal_distance_rms_change_angstrom": 0.042034786624327226,
+        "fixed_backbone_atom_rmsd_angstrom": 0.11306925457434197,
+        "fixed_backbone_max_displacement_angstrom": 1.5008522504452184,
+        "framework_fit_rmsd_angstrom": 0.09631226514475053,
+        "framework_relative_cdr_direction_change_degrees": 0.9373548842191407
+      },
+      "source_draw": 1,
+      "stage_contact_evaluation": "NOT_USED_AS_FREE_FOLD_EVIDENCE",
+      "task_id": "c1_local_inpaint",
+      "zero_cdr_sidechain_placeholders": 0
+    }
+  ],
+  "independent_verification": {
+    "status": "PASS",
+    "samples_checked": 18,
+    "method": "Direct NumPy distance recomputation, canonical atom-name validation, fixed-input hashes and outside-window identities; no project scorer functions called.",
+    "by_arm": {
+      "ORIGINAL": {
+        "both": 1,
+        "any": 5,
+        "all_three_both": 0
+      },
+      "SEQUENCE_ONLY": {
+        "both": 0,
+        "any": 6,
+        "all_three_both": 0
+      },
+      "LOCAL_INPAINT": {
+        "both": 1,
+        "any": 6,
+        "all_three_both": 0
+      }
+    }
+  },
+  "software_tests": {
+    "frozen_checkout_total_passed": 520,
+    "seconds": 30.11,
+    "warning": "Existing pynvml deprecation warning",
+    "changed_file_policy": "PASS",
+    "whole_repository_policy": "Existing historical docstring/cache failures; not repaired in this scoped pilot"
+  },
+  "interpretation_limits": [
+    "Sequence-only produced identical source sequences twice; its refolding differences are not evidence of a sequence-editing effect.",
+    "CYS exclusion is explicit in sequence-only but not inpainting; two pretrained workflow defaults differ.",
+    "Inpainting preserves outside-window sequence, but its context geometry is soft-conditioned rather than strictly fixed.",
+    "Three stochastic folds are nested within each candidate, not independent molecules.",
+    "Terminal chemistry and experimental binding are not validated."
+  ],
+  "source_binding_sha256": {
+    "plan": "0b57c448f33e472f0e912b7528d1353f56b05889a6769db1352737012641c34f",
+    "calibration_receipt": "d6336bde6f00c01ac1990e4205cdbdbcb358d6db8617917913a99cfc1eefa2db",
+    "local_scoring_result": "1d324c27d7ec0ccbb3c35f7f4e1703024fd4181c6bb76c103580f74c5537059f"
+  }
+}
