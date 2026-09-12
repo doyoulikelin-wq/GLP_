@@ -1,3 +1,5 @@
+"""Test independently calibrated matched-deletion execution gates."""
+
 import copy
 from pathlib import Path
 import sys

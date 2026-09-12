@@ -1,3 +1,5 @@
+"""Test original-generation versus dummy-sidechain interface semantics."""
+
 import importlib.util
 from pathlib import Path
 import numpy as np

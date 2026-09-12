@@ -1,3 +1,5 @@
+"""Test exact shared-atom and residue mapping for matched deletion inputs."""
+
 from pathlib import Path
 import sys
 import numpy as np
