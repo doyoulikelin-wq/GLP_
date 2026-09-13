@@ -1,0 +1,1135 @@
+{
+  "analysis_seconds": 0.610510044003604,
+  "biological_pass": false,
+  "by_arm": {
+    "LOCAL_INPAINT": {
+      "geometry_descriptors": {
+        "target_ala_ca_displacement_angstrom": {
+          "max": 21.583200703504893,
+          "median": 13.936320959103957,
+          "min": 0.7664003946265071
+        },
+        "target_all_ca_rmsd_after_central_fit_angstrom": {
+          "max": 11.83439010508246,
+          "median": 7.740033872376962,
+          "min": 0.699672532883926
+        },
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": {
+          "max": 17.475211933730034,
+          "median": 6.836898288794538,
+          "min": 1.5756834698851134
+        },
+        "target_central_ca_rmsd_angstrom": {
+          "max": 9.744038476392749,
+          "median": 6.672965158375233,
+          "min": 0.5895844244828946
+        },
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": {
+          "max": 23.68769911742873,
+          "median": 15.37480787100596,
+          "min": 0.5843107778461707
+        },
+        "target_his_ca_displacement_angstrom": {
+          "max": 25.619906837221194,
+          "median": 16.61006690336886,
+          "min": 0.30897994324992706
+        },
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 0.9958004739113624,
+          "median": 0.8814860303210129,
+          "min": 0.747564089604722
+        },
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": {
+          "max": 66.85022001662801,
+          "median": 63.11765537268032,
+          "min": 39.97320923515387
+        },
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": {
+          "max": 63.85875518322493,
+          "median": 61.10200933225845,
+          "min": 35.66313325833633
+        },
+        "vhh_framework_relative_rotation_degrees": {
+          "max": 148.7282994601611,
+          "median": 132.4061247421974,
+          "min": 101.14327148295546
+        },
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 6.46385617468066,
+          "median": 4.994306679016473,
+          "min": 3.677130539683618
+        }
+      },
+      "hypothetical_double_contact_count": 0,
+      "hypothetical_lost_double_contact_count": 1,
+      "hypothetical_restored_double_contact_count": 0,
+      "observed_double_contact_count": 1,
+      "sample_count": 6,
+      "source_candidate_count": 2
+    },
+    "ORIGINAL": {
+      "geometry_descriptors": {
+        "target_ala_ca_displacement_angstrom": {
+          "max": 21.322076119539393,
+          "median": 9.126579349085967,
+          "min": 1.7727863149880734
+        },
+        "target_all_ca_rmsd_after_central_fit_angstrom": {
+          "max": 12.018024840085099,
+          "median": 4.19322569668973,
+          "min": 2.283390661444404
+        },
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": {
+          "max": 18.619065759488752,
+          "median": 7.214411038021046,
+          "min": 1.7200116750605206
+        },
+        "target_central_ca_rmsd_angstrom": {
+          "max": 9.837549364803056,
+          "median": 2.9651084045762675,
+          "min": 1.108620462970327
+        },
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": {
+          "max": 24.34363259140548,
+          "median": 11.695663044658264,
+          "min": 2.1876564248893016
+        },
+        "target_his_ca_displacement_angstrom": {
+          "max": 27.029501760913874,
+          "median": 13.893308677232657,
+          "min": 2.535529520259997
+        },
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 1.0411726538420918,
+          "median": 0.8426232481616065,
+          "min": 0.6594108109706247
+        },
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": {
+          "max": 73.24165241334435,
+          "median": 62.39591111641148,
+          "min": 59.20591932574872
+        },
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": {
+          "max": 71.16860063937399,
+          "median": 60.62623066044249,
+          "min": 58.564344803122346
+        },
+        "vhh_framework_relative_rotation_degrees": {
+          "max": 155.10807822501383,
+          "median": 106.3689662061145,
+          "min": 47.45693988943678
+        },
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 4.495265058990936,
+          "median": 2.2922392968185914,
+          "min": 0.8681915375454654
+        }
+      },
+      "hypothetical_double_contact_count": 0,
+      "hypothetical_lost_double_contact_count": 1,
+      "hypothetical_restored_double_contact_count": 0,
+      "observed_double_contact_count": 1,
+      "sample_count": 6,
+      "source_candidate_count": 2
+    },
+    "SEQUENCE_ONLY": {
+      "geometry_descriptors": {
+        "target_ala_ca_displacement_angstrom": {
+          "max": 18.396412264899375,
+          "median": 2.1785258215277405,
+          "min": 0.5998272684582627
+        },
+        "target_all_ca_rmsd_after_central_fit_angstrom": {
+          "max": 10.292371576252213,
+          "median": 1.5510643655163232,
+          "min": 0.7953915145182389
+        },
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": {
+          "max": 13.223460206919977,
+          "median": 2.3945763611531925,
+          "min": 1.413228617799816
+        },
+        "target_central_ca_rmsd_angstrom": {
+          "max": 8.979437685855931,
+          "median": 0.9966773855934911,
+          "min": 0.3169587561916429
+        },
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": {
+          "max": 19.129555015903136,
+          "median": 3.9176592366024225,
+          "min": 1.3671028258507991
+        },
+        "target_his_ca_displacement_angstrom": {
+          "max": 19.83561861885809,
+          "median": 4.9392128216826405,
+          "min": 1.4945042623687828
+        },
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 1.0376063692755122,
+          "median": 0.8991924207888147,
+          "min": 0.8405578403621113
+        },
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": {
+          "max": 71.78595134718458,
+          "median": 63.72372602294135,
+          "min": 57.68726163708898
+        },
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": {
+          "max": 69.55944399200907,
+          "median": 61.83411074279983,
+          "min": 55.78214315588251
+        },
+        "vhh_framework_relative_rotation_degrees": {
+          "max": 111.48300179722952,
+          "median": 104.95541946904498,
+          "min": 88.52647802807378
+        },
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": {
+          "max": 3.925795849591922,
+          "median": 2.4412215863797693,
+          "min": 2.0258508720889066
+        }
+      },
+      "hypothetical_double_contact_count": 0,
+      "hypothetical_lost_double_contact_count": 0,
+      "hypothetical_restored_double_contact_count": 0,
+      "observed_double_contact_count": 0,
+      "sample_count": 6,
+      "source_candidate_count": 2
+    }
+  },
+  "candidate_count": 6,
+  "causal_failure_mechanism_established": false,
+  "central_target_tokens_zero_based": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27
+  ],
+  "created_at_utc": "2026-09-13T05:01:57.149110+00:00",
+  "framework_token_count": 91,
+  "full_cdr_token_count": 30,
+  "gpu_started": false,
+  "his_ala_tokens_zero_based": [
+    0,
+    1
+  ],
+  "implementation_sha256": {
+    "diagnose_vhh_terminal_interface.py": "3387d71a48d12cc52fa6fd8c227e1d05b08745c0156a5b5a1859640be5cebf49",
+    "diagnose_vhh_terminal_pose_20260913.py": "e9c3e227f4eda7e195f90c1578199378994ae27c9936c6487ec1c49e9ae742bf",
+    "evaluate_vhh_epitope.py": "bca24706b6392881f7f169467d2fb3df5bf8dd69089441af4f4b03d35d1df249",
+    "score_vhh_local_edit_20260913.py": "c2a87c82008ee146c297389c852832decbf7a75f3b73aeca9d4ff2f019865d74"
+  },
+  "input_content_sha256": [
+    "045516bc71794ecf0b44059fe4f23daac4571c0ebb7f1148b9d08a9682cdd473",
+    "0b57c448f33e472f0e912b7528d1353f56b05889a6769db1352737012641c34f",
+    "11b82b2633793e6799f1d56c19a88fd52828bec5d26d9366801753dfa72d2d53",
+    "1c5eb93bb88182b8bea1597df6e54ebcf16751388d880d868e7ea6853c59184a",
+    "1d324c27d7ec0ccbb3c35f7f4e1703024fd4181c6bb76c103580f74c5537059f",
+    "23f3569954be405543d0e4c4c5cd57aab3ec6fbbccf4c593ab8474a7c4db15e0",
+    "27697cd0fd2c47203b892f28fab06fc02ee78dddae4bb23055eacae9ed8f8357",
+    "2f93e9a5825f7df119ca936d8af8dc620083785939e001ad7dad21ba3b9cd1a6",
+    "3fff553f0b0e2bac042d5333cbaa32393f0ba2cd9aae149ef5db5fda08ff5004",
+    "4795eb7e2c485dfac88ec7f21934f588c7fe664b24e39bd9a597d0699a952f35",
+    "4e399227bdef3c99a967fbd78b2963c4faf8f193b557de4dc6b0eba566d6076e",
+    "5c4b944829f842d0efc0b99e816e91274b217cbb50e9f7b982a0b7a8a62b0ae5",
+    "733f159cf3a681cd2cb8513cd309bf2486990b7414154dcacb2ddc6b0ff2fba9",
+    "74891c64037e882c6ca188335ccd9c1b2ef7456cb3cc46e86240bd57ef3f3e68",
+    "7ff5428f66947ff4af74bb5b325f11636a28ab7932eee4f1be2f8c18ba4567fe",
+    "85a6086db66588c20ba85841c1230147b9b9515d75b7496853b8ebd50ce01eaa",
+    "95dd66a25347d0a137f2c71883760b1cf128da8e3afbbacece5d5d14fcc2092f",
+    "9a01a41d34e6594eaa84e749d44bfb61aa28c1c36bb1042b3398ebd015a1c8b4",
+    "a150c6796f0cd946374074b08702beb914cd13fa6bdd1776b933c1f36fe77582",
+    "a3cc18d8d426820698c397dada7c9b24807052f3627382c1c16121f91b33d8ec",
+    "a56af3af9e9278e1639917c44b1ff75287df4bdb76b8c1c9d330ca5a99077451",
+    "a9bcb19660a3960dcff72a92ba8a847b69f2c38db1778502cca8cd785c62be44",
+    "af89434a4b5ae13ddfef40d6b7e9217be12dee706213ff055748d36a7ff48181",
+    "b3d295ba668d775bfd2278052c791654e36267b21844cdffb68411a366ac3911",
+    "d255f558e0c9f8be5f04005114b39d21b8b187f539fc1ffefc19dd6982bad661",
+    "d3e0849e6051a3e7a992f939a6fbeeae26cfbd451a26b6d25ddecd3ae9349c39",
+    "d65cfe01078822ecba56f77927171e18ef5e32602940993f214de78dfda9a7f4",
+    "f1e313c42429e543c9a1cfbb553f9da3efeff35fa3c05e3dd7e9fbeb0b8af46a",
+    "f959b0bd0f9c1afc0ffd1e5ad9c75ce01ed9af556e8120a87cf525c7847e52a5",
+    "fd91e285429e30832a14bd66828828b22cf0810e4afcc869005fcf4574385fbd"
+  ],
+  "limitations": [
+    "All metrics are retrospective geometry descriptors, not independent additive causal contributions.",
+    "Target central fit uses tokens 2..27; terminal metrics concern His7/Ala8 tokens 0/1, with the C-terminal pair reported separately.",
+    "Relative-pose framework RMSD includes residual framework deformation; independent framework-fit RMSD, centroid displacement and rotation are supplied separately.",
+    "Both source and predicted complexes are independently aligned by target central CA to the same original target before relative-pose comparison.",
+    "The coordinate replacement substitutes the frozen original target conformation into each prediction while retaining predicted VHH atoms; it is not a model prediction or relaxed structure.",
+    "Hypothetical contact recovery cannot prove target deformation caused failure, or that a physically valid bound state exists.",
+    "Six samples per arm are nested within two source candidates; ORIGINAL and SEQUENCE_ONLY have identical sequences in this completed run.",
+    "Canonical atom mapping does not verify GLP1 terminal chemistry, affinity, selectivity or biological activity."
+  ],
+  "original_contact_counts_reconciled": {
+    "LOCAL_INPAINT": 1,
+    "ORIGINAL": 1,
+    "SEQUENCE_ONLY": 0
+  },
+  "overall": {
+    "geometry_descriptors": {
+      "target_ala_ca_displacement_angstrom": {
+        "max": 21.583200703504893,
+        "median": 4.990957531639694,
+        "min": 0.5998272684582627
+      },
+      "target_all_ca_rmsd_after_central_fit_angstrom": {
+        "max": 12.018024840085099,
+        "median": 3.073393984799358,
+        "min": 0.699672532883926
+      },
+      "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": {
+        "max": 18.619065759488752,
+        "median": 3.4925406518054194,
+        "min": 1.413228617799816
+      },
+      "target_central_ca_rmsd_angstrom": {
+        "max": 9.837549364803056,
+        "median": 2.531187447873898,
+        "min": 0.3169587561916429
+      },
+      "target_his_ala_ca_rmsd_after_central_fit_angstrom": {
+        "max": 24.34363259140548,
+        "median": 7.005297213519288,
+        "min": 0.5843107778461707
+      },
+      "target_his_ca_displacement_angstrom": {
+        "max": 27.029501760913874,
+        "median": 8.737359839217323,
+        "min": 0.30897994324992706
+      },
+      "vhh_framework_ca_rmsd_after_framework_fit_angstrom": {
+        "max": 1.0411726538420918,
+        "median": 0.8484346313543558,
+        "min": 0.6594108109706247
+      },
+      "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": {
+        "max": 73.24165241334435,
+        "median": 62.81127590833263,
+        "min": 39.97320923515387
+      },
+      "vhh_framework_centroid_displacement_after_target_fit_angstrom": {
+        "max": 71.16860063937399,
+        "median": 60.92677577889364,
+        "min": 35.66313325833633
+      },
+      "vhh_framework_relative_rotation_degrees": {
+        "max": 155.10807822501383,
+        "median": 109.33418198354562,
+        "min": 47.45693988943678
+      },
+      "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": {
+        "max": 6.46385617468066,
+        "median": 2.858928465376408,
+        "min": 0.8681915375454654
+      }
+    },
+    "hypothetical_double_contact_count": 0,
+    "hypothetical_lost_double_contact_count": 2,
+    "hypothetical_restored_double_contact_count": 0,
+    "observed_double_contact_count": 2,
+    "sample_count": 18,
+    "source_candidate_count": 2
+  },
+  "sample_count": 18,
+  "samples": [
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 3.6265114954332462,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 2.365315510840472,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 3.5125333645137755,
+        "target_central_ca_rmsd_angstrom": 1.9825287236695388,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 4.526301970510076,
+        "target_his_ca_displacement_angstrom": 5.274773306027218,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.6600597781796255,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 61.88337416460548,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 60.33209916586264,
+        "vhh_framework_relative_rotation_degrees": 89.46718896561413,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.285845618881569
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 25.766738676254572,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 27.483994099119307,
+        "min_target_cdr_distance_angstrom": 0.9399485752632206,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 26.48889886223215,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 28.32442864489784,
+        "min_target_cdr_distance_angstrom": 2.0853238591743755,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 0,
+      "task_id": "c0_original"
+    },
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 1.7727863149880734,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 2.283390661444404,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 7.571646928995177,
+        "target_central_ca_rmsd_angstrom": 1.1125997220941302,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 2.1876564248893016,
+        "target_his_ca_displacement_angstrom": 2.535529520259997,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.8632758233141437,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 62.83266394793081,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 60.92036215502233,
+        "vhh_framework_relative_rotation_degrees": 102.31799528576919,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.2986329747556145
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 23.770136409021895,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 25.460297533210618,
+        "min_target_cdr_distance_angstrom": 0.7459628889694434,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 23.4156392640683,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 24.352021251031925,
+        "min_target_cdr_distance_angstrom": 1.5749069133703306,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 0,
+      "task_id": "c0_original"
+    },
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 21.322076119539393,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 12.018024840085099,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 17.7700720466749,
+        "target_central_ca_rmsd_angstrom": 9.837549364803056,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 24.34363259140548,
+        "target_his_ca_displacement_angstrom": 27.029501760913874,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.846402729137999,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 61.95915828489215,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 58.98983342330053,
+        "vhh_framework_relative_rotation_degrees": 129.49842431316884,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 1.9692822341750182
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 12.372383669767075,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 15.35890738458573,
+        "min_target_cdr_distance_angstrom": 0.5721720349902644,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": true,
+        "ala_min_cdr_distance_angstrom": 2.869900877512093,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": true,
+        "his_contact": true,
+        "his_min_cdr_distance_angstrom": 3.5090784680532607,
+        "min_target_cdr_distance_angstrom": 2.5784754288179794,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 0,
+      "task_id": "c0_original"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 1.655077415925629,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 1.0159832647762992,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 1.9312110280294683,
+        "target_central_ca_rmsd_angstrom": 0.8224327767101003,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 1.720642362929573,
+        "target_his_ca_displacement_angstrom": 1.7837990440373803,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 1.0376063692755122,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 62.490377573665306,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 60.93318940276496,
+        "vhh_framework_relative_rotation_degrees": 88.52647802807378,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.5128268409099928
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 26.496291378316897,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 28.324339067695412,
+        "min_target_cdr_distance_angstrom": 0.7078867454028028,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 26.808501141371146,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 29.946850349667397,
+        "min_target_cdr_distance_angstrom": 1.9631707062236623,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 0,
+      "task_id": "c0_sequence_only"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 6.355403567846142,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 3.569961036725029,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 2.1182488378874447,
+        "target_central_ca_rmsd_angstrom": 3.0798461720782577,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 7.96061977167387,
+        "target_his_ca_displacement_angstrom": 9.292565834479646,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.8472881563539535,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 64.95707447221739,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 62.7350320828347,
+        "vhh_framework_relative_rotation_degrees": 109.54401634485505,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.265897846042098
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 21.08735388778847,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 22.74386109886998,
+        "min_target_cdr_distance_angstrom": 0.6697169341272498,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 25.64859064553528,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 29.339118017083752,
+        "min_target_cdr_distance_angstrom": 2.1632002386084572,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 0,
+      "task_id": "c0_sequence_only"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 2.7019742271298517,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 1.4550403138709505,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 2.6709038844189408,
+        "target_central_ca_rmsd_angstrom": 1.1709219944768818,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 2.6076136681062585,
+        "target_his_ca_displacement_angstrom": 2.5097078236550154,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.948803735222871,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 65.24700621354283,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 63.20715209468845,
+        "vhh_framework_relative_rotation_degrees": 109.12434762223617,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.0258508720889066
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 24.364250239661935,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 25.98311629679574,
+        "min_target_cdr_distance_angstrom": 1.0502448349894562,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 24.86365863883747,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 28.998656987109403,
+        "min_target_cdr_distance_angstrom": 2.360858618530057,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 0,
+      "task_id": "c0_sequence_only"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 1.1355641862161057,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 0.8981236894959254,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 1.5962391608870565,
+        "target_central_ca_rmsd_angstrom": 0.7655045926788789,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 1.3904849180754373,
+        "target_his_ca_displacement_angstrom": 1.605425362255706,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.8316748155879785,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 62.78988786873445,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 60.7404166675395,
+        "vhh_framework_relative_rotation_degrees": 101.14327148295546,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 4.339084641348443
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 26.03310110412125,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 27.699317746996453,
+        "min_target_cdr_distance_angstrom": 1.281246612830213,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 25.894636929264173,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 27.15035713079967,
+        "min_target_cdr_distance_angstrom": 2.2739279854155385,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 0,
+      "task_id": "c0_local_inpaint"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 11.67128881087843,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 8.206188256069739,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 10.23098012237035,
+        "target_central_ca_rmsd_angstrom": 7.704779113799514,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 11.563859893858117,
+        "target_his_ca_displacement_angstrom": 11.455423553174475,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.747564089604722,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 66.85022001662801,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 63.85875518322493,
+        "vhh_framework_relative_rotation_degrees": 134.6305651003672,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 4.127590151459065
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 14.280466130236606,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 14.950891577448857,
+        "min_target_cdr_distance_angstrom": 2.0316730362879425,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 7.780229016130336,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 7.079700748563297,
+        "min_target_cdr_distance_angstrom": 1.0969533698154048,
+        "severe_close_contact_diagnostic": true
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 0,
+      "task_id": "c0_local_inpaint"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 0.7664003946265071,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 0.699672532883926,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 1.5756834698851134,
+        "target_central_ca_rmsd_angstrom": 0.5895844244828946,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 0.5843107778461707,
+        "target_his_ca_displacement_angstrom": 0.30897994324992706,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.9574032813731383,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 63.44542287662619,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 61.4636019969774,
+        "vhh_framework_relative_rotation_degrees": 101.84824654305436,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 3.677130539683618
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 25.070528765438663,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 26.543782546846053,
+        "min_target_cdr_distance_angstrom": 0.21016477541373182,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 25.11935624976114,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 26.569759191810153,
+        "min_target_cdr_distance_angstrom": 2.4259573544183923,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 0,
+      "task_id": "c0_local_inpaint"
+    },
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 16.9764417775404,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 10.37000664418131,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 18.619065759488752,
+        "target_central_ca_rmsd_angstrom": 8.458580871920843,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 18.337592057862306,
+        "target_his_ca_displacement_angstrom": 19.60446351051031,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.6594108109706247,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 59.20591932574872,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 58.564344803122346,
+        "vhh_framework_relative_rotation_degrees": 47.45693988943678,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 0.8681915375454654
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 33.56157915140839,
+        "any_target_cdr_contact": false,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 34.39522327378635,
+        "min_target_cdr_distance_angstrom": 7.274062964802544,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 22.655681185691815,
+        "any_target_cdr_contact": false,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 20.610338879007774,
+        "min_target_cdr_distance_angstrom": 9.889065591334298,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 1,
+      "task_id": "c1_original"
+    },
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 14.626647202738688,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 5.809624460505772,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 1.7200116750605206,
+        "target_central_ca_rmsd_angstrom": 3.947688085482996,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 17.34135143395182,
+        "target_his_ca_displacement_angstrom": 19.685175404813197,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 1.0411726538420918,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 73.24165241334435,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 71.16860063937399,
+        "vhh_framework_relative_rotation_degrees": 110.4199371264598,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.5333160117155105
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 23.54369746614612,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 24.32683804282838,
+        "min_target_cdr_distance_angstrom": 1.873350608563469,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 21.10771557790662,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 20.945971451578576,
+        "min_target_cdr_distance_angstrom": 2.547025755620506,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 1,
+      "task_id": "c1_original"
+    },
+    {
+      "arm": "ORIGINAL",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 2.501348663214101,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 2.5768269328736872,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 6.857175147046915,
+        "target_central_ca_rmsd_angstrom": 1.108620462970327,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 6.049974655364705,
+        "target_his_ca_displacement_angstrom": 8.182153843955001,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.838843767185214,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 65.68896357779569,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 62.92691169492331,
+        "vhh_framework_relative_rotation_degrees": 155.10807822501383,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 4.495265058990936
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 14.763788266732035,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 16.51871461643929,
+        "min_target_cdr_distance_angstrom": 2.0065522646312486,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 14.1138927053661,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 8.872440201557058,
+        "min_target_cdr_distance_angstrom": 2.564955682578334,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 1,
+      "task_id": "c1_original"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 18.396412264899375,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 10.292371576252213,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 13.223460206919977,
+        "target_central_ca_rmsd_angstrom": 8.979437685855931,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 19.129555015903136,
+        "target_his_ca_displacement_angstrom": 19.83561861885809,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.8495811063547583,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 57.7996517582643,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 55.78214315588251,
+        "vhh_framework_relative_rotation_degrees": 96.08618826997956,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 3.925795849591922
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 24.264294985318763,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 25.204435034446757,
+        "min_target_cdr_distance_angstrom": 0.22287680738753496,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 11.817530446272162,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 10.04243293667163,
+        "min_target_cdr_distance_angstrom": 2.3445595501915575,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 1,
+      "task_id": "c1_sequence_only"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 0.5998272684582627,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 1.6470884171616957,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 3.4725479390970633,
+        "target_central_ca_rmsd_angstrom": 0.3169587561916429,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 5.227704805098586,
+        "target_his_ca_displacement_angstrom": 7.368717819710265,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.9667312606667138,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 57.68726163708898,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 56.009996826093996,
+        "vhh_framework_relative_rotation_degrees": 100.78649131585381,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 2.369616331849546
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 28.0864028095493,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 28.54108896824395,
+        "min_target_cdr_distance_angstrom": 0.4251512570026725,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 28.061732360159233,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 29.901778864074803,
+        "min_target_cdr_distance_angstrom": 1.8599902615810497,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 1,
+      "task_id": "c1_sequence_only"
+    },
+    {
+      "arm": "SEQUENCE_ONLY",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 1.2265387407905308,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 0.7953915145182389,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 1.413228617799816,
+        "target_central_ca_rmsd_angstrom": 0.6577075371725554,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 1.3671028258507991,
+        "target_his_ca_displacement_angstrom": 1.4945042623687828,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.8405578403621113,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 71.78595134718458,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 69.55944399200907,
+        "vhh_framework_relative_rotation_degrees": 111.48300179722952,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 3.1845409190373064
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 22.183834875363473,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 23.033734874828113,
+        "min_target_cdr_distance_angstrom": 2.3379944724053647,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 21.710472076263663,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 22.460661198185747,
+        "min_target_cdr_distance_angstrom": 2.003083249582438,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 1,
+      "task_id": "c1_sequence_only"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 21.583200703504893,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 11.83439010508246,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 17.475211933730034,
+        "target_central_ca_rmsd_angstrom": 9.744038476392749,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 23.68769911742873,
+        "target_his_ca_displacement_angstrom": 25.619906837221194,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.9958004739113624,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 64.68584873649233,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 61.783141115961655,
+        "vhh_framework_relative_rotation_degrees": 148.7282994601611,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 6.037456827938728
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 24.11323139797784,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 26.09008619478841,
+        "min_target_cdr_distance_angstrom": 0.4784182510527969,
+        "severe_close_contact_diagnostic": true
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 7.935558609480468,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 5.681115111646612,
+        "min_target_cdr_distance_angstrom": 2.5325872501493523,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 0,
+      "source_draw": 1,
+      "task_id": "c1_local_inpaint"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 20.24457084905138,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 10.528371308428778,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 15.970500987856251,
+        "target_central_ca_rmsd_angstrom": 8.397918527685828,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 22.154382671373195,
+        "target_his_ca_displacement_angstrom": 23.912145329037724,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.7951318309102862,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 39.97320923515387,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 35.66313325833633,
+        "vhh_framework_relative_rotation_degrees": 148.11490564022918,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 6.46385617468066
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 14.6902774130313,
+        "any_target_cdr_contact": false,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 17.818290263040602,
+        "min_target_cdr_distance_angstrom": 4.7099438622663605,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": true,
+        "ala_min_cdr_distance_angstrom": 2.2365369440004295,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": true,
+        "his_contact": true,
+        "his_min_cdr_distance_angstrom": 4.242725353471201,
+        "min_target_cdr_distance_angstrom": 2.2365369440004295,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 1,
+      "source_draw": 1,
+      "task_id": "c1_local_inpaint"
+    },
+    {
+      "arm": "LOCAL_INPAINT",
+      "geometry": {
+        "target_ala_ca_displacement_angstrom": 16.201353107329485,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 7.2738794886841855,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 3.4428164552187273,
+        "target_central_ca_rmsd_angstrom": 5.641151202950953,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 19.185755848153804,
+        "target_his_ca_displacement_angstrom": 21.764710253563244,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 0.9312972450540473,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 61.521569165382566,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 58.50898444800583,
+        "vhh_framework_relative_rotation_degrees": 130.18168438402756,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 5.649528716684503
+      },
+      "hypothetical_target_replacement_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 17.98969977451127,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 19.707359989924218,
+        "min_target_cdr_distance_angstrom": 2.0052502069718248,
+        "severe_close_contact_diagnostic": false
+      },
+      "observed_contacts": {
+        "ala_contact": false,
+        "ala_min_cdr_distance_angstrom": 14.8674639345796,
+        "any_target_cdr_contact": true,
+        "both_epitope_contacts": false,
+        "his_contact": false,
+        "his_min_cdr_distance_angstrom": 14.649624285747791,
+        "min_target_cdr_distance_angstrom": 3.0674518646268645,
+        "severe_close_contact_diagnostic": false
+      },
+      "replacement_classification": "COUNTERFACTUAL_GEOMETRY_NOT_PREDICTION",
+      "replacement_keeps_predicted_vhh_coordinates_unchanged": true,
+      "sample_index": 2,
+      "source_draw": 1,
+      "task_id": "c1_local_inpaint"
+    }
+  ],
+  "schema": "VHH_TERMINAL_POSE_DIAGNOSIS_V1",
+  "source_baselines": [
+    {
+      "geometry_to_self_and_common_target": {
+        "target_ala_ca_displacement_angstrom": 0.24495104515469435,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 0.12161767661190338,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 0.15636204689319436,
+        "target_central_ca_rmsd_angstrom": 0.10628163829730605,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 0.22487457159372443,
+        "target_his_ca_displacement_angstrom": 0.20282044121967854,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 5.1254523917821354e-15,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 0,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 0,
+        "vhh_framework_relative_rotation_degrees": 0.0000024148365394514667,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 1.0028813629613968e-14
+      },
+      "source_draw": 0
+    },
+    {
+      "geometry_to_self_and_common_target": {
+        "target_ala_ca_displacement_angstrom": 0.16872662082803916,
+        "target_all_ca_rmsd_after_central_fit_angstrom": 0.09464882078906701,
+        "target_c_terminal_two_ca_rmsd_after_central_fit_angstrom": 0.07746688244516935,
+        "target_central_ca_rmsd_angstrom": 0.09268307815133063,
+        "target_his_ala_ca_rmsd_after_central_fit_angstrom": 0.12923963243822148,
+        "target_his_ca_displacement_angstrom": 0.07026444769215993,
+        "vhh_framework_ca_rmsd_after_framework_fit_angstrom": 8.893982685589769e-15,
+        "vhh_framework_ca_rmsd_after_target_central_fit_angstrom": 0,
+        "vhh_framework_centroid_displacement_after_target_fit_angstrom": 0,
+        "vhh_framework_relative_rotation_degrees": 0.000002699869328381916,
+        "vhh_full_cdr_ca_rmsd_after_framework_fit_angstrom": 1.4390582088037443e-14
+      },
+      "source_draw": 1
+    }
+  ],
+  "source_draw_count": 2,
+  "status": "CPU_DIAGNOSIS_COMPLETE"
+}

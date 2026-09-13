@@ -1,0 +1,518 @@
+{
+  "schema": "VHH_POSE_INDEPENDENT_SCIPY_RECALCULATION_V1",
+  "sample_count": 18,
+  "method": "Scipy Rotation.align_vectors; no project alignment functions",
+  "replacement_status": "ARTIFICIAL_GEOMETRY_NOT_A_PREDICTION_OR_PHYSICAL_VALIDATION",
+  "rows": [
+    {
+      "task_id": "c0_original",
+      "arm": "ORIGINAL",
+      "sample_index": 0,
+      "framework_self_rmsd": 0.6600597781796254,
+      "cdr_after_framework_fit_rmsd": 2.285845618881574,
+      "iptm": 0.26995599269866943,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 2.3653155108404706,
+          "terminal_ca_rmsd": 4.526301970510072,
+          "target_aligned_framework_rmsd": 61.88337416460549,
+          "hypothetical_replacement_his_distance": 27.483994099119307,
+          "hypothetical_replacement_ala_distance": 25.76673867625457,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 3.1155338825657606,
+          "terminal_ca_rmsd": 7.1989229936926735,
+          "target_aligned_framework_rmsd": 61.718447815195944,
+          "hypothetical_replacement_his_distance": 26.849120917804616,
+          "hypothetical_replacement_ala_distance": 25.15655927234908,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_original",
+      "arm": "ORIGINAL",
+      "sample_index": 1,
+      "framework_self_rmsd": 0.8632758233141431,
+      "cdr_after_framework_fit_rmsd": 2.2986329747556096,
+      "iptm": 0.255437433719635,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 2.283390661444405,
+          "terminal_ca_rmsd": 2.1876564248893113,
+          "target_aligned_framework_rmsd": 62.832663947930854,
+          "hypothetical_replacement_his_distance": 25.46029753321062,
+          "hypothetical_replacement_ala_distance": 23.7701364090219,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 2.5035650334319213,
+          "terminal_ca_rmsd": 3.2071741496044144,
+          "target_aligned_framework_rmsd": 62.959793758384905,
+          "hypothetical_replacement_his_distance": 25.76361678773625,
+          "hypothetical_replacement_ala_distance": 24.167537269260624,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_original",
+      "arm": "ORIGINAL",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.8464027291379991,
+      "cdr_after_framework_fit_rmsd": 1.9692822341750182,
+      "iptm": 0.29053768515586853,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 12.0180248400851,
+          "terminal_ca_rmsd": 24.343632591405488,
+          "target_aligned_framework_rmsd": 61.959158284892155,
+          "hypothetical_replacement_his_distance": 15.35890738458573,
+          "hypothetical_replacement_ala_distance": 12.372383669767075,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 14.616136451423396,
+          "terminal_ca_rmsd": 32.41632019603791,
+          "target_aligned_framework_rmsd": 66.52885306095197,
+          "hypothetical_replacement_his_distance": 20.05664119169575,
+          "hypothetical_replacement_ala_distance": 18.941329485964346,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 0,
+      "framework_self_rmsd": 1.0376063692755115,
+      "cdr_after_framework_fit_rmsd": 2.512826840909987,
+      "iptm": 0.24952198565006256,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 1.0159832647763007,
+          "terminal_ca_rmsd": 1.7206423629295802,
+          "target_aligned_framework_rmsd": 62.49037757366538,
+          "hypothetical_replacement_his_distance": 28.32433906769541,
+          "hypothetical_replacement_ala_distance": 26.496291378316894,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 1.1677875361477519,
+          "terminal_ca_rmsd": 1.962796241516693,
+          "target_aligned_framework_rmsd": 62.674420481930504,
+          "hypothetical_replacement_his_distance": 28.345125833596324,
+          "hypothetical_replacement_ala_distance": 26.548685291894692,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 1,
+      "framework_self_rmsd": 0.8472881563539534,
+      "cdr_after_framework_fit_rmsd": 2.265897846042099,
+      "iptm": 0.33233630657196045,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 3.5699610367250316,
+          "terminal_ca_rmsd": 7.96061977167387,
+          "target_aligned_framework_rmsd": 64.95707447221743,
+          "hypothetical_replacement_his_distance": 22.74386109886998,
+          "hypothetical_replacement_ala_distance": 21.087353887788474,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 5.104674848712472,
+          "terminal_ca_rmsd": 11.998031268959716,
+          "target_aligned_framework_rmsd": 62.45087861514932,
+          "hypothetical_replacement_his_distance": 22.55272190077308,
+          "hypothetical_replacement_ala_distance": 21.01022571624103,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.9488037352228712,
+      "cdr_after_framework_fit_rmsd": 2.0258508720889044,
+      "iptm": 0.25166523456573486,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 1.4550403138709527,
+          "terminal_ca_rmsd": 2.6076136681062607,
+          "target_aligned_framework_rmsd": 65.24700621354287,
+          "hypothetical_replacement_his_distance": 25.983116296795746,
+          "hypothetical_replacement_ala_distance": 24.364250239661942,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 1.6946119347253705,
+          "terminal_ca_rmsd": 3.238588225935336,
+          "target_aligned_framework_rmsd": 65.4817452090675,
+          "hypothetical_replacement_his_distance": 26.2247579771814,
+          "hypothetical_replacement_ala_distance": 24.647472517337405,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 0,
+      "framework_self_rmsd": 0.8316748155879787,
+      "cdr_after_framework_fit_rmsd": 4.339084641348449,
+      "iptm": 0.2561039328575134,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 0.8981236894959246,
+          "terminal_ca_rmsd": 1.3904849180754282,
+          "target_aligned_framework_rmsd": 62.78988786873449,
+          "hypothetical_replacement_his_distance": 27.69931774699645,
+          "hypothetical_replacement_ala_distance": 26.033101104121247,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 1.101047870675432,
+          "terminal_ca_rmsd": 1.855611059016164,
+          "target_aligned_framework_rmsd": 62.63158285991782,
+          "hypothetical_replacement_his_distance": 27.804448255689994,
+          "hypothetical_replacement_ala_distance": 26.255657397158412,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 1,
+      "framework_self_rmsd": 0.7475640896047214,
+      "cdr_after_framework_fit_rmsd": 4.12759015145906,
+      "iptm": 0.3205501139163971,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 8.206188256069735,
+          "terminal_ca_rmsd": 11.563859893858117,
+          "target_aligned_framework_rmsd": 66.85022001662804,
+          "hypothetical_replacement_his_distance": 14.950891577448864,
+          "hypothetical_replacement_ala_distance": 14.280466130236613,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 10.585709481641912,
+          "terminal_ca_rmsd": 18.017929023829254,
+          "target_aligned_framework_rmsd": 63.778259493795225,
+          "hypothetical_replacement_his_distance": 9.232831937390017,
+          "hypothetical_replacement_ala_distance": 10.57551881870647,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c0_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.9574032813731382,
+      "cdr_after_framework_fit_rmsd": 3.6771305396836116,
+      "iptm": 0.2450728863477707,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 0.6996725328839285,
+          "terminal_ca_rmsd": 0.5843107778461747,
+          "target_aligned_framework_rmsd": 63.44542287662621,
+          "hypothetical_replacement_his_distance": 26.543782546846064,
+          "hypothetical_replacement_ala_distance": 25.07052876543867,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 0.9132444231295901,
+          "terminal_ca_rmsd": 1.1650210073448493,
+          "target_aligned_framework_rmsd": 63.23412873383246,
+          "hypothetical_replacement_his_distance": 26.460024399369303,
+          "hypothetical_replacement_ala_distance": 25.10278802299735,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_original",
+      "arm": "ORIGINAL",
+      "sample_index": 0,
+      "framework_self_rmsd": 0.6594108109706245,
+      "cdr_after_framework_fit_rmsd": 0.8681915375454665,
+      "iptm": 0.14456599950790405,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 10.37000664418131,
+          "terminal_ca_rmsd": 18.337592057862306,
+          "target_aligned_framework_rmsd": 59.20591932574873,
+          "hypothetical_replacement_his_distance": 34.39522327378634,
+          "hypothetical_replacement_ala_distance": 33.56157915140838,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 11.957107357247299,
+          "terminal_ca_rmsd": 23.528877789804262,
+          "target_aligned_framework_rmsd": 56.8769825945708,
+          "hypothetical_replacement_his_distance": 38.03815883373159,
+          "hypothetical_replacement_ala_distance": 34.6689326038537,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_original",
+      "arm": "ORIGINAL",
+      "sample_index": 1,
+      "framework_self_rmsd": 1.0411726538420911,
+      "cdr_after_framework_fit_rmsd": 2.533316011715505,
+      "iptm": 0.16718220710754395,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 5.809624460505774,
+          "terminal_ca_rmsd": 17.34135143395184,
+          "target_aligned_framework_rmsd": 73.24165241334435,
+          "hypothetical_replacement_his_distance": 24.326838042828374,
+          "hypothetical_replacement_ala_distance": 23.54369746614612,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 7.859106445710322,
+          "terminal_ca_rmsd": 22.716315772144615,
+          "target_aligned_framework_rmsd": 72.30458595691032,
+          "hypothetical_replacement_his_distance": 22.315555979317935,
+          "hypothetical_replacement_ala_distance": 22.18984840658838,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_original",
+      "arm": "ORIGINAL",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.8388437671852144,
+      "cdr_after_framework_fit_rmsd": 4.495265058990939,
+      "iptm": 0.21627511084079742,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 2.5768269328736855,
+          "terminal_ca_rmsd": 6.049974655364712,
+          "target_aligned_framework_rmsd": 65.68896357779569,
+          "hypothetical_replacement_his_distance": 16.518714616439283,
+          "hypothetical_replacement_ala_distance": 14.76378826673203,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 2.8656327517750597,
+          "terminal_ca_rmsd": 7.215384566645071,
+          "target_aligned_framework_rmsd": 64.94585985294141,
+          "hypothetical_replacement_his_distance": 17.013696341473608,
+          "hypothetical_replacement_ala_distance": 15.421127234597565,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 0,
+      "framework_self_rmsd": 0.8495811063547584,
+      "cdr_after_framework_fit_rmsd": 3.9257958495919194,
+      "iptm": 0.23334075510501862,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 10.292371576252213,
+          "terminal_ca_rmsd": 19.129555015903136,
+          "target_aligned_framework_rmsd": 57.79965175826431,
+          "hypothetical_replacement_his_distance": 25.204435034446764,
+          "hypothetical_replacement_ala_distance": 24.264294985318767,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 12.20533555388834,
+          "terminal_ca_rmsd": 25.85484424386475,
+          "target_aligned_framework_rmsd": 52.51865548316876,
+          "hypothetical_replacement_his_distance": 25.843924642079195,
+          "hypothetical_replacement_ala_distance": 24.931372401435247,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 1,
+      "framework_self_rmsd": 0.9667312606667142,
+      "cdr_after_framework_fit_rmsd": 2.3696163318495453,
+      "iptm": 0.16075843572616577,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 1.6470884171616949,
+          "terminal_ca_rmsd": 5.22770480509858,
+          "target_aligned_framework_rmsd": 57.687261637088994,
+          "hypothetical_replacement_his_distance": 28.541088968243947,
+          "hypothetical_replacement_ala_distance": 28.0864028095493,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 1.6441885124372384,
+          "terminal_ca_rmsd": 5.221222505763236,
+          "target_aligned_framework_rmsd": 57.78770821087098,
+          "hypothetical_replacement_his_distance": 28.5607554410086,
+          "hypothetical_replacement_ala_distance": 28.126285603236386,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_sequence_only",
+      "arm": "SEQUENCE_ONLY",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.8405578403621118,
+      "cdr_after_framework_fit_rmsd": 3.1845409190373033,
+      "iptm": 0.14122653007507324,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 0.7953915145182402,
+          "terminal_ca_rmsd": 1.3671028258507991,
+          "target_aligned_framework_rmsd": 71.7859513471846,
+          "hypothetical_replacement_his_distance": 23.033734874828106,
+          "hypothetical_replacement_ala_distance": 22.183834875363466,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 1.1277862310215068,
+          "terminal_ca_rmsd": 2.2657844261227202,
+          "target_aligned_framework_rmsd": 71.94916636545128,
+          "hypothetical_replacement_his_distance": 23.210571905035447,
+          "hypothetical_replacement_ala_distance": 22.383867694337983,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 0,
+      "framework_self_rmsd": 0.9958004739113625,
+      "cdr_after_framework_fit_rmsd": 6.037456827938728,
+      "iptm": 0.19079768657684326,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 11.83439010508246,
+          "terminal_ca_rmsd": 23.687699117428732,
+          "target_aligned_framework_rmsd": 64.68584873649233,
+          "hypothetical_replacement_his_distance": 26.09008619478841,
+          "hypothetical_replacement_ala_distance": 24.113231397977845,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 13.85999379292888,
+          "terminal_ca_rmsd": 31.758491782136392,
+          "target_aligned_framework_rmsd": 70.72995552980531,
+          "hypothetical_replacement_his_distance": 20.9928297670414,
+          "hypothetical_replacement_ala_distance": 18.515671485023734,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 1,
+      "framework_self_rmsd": 0.7951318309102857,
+      "cdr_after_framework_fit_rmsd": 6.463856174680663,
+      "iptm": 0.17368166148662567,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 10.528371308428778,
+          "terminal_ca_rmsd": 22.154382671373206,
+          "target_aligned_framework_rmsd": 39.97320923515387,
+          "hypothetical_replacement_his_distance": 17.81829026304059,
+          "hypothetical_replacement_ala_distance": 14.690277413031296,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 11.69209645223721,
+          "terminal_ca_rmsd": 26.632862458697602,
+          "target_aligned_framework_rmsd": 44.52135489469214,
+          "hypothetical_replacement_his_distance": 22.186843382847467,
+          "hypothetical_replacement_ala_distance": 20.452034908311305,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    },
+    {
+      "task_id": "c1_local_inpaint",
+      "arm": "LOCAL_INPAINT",
+      "sample_index": 2,
+      "framework_self_rmsd": 0.9312972450540473,
+      "cdr_after_framework_fit_rmsd": 5.649528716684511,
+      "iptm": 0.16506297886371613,
+      "alignments": {
+        "primary_2_27": {
+          "target_all_ca_rmsd": 7.273879488684187,
+          "terminal_ca_rmsd": 19.18575584815381,
+          "target_aligned_framework_rmsd": 61.521569165382566,
+          "hypothetical_replacement_his_distance": 19.707359989924218,
+          "hypothetical_replacement_ala_distance": 17.989699774511266,
+          "hypothetical_replacement_both_contact": false
+        },
+        "sensitivity_8_23": {
+          "target_all_ca_rmsd": 8.917350742335172,
+          "terminal_ca_rmsd": 22.407381234729584,
+          "target_aligned_framework_rmsd": 58.04037367777188,
+          "hypothetical_replacement_his_distance": 23.66471916603234,
+          "hypothetical_replacement_ala_distance": 22.390679584662685,
+          "hypothetical_replacement_both_contact": false
+        }
+      }
+    }
+  ],
+  "primary_geometry_agreement": {
+    "measurements_checked": 90,
+    "max_absolute_difference_angstrom": 0.0000030870303078245342
+  },
+  "target_replacement_agreement": {
+    "checks": 36,
+    "max_absolute_difference_angstrom": 1.0658141036401503e-14,
+    "primary_contacts": 0,
+    "sensitivity_contacts": 0
+  },
+  "summary": {
+    "framework_self_rmsd_angstrom": {
+      "min": 0.6594108109706245,
+      "median": 0.8484346313543558,
+      "max": 1.0411726538420911
+    },
+    "target_all_ca_rmsd_angstrom": {
+      "min": 0.6996725328839285,
+      "median": 3.0733939847993588,
+      "max": 12.0180248400851
+    },
+    "terminal_ca_rmsd_angstrom": {
+      "min": 0.5843107778461747,
+      "median": 7.005297213519291,
+      "max": 24.343632591405488
+    },
+    "relative_pose_rmsd_primary_angstrom": {
+      "min": 39.97320923515387,
+      "median": 62.811275908332675,
+      "max": 73.24165241334435
+    },
+    "relative_pose_rmsd_sensitivity_angstrom": {
+      "min": 44.52135489469214,
+      "median": 62.8171071201577,
+      "max": 72.30458595691032
+    },
+    "iptm": {
+      "min": 0.14122653007507324,
+      "median": 0.23920682072639465,
+      "max": 0.33233630657196045
+    }
+  }
+}

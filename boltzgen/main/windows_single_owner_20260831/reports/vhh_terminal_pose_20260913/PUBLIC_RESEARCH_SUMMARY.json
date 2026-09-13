@@ -1,0 +1,94 @@
+{
+  "schema": "VHH_TERMINAL_RESEARCH_SUMMARY_V1",
+  "status": "CPU_DIAGNOSTIC_RESEARCH_COMPLETE",
+  "date": "2026-09-13",
+  "source_pilot_execution_commit": "9a0576dd1510298a00ea0472bdf4de4740f8bada",
+  "source_result_publication_commit": "e92bd60a44a77c6e626be545e6877eb7fa7689d7",
+  "gpu_jobs_this_continuation": 0,
+  "new_sequences_generated": 0,
+  "weights_loaded_this_continuation": 0,
+  "model_environment_changed": false,
+  "source_draw_count": 2,
+  "assessment_task_count": 6,
+  "unique_final_sequences": 4,
+  "nested_prediction_count": 18,
+  "contact_cutoff_angstrom": 4.5,
+  "diagnostic_findings": {
+    "double_terminal_contacts": 2,
+    "terminal_negative_predictions": 16,
+    "terminal_negative_CDR_middle_or_C_contacts": 15,
+    "terminal_negative_framework_only_contacts": 1,
+    "no_VHH_contact_predictions": 0,
+    "framework_contacts": 18,
+    "double_terminal_CDR3_contributors": 2,
+    "edited_window_contributor_among_two_terminal_positives": 1,
+    "original_target_coordinate_replacement_contacts": 0
+  },
+  "structure_statistics": {
+    "framework_self_rmsd_angstrom": {
+      "min": 0.6594108109706245,
+      "median": 0.8484346313543558,
+      "max": 1.0411726538420911
+    },
+    "target_all_ca_rmsd_angstrom": {
+      "min": 0.6996725328839285,
+      "median": 3.0733939847993588,
+      "max": 12.0180248400851
+    },
+    "terminal_ca_rmsd_angstrom": {
+      "min": 0.5843107778461747,
+      "median": 7.005297213519291,
+      "max": 24.343632591405488
+    },
+    "relative_pose_rmsd_primary_angstrom": {
+      "min": 39.97320923515387,
+      "median": 62.811275908332675,
+      "max": 73.24165241334435
+    },
+    "relative_pose_rmsd_sensitivity_angstrom": {
+      "min": 44.52135489469214,
+      "median": 62.8171071201577,
+      "max": 72.30458595691032
+    },
+    "iptm": {
+      "min": 0.14122653007507324,
+      "median": 0.23920682072639465,
+      "max": 0.33233630657196045
+    }
+  },
+  "independent_recomputation": {
+    "measurements_checked": 90,
+    "max_absolute_difference_angstrom": 0.0000030870303078245342,
+    "replacement": {
+      "checks": 36,
+      "max_absolute_difference_angstrom": 1.0658141036401503e-14,
+      "primary_contacts": 0,
+      "sensitivity_contacts": 0
+    }
+  },
+  "tests": {
+    "related_suite_passed": 547,
+    "wall_seconds": 32.36,
+    "warnings": [
+      "Existing pynvml deprecation FutureWarning"
+    ]
+  },
+  "method_cautions": [
+    "Relative-to-generated-source geometry is not error relative to experimentally observed VHH binding.",
+    "Target-coordinate replacement is an artificial geometric probe, not a physical structure, new prediction, or causal proof.",
+    "Large GLP1 deformation is not automatically unphysical; source 6X18 is receptor-bound, and free peptide conformation is condition-dependent.",
+    "Template fidelity and terminal contact are separate diagnostics, not retroactively added success gates.",
+    "The 16 non-terminal predictions are partitioned into disjoint contact-location classes; overlapping region or component counts are not additive."
+  ],
+  "next_direction": "Target-conformation-sensitive evaluation and separate pose/epitope reporting before larger scaffold or generation campaigns.",
+  "software_compatibility": {
+    "installed": "BoltzGen 0.3.2",
+    "standalone_boltz_installed": false,
+    "standalone_force_template_schema_accepted_by_installed_boltzgen": false,
+    "force_is_absolute_rigidity": false,
+    "existing_weights_compatible_with_separate_boltz": "UNVERIFIED",
+    "installation_or_GPU_comparison_performed": false
+  },
+  "biological_pass": false,
+  "causal_mechanism_established": false
+}

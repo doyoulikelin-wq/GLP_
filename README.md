@@ -8,6 +8,13 @@
 
 ## 当前结论
 
+2026-09-13 最新研究：[VHH 端部定位与构象诊断](boltzgen/main/windows_single_owner_20260831/reports/vhh_terminal_pose_20260913/README.md)。
+复用[局部编辑小试](boltzgen/main/windows_single_owner_20260831/reports/vhh_local_edit_20260913/README.md)全部 18 个预测，未新增 GPU。
+16 次未命中端部的预测中，15 次仍有 CDR 中段/C 端接触，1 次仅框架接触；不是整体完全脱离。
+两次端部命中伴随明显靶肽构象变化，不能当作保持原设计构象下的稳定识别。
+框架自身较稳定；下一研究重点是目标构象敏感性与端部定位，不继续盲目扩骨架。
+原目标来自受体结合态，变形也不能自动判假；独立 Boltz 强模板接口与现有 BoltzGen 不直接兼容，未换环境或启动新批次。
+
 2026-09-11 新入口：[输入兼容性修复与端部条件对照](boltzgen/main/windows_single_owner_20260831/VHH_TERMINAL_CONTROL_PROCESS_ZH_20260911.md)。
 本轮在实际 GPU 前使用严格全原子输入门，并在每组完成后再次检查完整候选；
 以同一完整 7XL0 骨架比较三种端部软条件，不继续扩骨架、不改写旧失败。

@@ -1,0 +1,328 @@
+{
+  "schema": "VHH_CONTACT_LOCATION_DIAGNOSIS_V1",
+  "status": "RETROSPECTIVE_DESCRIPTIVE_ANALYSIS_COMPLETE",
+  "contact_threshold_angstrom": 4.5,
+  "geometry_source": "FINAL_FREE_FOLD_PREDICTIONS_ONLY",
+  "target_numbering": "native_GLP1_token_plus_7",
+  "regions_inclusive_native_numbering": {
+    "terminal": [
+      7,
+      8
+    ],
+    "near_N": [
+      9,
+      14
+    ],
+    "middle": [
+      15,
+      28
+    ],
+    "C_region": [
+      29,
+      36
+    ]
+  },
+  "source_draw_count": 2,
+  "all_18_predetermined_samples_retained": true,
+  "source_and_full_atom_validation": true,
+  "all_framework_and_outside_window_identities_preserved": true,
+  "original_terminal_endpoint_changed": false,
+  "biological_pass": false,
+  "causal_editing_benefit_established": false,
+  "new_downstream_gpu_authorized": false,
+  "overall": {
+    "candidate_draw_count": 6,
+    "free_fold_sample_count": 18,
+    "folds_nested_per_candidate": 3,
+    "full_CDR_both_terminal_count": 2,
+    "candidate_all_three_both_terminal_count": 0,
+    "any_full_CDR_contact_count": 17,
+    "any_framework_contact_count": 18,
+    "both_terminal_positive_CDR_contributor_counts": {
+      "CDR1": {
+        "His7": 0,
+        "Ala8": 0
+      },
+      "CDR2": {
+        "His7": 0,
+        "Ala8": 0
+      },
+      "CDR3": {
+        "His7": 2,
+        "Ala8": 2
+      }
+    },
+    "both_terminal_positive_edit_window_contribution_counts": {
+      "His7": 1,
+      "Ala8": 1
+    },
+    "terminal_negative_location_counts_disjoint": {
+      "CDR_middle_or_C_contact": 15,
+      "CDR_other_region_only": 0,
+      "framework_only_contact": 1,
+      "no_VHH_contact_at_cutoff": 0
+    },
+    "region_contact_fold_counts_nonexclusive": {
+      "CDR1": {
+        "terminal": 0,
+        "near_N": 0,
+        "middle": 4,
+        "C_region": 14
+      },
+      "CDR2": {
+        "terminal": 0,
+        "near_N": 0,
+        "middle": 7,
+        "C_region": 16
+      },
+      "CDR3": {
+        "terminal": 2,
+        "near_N": 3,
+        "middle": 15,
+        "C_region": 17
+      },
+      "full_CDR": {
+        "terminal": 2,
+        "near_N": 3,
+        "middle": 17,
+        "C_region": 17
+      },
+      "edit_window": {
+        "terminal": 1,
+        "near_N": 1,
+        "middle": 10,
+        "C_region": 14
+      },
+      "framework": {
+        "terminal": 1,
+        "near_N": 3,
+        "middle": 17,
+        "C_region": 17
+      }
+    }
+  },
+  "by_arm": {
+    "ORIGINAL": {
+      "candidate_draw_count": 2,
+      "free_fold_sample_count": 6,
+      "folds_nested_per_candidate": 3,
+      "full_CDR_both_terminal_count": 1,
+      "candidate_all_three_both_terminal_count": 0,
+      "any_full_CDR_contact_count": 5,
+      "any_framework_contact_count": 6,
+      "both_terminal_positive_CDR_contributor_counts": {
+        "CDR1": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR2": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR3": {
+          "His7": 1,
+          "Ala8": 1
+        }
+      },
+      "both_terminal_positive_edit_window_contribution_counts": {
+        "His7": 0,
+        "Ala8": 0
+      },
+      "terminal_negative_location_counts_disjoint": {
+        "CDR_middle_or_C_contact": 4,
+        "CDR_other_region_only": 0,
+        "framework_only_contact": 1,
+        "no_VHH_contact_at_cutoff": 0
+      },
+      "region_contact_fold_counts_nonexclusive": {
+        "CDR1": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 2,
+          "C_region": 4
+        },
+        "CDR2": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 2,
+          "C_region": 5
+        },
+        "CDR3": {
+          "terminal": 1,
+          "near_N": 1,
+          "middle": 5,
+          "C_region": 5
+        },
+        "full_CDR": {
+          "terminal": 1,
+          "near_N": 1,
+          "middle": 5,
+          "C_region": 5
+        },
+        "edit_window": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 3,
+          "C_region": 3
+        },
+        "framework": {
+          "terminal": 0,
+          "near_N": 1,
+          "middle": 6,
+          "C_region": 6
+        }
+      }
+    },
+    "SEQUENCE_ONLY": {
+      "candidate_draw_count": 2,
+      "free_fold_sample_count": 6,
+      "folds_nested_per_candidate": 3,
+      "full_CDR_both_terminal_count": 0,
+      "candidate_all_three_both_terminal_count": 0,
+      "any_full_CDR_contact_count": 6,
+      "any_framework_contact_count": 6,
+      "both_terminal_positive_CDR_contributor_counts": {
+        "CDR1": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR2": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR3": {
+          "His7": 0,
+          "Ala8": 0
+        }
+      },
+      "both_terminal_positive_edit_window_contribution_counts": {
+        "His7": 0,
+        "Ala8": 0
+      },
+      "terminal_negative_location_counts_disjoint": {
+        "CDR_middle_or_C_contact": 6,
+        "CDR_other_region_only": 0,
+        "framework_only_contact": 0,
+        "no_VHH_contact_at_cutoff": 0
+      },
+      "region_contact_fold_counts_nonexclusive": {
+        "CDR1": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 1,
+          "C_region": 5
+        },
+        "CDR2": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 2,
+          "C_region": 6
+        },
+        "CDR3": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 5,
+          "C_region": 6
+        },
+        "full_CDR": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 6,
+          "C_region": 6
+        },
+        "edit_window": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 2,
+          "C_region": 6
+        },
+        "framework": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 5,
+          "C_region": 6
+        }
+      }
+    },
+    "LOCAL_INPAINT": {
+      "candidate_draw_count": 2,
+      "free_fold_sample_count": 6,
+      "folds_nested_per_candidate": 3,
+      "full_CDR_both_terminal_count": 1,
+      "candidate_all_three_both_terminal_count": 0,
+      "any_full_CDR_contact_count": 6,
+      "any_framework_contact_count": 6,
+      "both_terminal_positive_CDR_contributor_counts": {
+        "CDR1": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR2": {
+          "His7": 0,
+          "Ala8": 0
+        },
+        "CDR3": {
+          "His7": 1,
+          "Ala8": 1
+        }
+      },
+      "both_terminal_positive_edit_window_contribution_counts": {
+        "His7": 1,
+        "Ala8": 1
+      },
+      "terminal_negative_location_counts_disjoint": {
+        "CDR_middle_or_C_contact": 5,
+        "CDR_other_region_only": 0,
+        "framework_only_contact": 0,
+        "no_VHH_contact_at_cutoff": 0
+      },
+      "region_contact_fold_counts_nonexclusive": {
+        "CDR1": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 1,
+          "C_region": 5
+        },
+        "CDR2": {
+          "terminal": 0,
+          "near_N": 0,
+          "middle": 3,
+          "C_region": 5
+        },
+        "CDR3": {
+          "terminal": 1,
+          "near_N": 2,
+          "middle": 5,
+          "C_region": 6
+        },
+        "full_CDR": {
+          "terminal": 1,
+          "near_N": 2,
+          "middle": 6,
+          "C_region": 6
+        },
+        "edit_window": {
+          "terminal": 1,
+          "near_N": 1,
+          "middle": 5,
+          "C_region": 5
+        },
+        "framework": {
+          "terminal": 1,
+          "near_N": 2,
+          "middle": 6,
+          "C_region": 5
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Region bins and component locations are post-run descriptions, not new success criteria.",
+    "CDR1/2/3/framework are disjoint; full_CDR is their CDR union and edit_window overlaps CDR3.",
+    "A target residue may contact several components or regions; those counts must not be summed as independent samples.",
+    "Three predictions are nested within each sequence; two matched source draws per arm are not six independent molecules.",
+    "Prediction indices are not random-number paired; unchanged sequences and every original draw are retained.",
+    "Contact location does not establish experimental binding, specificity, affinity or the cause of failure.",
+    "No_VHH_contact means no heavy-atom pair within 4.5 angstrom, not proof of physical dissociation."
+  ]
+}
